@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tình Yêu ❤️</title>
+  <style>
+    * {
+
+       background-color: #000000; /* hồng nóng */
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      color: #ff69b4;
+    }
+
+    video#bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .love {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 2em;
+      animation: floatUp 6s ease-out forwards;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      text-shadow: 0 0 5px rgb(144, 22, 112);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translate(-50%, 100vh);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -10vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+
+<script>
+  const messages = [
+    "Tình yêu là tất cả ❤️",
+    "Anh yêu em mãi mãi 💞",
+    "Trái tim này chỉ dành cho em 💖",
+    "Yêu em đến suốt cuộc đời 💘",
+    "Mãi mãi bên nhau 💑"
+  ];
+
+  function createLoveText() {
+    const div = document.createElement("div");
+    div.className = "love";
+    div.textContent = messages[Math.floor(Math.random() * messages.length)];
+
+    const randX = Math.random() * 80 + 10; // Từ 10% đến 90%
+    div.style.left = `${randX}%`;
+
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 7000);
+  }
+
+  setInterval(createLoveText, 500);
+</script>
+
+</body>
+</html>
