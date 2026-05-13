@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>AURORA V50 - ADMIN PANEL</title>
+    <style>
+        body { background: #0b0e14; color: #00d2ff; font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .box { background: #151921; padding: 30px; border-radius: 15px; border: 1px solid #00d2ff; display: inline-block; }
+        input { background: #1b212c; border: 1px solid #333; color: white; padding: 10px; margin: 10px; width: 250px; border-radius: 5px; }
+        button { background: #00d2ff; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>AURORA V50 ADMIN</h2>
+        <input type="password" id="token" placeholder="Dán GitHub Token vào đây"><br>
+        <input type="text" id="keyName" placeholder="Tên Key cần tạo..."><br>
+        <button onclick="create()">KÍCH HOẠT NGAY</button>
+        <p id="msg"></p>
+    </div>
+
+    <script>
+        async function create() {
+            const T = document.getElementById('token').value;
+            const K = document.getElementById('keyName').value;
+            const M = document.getElementById('msg');
+            const R = "Tloilos/Tloi"; // Tên Repo của Lợi
+            const F = "key.json"; // Tên file của Lợi
+
+            if(!T || !K) return alert("Nhập đủ Token và Key!");
+            M.innerText = "⏳ Đang xử lý...";
+
+            try {
+                const r = await fetch(`https://api.github.com/repos/${R}/contents/${F}`, {
+                    headers: { Authorization: `token ${T}` }
+                });
+                const d = await r.json();
+                const content = JSON.parse(atob(d.content.replace(/\s/g, '')));
+
+                content[K] = { "rank": "VIP", "status": "Active" };
+
+                const up = await fetch(`https://api.github.com/repos/${R}/contents/${F}`, {
+                    method: "PUT",
+                    headers: { Authorization: `token ${T}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        message: "Add: " + K,
+                        content: btoa(JSON.stringify(content, null, 2)),
+                        sha: d.sha
+                    })
+                });
+
+                if(up.ok) { M.style.color = "#2ecc71"; M.innerText = "✅ ĐÃ THÊM KEY: " + K; }
+                else { M.style.color = "#e74c3c"; M.innerText = "❌ Lỗi: Token hết hạn hoặc sai quyền!"; }
+            } catch(e) { M.innerText = "❌ Lỗi kết nối API!"; }
+        }
+    </script>
+</body>
+</html>
