@@ -1,58 +1,1269 @@
+<!--
+====================================================
+AURORA V70 ULTRA PREMIUM ADMIN PANEL
+FULL OTP LOGIN + EMAIL VERIFY + TAB SYSTEM
+====================================================
+-->
+
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-    <meta charset="UTF-8">
-    <title>AURORA V50 - ADMIN PANEL</title>
-    <style>
-        body { background: #0b0e14; color: #00d2ff; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        .box { background: #151921; padding: 30px; border-radius: 15px; border: 1px solid #00d2ff; display: inline-block; }
-        input { background: #1b212c; border: 1px solid #333; color: white; padding: 10px; margin: 10px; width: 250px; border-radius: 5px; }
-        button { background: #00d2ff; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 5px; }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>AURORA V70 ULTRA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+:root{
+    --bg:#050816;
+    --panel:rgba(13,18,32,.86);
+    --panel2:rgba(18,25,42,.72);
+    --line:rgba(255,255,255,.06);
+    --neon:#00ffd5;
+    --cyan:#00c3ff;
+    --green:#00ff88;
+    --red:#ff4567;
+    --orange:#ffb84d;
+    --text:#dffcff;
+    --sub:#7f97ba;
+}
+
+body{
+    background:
+    radial-gradient(circle at top left,#0d2342 0%,transparent 30%),
+    radial-gradient(circle at bottom right,#0f1f38 0%,transparent 30%),
+    linear-gradient(135deg,#02040a,#08111e,#02040a);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+#particles-js{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+    repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 120px,
+        rgba(255,255,255,.02) 121px
+    );
+    z-index:-1;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.login-screen{
+    width:100%;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.auth-box{
+    width:430px;
+    padding:35px;
+    border-radius:30px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    backdrop-filter:blur(18px);
+    box-shadow:
+    0 0 50px rgba(0,255,213,.12),
+    inset 0 0 30px rgba(255,255,255,.02);
+    position:relative;
+    overflow:hidden;
+}
+
+.auth-box::before{
+    content:'';
+    position:absolute;
+    width:250px;
+    height:250px;
+    background:radial-gradient(circle,rgba(0,255,213,.12),transparent);
+    top:-100px;
+    right:-100px;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo h1{
+    color:var(--neon);
+    font-size:42px;
+    font-weight:800;
+    letter-spacing:3px;
+    text-shadow:0 0 25px var(--neon);
+}
+
+.logo p{
+    color:var(--sub);
+    font-size:13px;
+}
+
+.input-group{
+    margin-bottom:16px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:8px;
+    color:#9db6d6;
+    font-size:12px;
+}
+
+input,
+select{
+    width:100%;
+    padding:15px;
+    border:none;
+    outline:none;
+    border-radius:16px;
+    background:#09111d;
+    color:white;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+input:focus,
+select:focus{
+    border-color:var(--neon);
+    box-shadow:0 0 20px rgba(0,255,213,.15);
+}
+
+.btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:16px;
+    cursor:pointer;
+    margin-top:10px;
+    font-weight:700;
+    transition:.25s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-main{
+    background:linear-gradient(135deg,var(--neon),var(--cyan));
+    color:black;
+}
+
+.btn-green{
+    background:linear-gradient(135deg,#00ff88,#00c853);
+    color:black;
+}
+
+.btn-red{
+    background:linear-gradient(135deg,#ff1744,#ff4567);
+    color:white;
+}
+
+.btn-orange{
+    background:linear-gradient(135deg,#ff9800,#ffb84d);
+    color:black;
+}
+
+.status-box{
+    margin-top:15px;
+    padding:14px;
+    border-radius:16px;
+    background:#08101b;
+    border:1px solid rgba(255,255,255,.04);
+    color:var(--neon);
+}
+
+.wrapper{
+    display:flex;
+}
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    position:fixed;
+    top:0;
+    left:0;
+    background:rgba(8,12,22,.92);
+    border-right:1px solid rgba(255,255,255,.05);
+    backdrop-filter:blur(20px);
+    padding:24px;
+}
+
+.side-logo{
+    color:var(--neon);
+    font-size:34px;
+    font-weight:800;
+    text-shadow:0 0 25px var(--neon);
+    margin-bottom:30px;
+}
+
+.side-btn{
+    width:100%;
+    padding:15px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:16px;
+    background:transparent;
+    color:#8ca3c5;
+    cursor:pointer;
+    text-align:left;
+    font-weight:600;
+}
+
+.side-btn:hover,
+.side-btn.active{
+    background:rgba(0,255,213,.1);
+    color:var(--neon);
+}
+
+.main{
+    margin-left:260px;
+    width:calc(100% - 260px);
+    padding:25px;
+}
+
+.panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:28px;
+    padding:25px;
+    backdrop-filter:blur(18px);
+    margin-bottom:20px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.stats{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.stat-box{
+    min-width:150px;
+    padding:20px;
+    border-radius:20px;
+    background:var(--panel2);
+    border:1px solid rgba(255,255,255,.05);
+    text-align:center;
+}
+
+.stat-box h2{
+    color:var(--neon);
+    font-size:30px;
+}
+
+.stat-box span{
+    color:#8ea7cb;
+    font-size:12px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:20px;
+}
+
+.key-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:18px;
+}
+
+.key-card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:24px;
+    padding:20px;
+}
+
+.key-name{
+    color:var(--neon);
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:10px;
+    word-break:break-all;
+}
+
+.key-info{
+    color:#90a7ca;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.action-buttons{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.small-btn{
+    border:none;
+    padding:10px 14px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:700;
+}
+
+.theme-picker{
+    width:100%;
+    height:50px;
+    border:none;
+    border-radius:14px;
+    margin-top:10px;
+}
+
+.notify{
+    position:fixed;
+    top:20px;
+    right:-300px;
+    background:#0c1422;
+    padding:15px 20px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.05);
+    transition:.4s;
+    z-index:9999;
+}
+
+.notify.show{
+    right:20px;
+}
+
+@media(max-width:1000px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
-    <div class="box">
-        <h2>AURORA V50 ADMIN</h2>
-        <input type="password" id="token" placeholder="Dán GitHub Token vào đây"><br>
-        <input type="text" id="keyName" placeholder="Tên Key cần tạo..."><br>
-        <button onclick="create()">KÍCH HOẠT NGAY</button>
-        <p id="msg"></p>
-    </div>
 
-    <script>
-        async function create() {
-            const T = document.getElementById('token').value;
-            const K = document.getElementById('keyName').value;
-            const M = document.getElementById('msg');
-            const R = "Tloilos/thanhloi"; // Tên Repo của Lợi
-            const F = "key.json"; // Tên file của Lợi
+<div id="particles-js"></div>
 
-            if(!T || !K) return alert("Nhập đủ Token và Key!");
-            M.innerText = "⏳ Đang xử lý...";
+<!-- LOGIN -->
 
-            try {
-                const r = await fetch(`https://api.github.com/repos/${R}/contents/${F}`, {
-                    headers: { Authorization: `token ${T}` }
-                });
-                const d = await r.json();
-                const content = JSON.parse(atob(d.content.replace(/\s/g, '')));
+<div class="login-screen" id="authPage">
 
-                content[K] = { "rank": "VIP", "status": "Active" };
+<div class="auth-box">
 
-                const up = await fetch(`https://api.github.com/repos/${R}/contents/${F}`, {
-                    method: "PUT",
-                    headers: { Authorization: `token ${T}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        message: "Add: " + K,
-                        content: btoa(JSON.stringify(content, null, 2)),
-                        sha: d.sha
-                    })
-                });
+<div class="logo">
+<h1>AURORA</h1>
+<p>OTP LOGIN SYSTEM</p>
+</div>
 
-                if(up.ok) { M.style.color = "#2ecc71"; M.innerText = "✅ ĐÃ THÊM KEY: " + K; }
-                else { M.style.color = "#e74c3c"; M.innerText = "❌ Lỗi: Token hết hạn hoặc sai quyền!"; }
-            } catch(e) { M.innerText = "❌ Lỗi kết nối API!"; }
-        }
-    </script>
+<div class="input-group">
+<label>TÊN</label>
+<input type="text" id="nameInput">
+</div>
+
+<div class="input-group">
+<label>EMAIL GMAIL</label>
+<input type="email" id="emailInput">
+</div>
+
+<div class="input-group">
+<label>MẬT KHẨU</label>
+<input type="password" id="passwordInput">
+</div>
+
+<div class="input-group">
+<label>MÃ OTP</label>
+<input type="text" id="otpInput">
+</div>
+
+<button class="btn btn-orange" onclick="sendOTP()">
+GỬI MÃ OTP
+</button>
+
+<button class="btn btn-main" onclick="verifyOTP()">
+XÁC NHẬN OTP
+</button>
+
+<div class="status-box" id="authStatus">
+⚡ Chưa xác minh OTP
+</div>
+
+</div>
+
+</div>
+
+<!-- PANEL -->
+
+<div class="hidden" id="mainPanel">
+
+<div class="wrapper">
+
+<div class="sidebar">
+
+<div class="side-logo">
+AURORA
+</div>
+
+<button class="side-btn active" onclick="showTab('dashboard')">
+DASHBOARD
+</button>
+
+<button class="side-btn" onclick="showTab('keys')">
+KEYS
+</button>
+
+<button class="side-btn" onclick="showTab('users')">
+USERS
+</button>
+
+<button class="side-btn" onclick="showTab('tokens')">
+TOKENS
+</button>
+
+<button class="side-btn" onclick="showTab('settings')">
+SETTINGS
+</button>
+
+<button class="side-btn" onclick="logout()">
+LOGOUT
+</button>
+
+</div>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+
+<div id="dashboardTab">
+
+<div class="panel topbar">
+
+<div>
+
+<h2 style="color:var(--neon)">
+AURORA V70
+</h2>
+
+<p style="color:var(--sub)">
+ULTRA PREMIUM PANEL
+</p>
+
+<div id="clock"></div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-box">
+<h2 id="totalKeys">0</h2>
+<span>TOTAL KEYS</span>
+</div>
+
+<div class="stat-box">
+<h2 id="activeKeys">0</h2>
+<span>ACTIVE</span>
+</div>
+
+<div class="stat-box">
+<h2 id="bannedKeys">0</h2>
+<span>BANNED</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- KEYS -->
+
+<div id="keysTab" class="hidden">
+
+<div class="grid">
+
+<div class="panel">
+
+<h2 style="color:var(--neon);margin-bottom:20px;">
+CREATE KEY
+</h2>
+
+<div class="input-group">
+<label>KEY</label>
+<input type="text" id="keyInput">
+</div>
+
+<div class="input-group">
+<label>DURATION</label>
+
+<select id="durationInput">
+<option value="1">1 DAY</option>
+<option value="7">7 DAYS</option>
+<option value="30">30 DAYS</option>
+<option value="365">365 DAYS</option>
+</select>
+
+</div>
+
+<div class="input-group">
+<label>DEVICES</label>
+
+<select id="deviceInput">
+<option value="1">1 DEVICE</option>
+<option value="2">2 DEVICE</option>
+<option value="3">3 DEVICE</option>
+<option value="5">5 DEVICE</option>
+</select>
+
+</div>
+
+<button class="btn btn-main" onclick="createKey()">
+CREATE KEY
+</button>
+
+<button class="btn btn-orange" onclick="generateRandomKey()">
+RANDOM KEY
+</button>
+
+<div class="status-box" id="statusBox">
+⚡ Online
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="input-group">
+<input type="text"
+id="searchInput"
+placeholder="Search..."
+onkeyup="filterKeys()">
+</div>
+
+<div class="key-grid" id="keyGrid"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- USERS -->
+
+<div id="usersTab" class="hidden">
+
+<div class="panel">
+
+<h2 style="color:var(--neon);margin-bottom:20px;">
+USER LIST
+</h2>
+
+<div class="key-grid" id="userGrid"></div>
+
+</div>
+
+</div>
+
+<!-- TOKENS -->
+
+<div id="tokensTab" class="hidden">
+
+<div class="panel">
+
+<h2 style="color:var(--neon);margin-bottom:20px;">
+TOKEN SYSTEM
+</h2>
+
+<div class="status-box" id="tokenBox">
+NO TOKEN
+</div>
+
+<button class="btn btn-main" onclick="generateToken()">
+GENERATE TOKEN
+</button>
+
+<button class="btn btn-green" onclick="copyToken()">
+COPY TOKEN
+</button>
+
+</div>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div id="settingsTab" class="hidden">
+
+<div class="panel">
+
+<h2 style="color:var(--neon);margin-bottom:20px;">
+SETTINGS
+</h2>
+
+<input type="color"
+class="theme-picker"
+id="themePicker"
+value="#00ffd5">
+
+<button class="btn btn-red" onclick="resetTheme()">
+RESET THEME
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+
+emailjs.init("YOUR_PUBLIC_KEY");
+
+const BASE_URL =
+"https://aurora-sever-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+let currentOTP = "";
+
+particlesJS("particles-js",{
+particles:{
+number:{value:90},
+color:{value:"#00ffd5"},
+line_linked:{
+enable:true,
+color:"#00ffd5",
+opacity:.2
+},
+move:{speed:2},
+size:{value:3}
+}
+});
+
+function notify(text){
+
+const div =
+document.createElement("div");
+
+div.className = "notify";
+
+div.innerText = text;
+
+document.body.appendChild(div);
+
+setTimeout(()=>{
+div.classList.add("show");
+},100);
+
+setTimeout(()=>{
+div.remove();
+},3000);
+
+}
+
+function setAuthStatus(msg,error=false){
+
+const box =
+document.getElementById("authStatus");
+
+box.innerText = msg;
+
+box.style.color =
+error
+? "#ff4567"
+: "#00ffd5";
+
+}
+
+async function sendOTP(){
+
+const email =
+document.getElementById("emailInput")
+.value.trim();
+
+if(!email){
+
+return setAuthStatus(
+"❌ Nhập email!",
+true
+);
+
+}
+
+currentOTP =
+Math.floor(
+100000 + Math.random()*900000
+).toString();
+
+try{
+
+await emailjs.send(
+"YOUR_SERVICE_ID",
+"YOUR_TEMPLATE_ID",
+{
+email:email,
+otp:currentOTP
+}
+);
+
+setAuthStatus(
+"✅ OTP đã gửi!"
+);
+
+}
+catch{
+
+setAuthStatus(
+"❌ Không gửi được OTP!",
+true
+);
+
+}
+
+}
+
+async function verifyOTP(){
+
+const otp =
+document.getElementById("otpInput")
+.value.trim();
+
+if(otp !== currentOTP){
+
+return setAuthStatus(
+"❌ Sai OTP!",
+true
+);
+
+}
+
+const name =
+document.getElementById("nameInput")
+.value.trim();
+
+const email =
+document.getElementById("emailInput")
+.value.trim();
+
+const password =
+document.getElementById("passwordInput")
+.value.trim();
+
+await fetch(
+`${BASE_URL}/users/${btoa(email)}.json`,
+{
+method:"PUT",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name,
+email,
+password,
+verified:true
+})
+}
+);
+
+localStorage.setItem(
+"aurora_login",
+"true"
+);
+
+localStorage.setItem(
+"aurora_email",
+email
+);
+
+document
+.getElementById("authPage")
+.classList.add("hidden");
+
+document
+.getElementById("mainPanel")
+.classList.remove("hidden");
+
+fetchKeys();
+fetchUsers();
+
+notify("✅ Login Success!");
+
+}
+
+function showTab(tab){
+
+document
+.querySelectorAll('[id$="Tab"]')
+.forEach(v=>{
+v.classList.add("hidden");
+});
+
+document
+.getElementById(tab+"Tab")
+.classList.remove("hidden");
+
+}
+
+function generateRandomKey(){
+
+const chars =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+let result = "AURORA-";
+
+for(let i=0;i<24;i++){
+
+result += chars.charAt(
+Math.floor(
+Math.random()*chars.length
+)
+);
+
+}
+
+document
+.getElementById("keyInput")
+.value = result;
+
+}
+
+async function createKey(){
+
+const key =
+document.getElementById("keyInput")
+.value.trim();
+
+const duration =
+parseInt(
+document.getElementById("durationInput")
+.value
+);
+
+const devices =
+parseInt(
+document.getElementById("deviceInput")
+.value
+);
+
+let exp = new Date();
+
+exp.setDate(
+exp.getDate()+duration
+);
+
+await fetch(
+`${BASE_URL}/keys.json`,
+{
+method:"PATCH",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+
+[key]:{
+
+rank:"VIP",
+status:"Active",
+max_devices:devices,
+used_devices:0,
+created_at:new Date().toLocaleString("vi-VN"),
+expired_at:exp.toLocaleString("vi-VN")
+
+}
+
+})
+}
+);
+
+fetchKeys();
+
+notify("🔑 Key Created!");
+
+}
+
+async function fetchKeys(){
+
+const res = await fetch(
+`${BASE_URL}/keys.json`
+);
+
+const data = await res.json();
+
+renderKeys(data || {});
+updateStats(data || {});
+
+}
+
+function renderKeys(data){
+
+const grid =
+document.getElementById("keyGrid");
+
+grid.innerHTML = "";
+
+Object.entries(data)
+.reverse()
+.forEach(([key,val])=>{
+
+grid.innerHTML += `
+
+<div class="key-card">
+
+<div class="key-name">
+${key}
+</div>
+
+<div class="key-info">
+👑 ${val.rank}
+</div>
+
+<div class="key-info">
+💻 ${val.used_devices}/${val.max_devices}
+</div>
+
+<div class="key-info">
+⏳ ${val.expired_at}
+</div>
+
+<div class="action-buttons">
+
+<button class="small-btn btn-orange"
+onclick="lockKey('${key}')">
+LOCK
+</button>
+
+<button class="small-btn btn-green"
+onclick="unlockKey('${key}')">
+OPEN
+</button>
+
+<button class="small-btn btn-red"
+onclick="deleteKey('${key}')">
+DELETE
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function updateStats(data){
+
+const values =
+Object.values(data);
+
+document
+.getElementById("totalKeys")
+.innerText = values.length;
+
+document
+.getElementById("activeKeys")
+.innerText =
+values.filter(v=>v.status==="Active")
+.length;
+
+document
+.getElementById("bannedKeys")
+.innerText =
+values.filter(v=>v.status==="Banned")
+.length;
+
+}
+
+async function lockKey(key){
+
+await fetch(
+`${BASE_URL}/keys/${key}.json`,
+{
+method:"PATCH",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+status:"Banned"
+})
+}
+);
+
+fetchKeys();
+
+}
+
+async function unlockKey(key){
+
+await fetch(
+`${BASE_URL}/keys/${key}.json`,
+{
+method:"PATCH",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+status:"Active"
+})
+}
+);
+
+fetchKeys();
+
+}
+
+async function deleteKey(key){
+
+if(!confirm(`Delete ${key}?`))
+return;
+
+await fetch(
+`${BASE_URL}/keys/${key}.json`,
+{
+method:"DELETE"
+}
+);
+
+fetchKeys();
+
+}
+
+function filterKeys(){
+
+const value =
+document
+.getElementById("searchInput")
+.value
+.toLowerCase();
+
+document
+.querySelectorAll(".key-card")
+.forEach(card=>{
+
+card.style.display =
+card.innerText
+.toLowerCase()
+.includes(value)
+? ""
+: "none";
+
+});
+
+}
+
+async function fetchUsers(){
+
+const res = await fetch(
+`${BASE_URL}/users.json`
+);
+
+const data = await res.json();
+
+const grid =
+document.getElementById("userGrid");
+
+grid.innerHTML = "";
+
+Object.values(data || {})
+.forEach(user=>{
+
+grid.innerHTML += `
+
+<div class="key-card">
+
+<div class="key-name">
+${user.name}
+</div>
+
+<div class="key-info">
+📧 ${user.email}
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function generateToken(){
+
+const chars =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+let token = "AURORA_";
+
+for(let i=0;i<64;i++){
+
+token += chars.charAt(
+Math.floor(
+Math.random()*chars.length
+)
+);
+
+}
+
+document
+.getElementById("tokenBox")
+.innerText = token;
+
+localStorage.setItem(
+"aurora_token",
+token
+);
+
+notify("🔐 Token Generated!");
+
+}
+
+function copyToken(){
+
+navigator.clipboard.writeText(
+document.getElementById("tokenBox")
+.innerText
+);
+
+notify("📋 Copied!");
+
+}
+
+function logout(){
+
+localStorage.clear();
+
+location.reload();
+
+}
+
+const picker =
+document.getElementById("themePicker");
+
+picker.addEventListener("input",e=>{
+
+document.documentElement
+.style
+.setProperty(
+"--neon",
+e.target.value
+);
+
+localStorage.setItem(
+"aurora_theme",
+e.target.value
+);
+
+});
+
+function resetTheme(){
+
+document.documentElement
+.style
+.setProperty(
+"--neon",
+"#00ffd5"
+);
+
+picker.value = "#00ffd5";
+
+}
+
+const savedTheme =
+localStorage.getItem(
+"aurora_theme"
+);
+
+if(savedTheme){
+
+document.documentElement
+.style
+.setProperty(
+"--neon",
+savedTheme
+);
+
+picker.value = savedTheme;
+
+}
+
+if(
+localStorage.getItem("aurora_login")
+){
+
+document
+.getElementById("authPage")
+.classList.add("hidden");
+
+document
+.getElementById("mainPanel")
+.classList.remove("hidden");
+
+fetchKeys();
+fetchUsers();
+
+}
+
+setInterval(()=>{
+
+document
+.getElementById("clock")
+.innerText =
+new Date()
+.toLocaleString("vi-VN");
+
+},1000);
+
+setInterval(
+fetchKeys,
+5000
+);
+
+</script>
+
 </body>
 </html>
