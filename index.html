@@ -1,19 +1,11 @@
-<!--
-====================================================
-AURORA V70 ULTRA PREMIUM ADMIN PANEL
-FULL OTP LOGIN + EMAIL VERIFY + TAB SYSTEM
-====================================================
--->
-
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AURORA V70 ULTRA</title>
+<title>AURORA V80 ULTRA PANEL</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -32,11 +24,11 @@ FULL OTP LOGIN + EMAIL VERIFY + TAB SYSTEM
 
 :root{
     --bg:#050816;
-    --panel:rgba(13,18,32,.86);
-    --panel2:rgba(18,25,42,.72);
+    --panel:rgba(12,18,32,.88);
+    --panel2:rgba(18,25,42,.65);
     --line:rgba(255,255,255,.06);
     --neon:#00ffd5;
-    --cyan:#00c3ff;
+    --cyan:#00bfff;
     --green:#00ff88;
     --red:#ff4567;
     --orange:#ffb84d;
@@ -46,11 +38,11 @@ FULL OTP LOGIN + EMAIL VERIFY + TAB SYSTEM
 
 body{
     background:
-    radial-gradient(circle at top left,#0d2342 0%,transparent 30%),
-    radial-gradient(circle at bottom right,#0f1f38 0%,transparent 30%),
-    linear-gradient(135deg,#02040a,#08111e,#02040a);
-    color:var(--text);
+    radial-gradient(circle at top left,#0f2a46 0%,transparent 30%),
+    radial-gradient(circle at bottom right,#10223d 0%,transparent 30%),
+    linear-gradient(135deg,#03050b,#09111e,#03050b);
     min-height:100vh;
+    color:var(--text);
     overflow-x:hidden;
 }
 
@@ -93,7 +85,7 @@ body::before{
     border-radius:30px;
     background:var(--panel);
     border:1px solid var(--line);
-    backdrop-filter:blur(18px);
+    backdrop-filter:blur(20px);
     box-shadow:
     0 0 50px rgba(0,255,213,.12),
     inset 0 0 30px rgba(255,255,255,.02);
@@ -120,8 +112,8 @@ body::before{
     color:var(--neon);
     font-size:42px;
     font-weight:800;
-    letter-spacing:3px;
     text-shadow:0 0 25px var(--neon);
+    letter-spacing:3px;
 }
 
 .logo p{
@@ -136,7 +128,7 @@ body::before{
 .input-group label{
     display:block;
     margin-bottom:8px;
-    color:#9db6d6;
+    color:#9fb7d7;
     font-size:12px;
 }
 
@@ -219,8 +211,8 @@ select:focus{
 }
 
 .side-logo{
-    color:var(--neon);
     font-size:34px;
+    color:var(--neon);
     font-weight:800;
     text-shadow:0 0 25px var(--neon);
     margin-bottom:30px;
@@ -234,8 +226,8 @@ select:focus{
     border-radius:16px;
     background:transparent;
     color:#8ca3c5;
-    cursor:pointer;
     text-align:left;
+    cursor:pointer;
     font-weight:600;
 }
 
@@ -256,7 +248,6 @@ select:focus{
     border:1px solid var(--line);
     border-radius:28px;
     padding:25px;
-    backdrop-filter:blur(18px);
     margin-bottom:20px;
 }
 
@@ -329,8 +320,8 @@ select:focus{
 .action-buttons{
     display:flex;
     gap:8px;
-    flex-wrap:wrap;
     margin-top:15px;
+    flex-wrap:wrap;
 }
 
 .small-btn{
@@ -347,7 +338,6 @@ select:focus{
     height:50px;
     border:none;
     border-radius:14px;
-    margin-top:10px;
 }
 
 .notify{
@@ -407,7 +397,7 @@ select:focus{
 </div>
 
 <div class="input-group">
-<label>EMAIL GMAIL</label>
+<label>EMAIL</label>
 <input type="email" id="emailInput">
 </div>
 
@@ -417,27 +407,27 @@ select:focus{
 </div>
 
 <div class="input-group">
-<label>MÃ OTP</label>
+<label>OTP</label>
 <input type="text" id="otpInput">
 </div>
 
 <button class="btn btn-orange" onclick="sendOTP()">
-GỬI MÃ OTP
+SEND OTP
 </button>
 
 <button class="btn btn-main" onclick="verifyOTP()">
-XÁC NHẬN OTP
+VERIFY LOGIN
 </button>
 
 <div class="status-box" id="authStatus">
-⚡ Chưa xác minh OTP
+⚡ Waiting OTP...
 </div>
 
 </div>
 
 </div>
 
-<!-- PANEL -->
+<!-- MAIN -->
 
 <div class="hidden" id="mainPanel">
 
@@ -486,11 +476,11 @@ LOGOUT
 <div>
 
 <h2 style="color:var(--neon)">
-AURORA V70
+AURORA V80
 </h2>
 
 <p style="color:var(--sub)">
-ULTRA PREMIUM PANEL
+FULL PREMIUM SYSTEM
 </p>
 
 <div id="clock"></div>
@@ -565,12 +555,12 @@ CREATE KEY
 CREATE KEY
 </button>
 
-<button class="btn btn-orange" onclick="generateRandomKey()">
+<button class="btn btn-green" onclick="generateRandomKey()">
 RANDOM KEY
 </button>
 
 <div class="status-box" id="statusBox">
-⚡ Online
+⚡ Server Online
 </div>
 
 </div>
@@ -599,7 +589,7 @@ onkeyup="filterKeys()">
 <div class="panel">
 
 <h2 style="color:var(--neon);margin-bottom:20px;">
-USER LIST
+USERS
 </h2>
 
 <div class="key-grid" id="userGrid"></div>
@@ -663,7 +653,7 @@ RESET THEME
 
 <script>
 
-emailjs.init("YOUR_PUBLIC_KEY");
+emailjs.init("zMyyu4auGkrBzJAdV");
 
 const BASE_URL =
 "https://aurora-sever-default-rtdb.asia-southeast1.firebasedatabase.app";
@@ -742,20 +732,26 @@ Math.floor(
 try{
 
 await emailjs.send(
-"YOUR_SERVICE_ID",
-"YOUR_TEMPLATE_ID",
+
+"service_ymdkgz7",
+
+"template_rx8qb8j",
+
 {
-email:email,
+to_email:email,
 otp:currentOTP
 }
+
 );
 
 setAuthStatus(
-"✅ OTP đã gửi!"
+"✅ OTP Đã Gửi!"
 );
 
 }
-catch{
+catch(err){
+
+console.log(err);
 
 setAuthStatus(
 "❌ Không gửi được OTP!",
@@ -803,8 +799,7 @@ headers:{
 body:JSON.stringify({
 name,
 email,
-password,
-verified:true
+password
 })
 }
 );
