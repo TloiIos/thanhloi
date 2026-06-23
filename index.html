@@ -13,28 +13,18 @@
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
     <link rel="dns-prefetch" href="https://api.vilao.ai" />
     
-    <!-- ===== PRELOAD FONTS ===== -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" />
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" />
-    
     <!-- ===== FONTS ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
-    <!-- ===== PWA META ===== -->
-    <link rel="manifest" href="data:application/json,{}" />
-    <meta name="theme-color" content="#0b0b12" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    
     <!-- ===== SEO META ===== -->
-    <title>ThanhLoi AI Chat</title>
-    <meta name="description" content="DeepSeek AI Chat - Intelligent AI Assistant" />
-    <meta name="keywords" content="AI, Chat, ThanhLoi, Assistant" />
+    <title>Thành Lợi AI - Trợ lý thông minh</title>
+    <meta name="description" content="Thành Lợi AI - Trợ lý thông minh với Minimax-M3" />
+    <meta name="keywords" content="AI, Chat, Thành Lợi, Minimax, Trợ lý AI" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
     
     <style>
-        /* ===== CRITICAL CSS (Inline for faster load) ===== */
+        /* ===== RESET & VARIABLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -69,9 +59,6 @@
             color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         /* ===== APP CONTAINER ===== */
@@ -79,10 +66,10 @@
             width: 100%;
             height: 100vh;
             max-width: 1400px;
+            margin: 0 auto;
             background: var(--bg-primary);
             display: flex;
             flex-direction: column;
-            position: relative;
         }
 
         /* ===== LOADING SCREEN ===== */
@@ -118,8 +105,8 @@
 
         .loading-screen .logo-text {
             margin-top: 20px;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 800;
             color: var(--text-secondary);
         }
 
@@ -133,12 +120,12 @@
 
         /* ===== TITLE BAR ===== */
         .title-bar {
-            height: 40px;
+            height: 44px;
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            padding: 0 20px;
             flex-shrink: 0;
             user-select: none;
             border-bottom: 1px solid var(--border-color);
@@ -147,30 +134,42 @@
         .title-bar-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .title-bar-left .icon {
             color: var(--secondary);
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 800;
         }
 
-        .title-bar-left span {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: 0.3px;
+        .title-bar-left .brand-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .title-bar-left .brand-name span {
+            color: var(--secondary);
+        }
+
+        .title-bar-left .version {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
         }
 
         .title-bar-right {
             display: flex;
-            gap: 4px;
+            gap: 6px;
         }
 
         .window-btn {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
@@ -188,18 +187,14 @@
             color: var(--text-primary);
         }
 
-        .window-btn.close:hover {
-            background: #ef4444;
-            color: white;
-        }
-
-        /* ===== SIDEBAR & CHAT ===== */
+        /* ===== MAIN LAYOUT ===== */
         .main-layout {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
 
+        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 260px;
             background: var(--bg-secondary);
@@ -209,22 +204,22 @@
             transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
             flex-shrink: 0;
-            position: relative;
         }
 
         .sidebar.collapsed {
             width: 64px;
         }
 
-        .sidebar.collapsed .sidebar-content>*:not(.sidebar-header) {
-            opacity: 0;
-            pointer-events: none;
+        .sidebar.collapsed .brand-text,
+        .sidebar.collapsed .new-chat-btn span,
+        .sidebar.collapsed .conv-item .title,
+        .sidebar.collapsed .conv-item .delete-btn {
+            display: none;
         }
 
-        .sidebar.collapsed .sidebar-header .brand-text {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
+        .sidebar.collapsed .new-chat-btn {
+            justify-content: center;
+            padding: 10px;
         }
 
         .sidebar-header {
@@ -247,7 +242,7 @@
             transform: translateX(-50%);
             width: 150px;
             height: 80px;
-            background: radial-gradient(ellipse, rgba(139, 92, 246, 0.15), transparent 70%);
+            background: radial-gradient(ellipse, rgba(139, 92, 246, 0.12), transparent 70%);
             pointer-events: none;
         }
 
@@ -259,7 +254,7 @@
         }
 
         .sidebar-header .brand .logo {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
             color: var(--secondary);
         }
@@ -272,7 +267,7 @@
         }
 
         .sidebar-header .brand-text .name {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.2;
@@ -306,9 +301,10 @@
             color: var(--text-primary);
         }
 
+        /* New Chat Button */
         .new-chat-btn {
             margin: 12px 12px 8px 12px;
-            padding: 10px 16px;
+            padding: 11px 18px;
             background: var(--primary);
             color: white;
             border: none;
@@ -320,7 +316,7 @@
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
         }
 
@@ -330,6 +326,11 @@
             box-shadow: var(--shadow-glow);
         }
 
+        .new-chat-btn i {
+            font-size: 14px;
+        }
+
+        /* Conversation List */
         .conv-list {
             flex: 1;
             overflow-y: auto;
@@ -358,7 +359,6 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 2px;
-            position: relative;
         }
 
         .conv-item:hover {
@@ -408,6 +408,7 @@
             color: #ef4444;
         }
 
+        /* Sidebar Footer */
         .sidebar-footer {
             padding: 12px 16px;
             border-top: 1px solid var(--border-color);
@@ -421,7 +422,7 @@
         .sidebar-footer .status {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-size: 12px;
             color: var(--text-muted);
         }
@@ -435,13 +436,8 @@
         }
 
         @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.4;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         .sidebar-footer .actions {
@@ -450,15 +446,15 @@
         }
 
         .sidebar-footer .actions button {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border: none;
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
             border-radius: 4px;
             transition: var(--transition);
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .sidebar-footer .actions button:hover {
@@ -471,6 +467,7 @@
             color: #ef4444;
         }
 
+        /* ===== CHAT PANEL ===== */
         .chat-panel {
             flex: 1;
             display: flex;
@@ -479,6 +476,7 @@
             min-width: 0;
         }
 
+        /* Chat Header */
         .chat-header {
             padding: 16px 24px;
             background: var(--bg-secondary);
@@ -499,11 +497,11 @@
             right: 0;
             height: 2px;
             background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
         .chat-header .info h2 {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--text-primary);
         }
@@ -515,7 +513,7 @@
         }
 
         .chat-header .model-badge {
-            padding: 4px 12px;
+            padding: 4px 14px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-full);
@@ -524,6 +522,12 @@
             font-weight: 500;
         }
 
+        .chat-header .model-badge i {
+            color: var(--secondary);
+            margin-right: 4px;
+        }
+
+        /* Chat Messages */
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -543,6 +547,7 @@
             border-radius: 4px;
         }
 
+        /* Message Styles */
         .message {
             display: flex;
             gap: 12px;
@@ -562,8 +567,8 @@
         }
 
         .message .avatar {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -585,10 +590,10 @@
 
         .message .bubble {
             max-width: 80%;
-            padding: 12px 16px;
+            padding: 12px 18px;
             border-radius: var(--radius);
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.7;
             word-wrap: break-word;
         }
 
@@ -613,10 +618,11 @@
             display: block;
         }
 
+        /* Code Block */
         .code-block {
             background: #0d0d14;
             border-radius: var(--radius-sm);
-            padding: 12px;
+            padding: 12px 14px;
             margin: 8px 0;
             overflow-x: auto;
             position: relative;
@@ -644,7 +650,7 @@
             cursor: pointer;
             font-size: 12px;
             transition: var(--transition);
-            padding: 2px 8px;
+            padding: 2px 10px;
             border-radius: 4px;
         }
 
@@ -662,10 +668,11 @@
             word-break: break-all;
         }
 
+        /* Thinking */
         .thinking {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             padding: 12px 16px;
             color: var(--text-muted);
             font-size: 14px;
@@ -684,26 +691,15 @@
             animation: thinkingDot 1.4s infinite;
         }
 
-        .thinking .dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .thinking .dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .thinking .dots span:nth-child(2) { animation-delay: 0.2s; }
+        .thinking .dots span:nth-child(3) { animation-delay: 0.4s; }
 
         @keyframes thinkingDot {
-            0%,
-            60%,
-            100% {
-                transform: translateY(0);
-                opacity: 0.3;
-            }
-            30% {
-                transform: translateY(-6px);
-                opacity: 1;
-            }
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+            30% { transform: translateY(-6px); opacity: 1; }
         }
 
+        /* Chat Input */
         .chat-input-container {
             padding: 12px 20px 16px 20px;
             background: var(--bg-secondary);
@@ -730,7 +726,7 @@
             flex: 1;
             background: transparent;
             border: none;
-            padding: 10px 12px;
+            padding: 10px 14px;
             color: var(--text-primary);
             font-family: inherit;
             font-size: 14px;
@@ -746,8 +742,8 @@
         }
 
         .chat-input-wrapper .send-btn {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border: none;
             background: var(--primary);
             color: white;
@@ -772,6 +768,7 @@
             transform: none;
         }
 
+        /* Toast */
         .toast {
             position: fixed;
             top: 20px;
@@ -779,7 +776,7 @@
             transform: translateX(-50%) translateY(-100px);
             background: var(--bg-card);
             color: var(--text-primary);
-            padding: 12px 24px;
+            padding: 12px 28px;
             border-radius: var(--radius);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-glow);
@@ -807,18 +804,22 @@
             .chat-header .model-badge {
                 display: none;
             }
+            .chat-header .info h2 {
+                font-size: 15px;
+            }
         }
 
         @media (max-width: 480px) {
             .sidebar {
                 position: fixed;
-                top: 40px;
+                top: 44px;
                 left: 0;
                 bottom: 0;
                 z-index: 100;
                 width: 280px;
                 transform: translateX(-100%);
                 transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                border-right: 1px solid var(--border-color);
             }
             .sidebar.open {
                 transform: translateX(0);
@@ -830,11 +831,11 @@
             .sidebar-overlay {
                 display: none;
                 position: fixed;
-                top: 40px;
+                top: 44px;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
+                background: rgba(0, 0, 0, 0.6);
                 z-index: 99;
             }
             .sidebar-overlay.active {
@@ -849,6 +850,9 @@
             .chat-input-container {
                 padding: 8px 12px 12px 12px;
             }
+            .title-bar-left .version {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -857,7 +861,7 @@
     <!-- ===== LOADING SCREEN ===== -->
     <div class="loading-screen" id="loadingScreen">
         <div class="spinner"></div>
-        <div class="logo-text">✦ Deep<span>Seek</span></div>
+        <div class="logo-text">✦ Thành <span>Lợi AI</span></div>
     </div>
 
     <!-- ===== TOAST ===== -->
@@ -873,12 +877,13 @@
         <div class="title-bar">
             <div class="title-bar-left">
                 <span class="icon">✦</span>
-                <span>ThanhLoi AI</span>
+                <span class="brand-name">Thành <span>Lợi</span> AI</span>
+                <span class="version">v1.0</span>
             </div>
             <div class="title-bar-right">
-                <button class="window-btn" onclick="window.minimize()">─</button>
-                <button class="window-btn" onclick="window.maximize()">□</button>
-                <button class="window-btn close" onclick="window.close()">✕</button>
+                <button class="window-btn" onclick="window.location.reload()" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
         </div>
 
@@ -891,17 +896,18 @@
                     <div class="brand">
                         <span class="logo">✦</span>
                         <div class="brand-text">
-                            <span class="name">DeepSeek</span>
+                            <span class="name">Thành Lợi</span>
                             <span class="sub">AI Assistant</span>
                         </div>
                     </div>
-                    <button class="toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    <button class="toggle-btn" onclick="toggleSidebar()" title="Thu gọn">
                         <i class="fas fa-chevron-left" id="toggleIcon"></i>
                     </button>
                 </div>
 
                 <button class="new-chat-btn" onclick="newChat()">
-                    <i class="fas fa-plus"></i> New Chat
+                    <i class="fas fa-plus"></i>
+                    <span>Cuộc trò chuyện mới</span>
                 </button>
 
                 <div class="conv-list" id="convList"></div>
@@ -909,13 +915,13 @@
                 <div class="sidebar-footer">
                     <div class="status">
                         <span class="dot"></span>
-                        Online
+                        <span>Online</span>
                     </div>
                     <div class="actions">
-                        <button onclick="clearMessages()" class="danger" title="Clear messages">
-                            <i class="fas fa-trash"></i>
+                        <button onclick="clearMessages()" class="danger" title="Xóa tin nhắn">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
-                        <button onclick="exportChat()" title="Export chat">
+                        <button onclick="exportChat()" title="Xuất chat">
                             <i class="fas fa-download"></i>
                         </button>
                     </div>
@@ -926,19 +932,21 @@
             <div class="chat-panel">
                 <div class="chat-header">
                     <div class="info">
-                        <h2>💬 Chat with DeepSeek</h2>
-                        <p>Intelligent AI Assistant</p>
+                        <h2>💬 Chat với Thành Lợi AI</h2>
+                        <p>Trợ lý thông minh - Model Minimax-M3</p>
                     </div>
-                    <span class="model-badge">✦ DeepSeek V4 Pro</span>
+                    <span class="model-badge">
+                        <i class="fas fa-robot"></i> Minimax-M3
+                    </span>
                 </div>
 
                 <div class="chat-messages" id="chatMessages"></div>
 
                 <div class="chat-input-container">
                     <div class="chat-input-wrapper">
-                        <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
+                        <textarea id="chatInput" placeholder="Nhập tin nhắn của bạn..." rows="1"></textarea>
                         <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
                 </div>
@@ -947,11 +955,8 @@
         </div>
     </div>
 
-    <!-- ===== LOAD SCRIPT DEFERRED ===== -->
-    <script defer>
-        // ============================================================
-        // LAZY LOADING - Defer non-critical JS
-        // ============================================================
+    <!-- ===== SCRIPT ===== -->
+    <script>
         (function() {
             'use strict';
 
@@ -968,9 +973,10 @@
                 codeIdCounter: 0,
             };
 
-            // API Configuration
-            const API_KEY = 'sk-da24f47662ffcef39efddaf2265c833ae9bcbbe7aa38122037adc6275fc1c9ae'; // ⚠️ Thay bằng API key của bạn
+
+            const API_KEY = 'sk-da24f47662ffcef39efddaf2265c833ae9bcbbe7aa38122037adc6275fc1c9ae'; // Thay bằng API key thật
             const API_URL = 'https://api.vilao.ai/v1/chat/completions';
+            const MODEL = 'mn/Minimax-M3';
 
             // DOM refs
             const $ = (id) => document.getElementById(id);
@@ -985,7 +991,7 @@
             const loadingScreen = $('loadingScreen');
 
             // ============================================================
-            // HIDE LOADING SCREEN
+            // HIDE LOADING
             // ============================================================
             function hideLoading() {
                 loadingScreen.classList.add('hidden');
@@ -998,12 +1004,10 @@
             // INIT
             // ============================================================
             document.addEventListener('DOMContentLoaded', () => {
-                // Hide loading after a brief delay (or immediately if cached)
                 if (document.readyState === 'complete') {
                     hideLoading();
                 } else {
                     window.addEventListener('load', hideLoading);
-                    // Fallback: hide after 1s if load event doesn't fire
                     setTimeout(hideLoading, 1000);
                 }
 
@@ -1033,8 +1037,8 @@
                     overlay.classList.remove('active');
                 });
 
-                if (!API_KEY || API_KEY === 'sk-') {
-                    addSystemMessage('⚠️ Please configure API Key in the code!');
+                if (!API_KEY || API_KEY === '') {
+                    addSystemMessage('⚠️ Vui lòng cấu hình API Key trong code!');
                 }
             });
 
@@ -1057,7 +1061,7 @@
                     id: state.conversations.length,
                     title: `Chat ${state.conversations.length + 1}`,
                     history: [],
-                    created_at: new Date().toLocaleString(),
+                    created_at: new Date().toLocaleString('vi-VN'),
                 };
 
                 state.conversations.push(conv);
@@ -1088,7 +1092,7 @@
             }
 
             function deleteConversation(index) {
-                if (!confirm('Delete this conversation?')) return;
+                if (!confirm('Xóa cuộc trò chuyện này?')) return;
                 state.conversations.splice(index, 1);
 
                 if (state.currentIndex === index) {
@@ -1121,13 +1125,13 @@
             // ============================================================
             function saveConversations() {
                 try {
-                    localStorage.setItem('deepseek_conversations', JSON.stringify(state.conversations));
+                    localStorage.setItem('thanhloi_conversations', JSON.stringify(state.conversations));
                 } catch (e) { /* ignore */ }
             }
 
             function loadConversations() {
                 try {
-                    const data = localStorage.getItem('deepseek_conversations');
+                    const data = localStorage.getItem('thanhloi_conversations');
                     if (data) state.conversations = JSON.parse(data);
                 } catch (e) {
                     state.conversations = [];
@@ -1142,63 +1146,67 @@
 
                 if (state.currentIndex < 0) {
                     chatMessages.innerHTML = `
-                            <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);">
-                                <div style="text-align:center;">
-                                    <div style="font-size:48px;margin-bottom:12px;">✦</div>
-                                    <p style="font-size:18px;font-weight:600;color:var(--text-secondary);">DeepSeek AI</p>
-                                    <p style="font-size:14px;">Start a new conversation to begin</p>
-                                </div>
+                        <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);">
+                            <div style="text-align:center;">
+                                <div style="font-size:56px;margin-bottom:16px;">✦</div>
+                                <p style="font-size:20px;font-weight:700;color:var(--text-secondary);">Thành Lợi AI</p>
+                                <p style="font-size:14px;margin-top:4px;">Trợ lý thông minh với Minimax-M3</p>
+                                <p style="font-size:13px;margin-top:12px;color:var(--text-muted);">
+                                    <i class="fas fa-plus-circle" style="color:var(--primary);"></i> 
+                                    Tạo cuộc trò chuyện mới để bắt đầu
+                                </p>
                             </div>
-                        `;
+                        </div>
+                    `;
                     return;
                 }
 
                 const conv = state.conversations[state.currentIndex];
                 if (state.currentHistory.length === 0) {
                     chatMessages.innerHTML = `
-                            <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:16px;">
-                                ${conv.created_at}
+                        <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:12px;margin-bottom:16px;">
+                            <i class="far fa-clock"></i> ${conv.created_at}
+                        </div>
+                        <div class="message ai">
+                            <div class="avatar">✦</div>
+                            <div class="bubble">
+                                <span class="label">Thành Lợi AI</span>
+                                👋 Xin chào! Tôi là Thành Lợi AI, trợ lý thông minh của bạn.<br>
+                                Hãy hỏi tôi bất cứ điều gì bạn cần biết!
                             </div>
-                            <div class="message ai">
-                                <div class="avatar">✦</div>
-                                <div class="bubble">
-                                    <span class="label">DeepSeek AI</span>
-                                    👋 Hello! I'm DeepSeek AI, your intelligent assistant.<br>
-                                    Ask me anything you'd like to know!
-                                </div>
-                            </div>
-                        `;
+                        </div>
+                    `;
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                     return;
                 }
 
                 let html = `
-                        <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:16px;">
-                            ${conv.created_at}
-                        </div>
-                    `;
+                    <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:12px;margin-bottom:16px;">
+                        <i class="far fa-clock"></i> ${conv.created_at}
+                    </div>
+                `;
 
                 for (const msg of state.currentHistory) {
                     if (msg.role === 'user') {
                         html += `
-                                <div class="message user">
-                                    <div class="avatar"><i class="fas fa-user"></i></div>
-                                    <div class="bubble">
-                                        <span class="label">You</span>
-                                        ${escapeHtml(msg.content)}
-                                    </div>
+                            <div class="message user">
+                                <div class="avatar"><i class="fas fa-user"></i></div>
+                                <div class="bubble">
+                                    <span class="label">Bạn</span>
+                                    ${escapeHtml(msg.content)}
                                 </div>
-                            `;
+                            </div>
+                        `;
                     } else {
                         html += `
-                                <div class="message ai">
-                                    <div class="avatar">✦</div>
-                                    <div class="bubble">
-                                        <span class="label">DeepSeek AI</span>
-                                        ${renderContent(msg.content)}
-                                    </div>
+                            <div class="message ai">
+                                <div class="avatar">✦</div>
+                                <div class="bubble">
+                                    <span class="label">Thành Lợi AI</span>
+                                    ${renderContent(msg.content)}
                                 </div>
-                            `;
+                            </div>
+                        `;
                     }
                 }
 
@@ -1224,16 +1232,16 @@
                         state.codeBlocks[codeId] = codeLines;
 
                         html += `
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span class="lang">📝 ${lang}</span>
-                                        <button class="copy-btn" onclick="copyCode(${codeId})">
-                                            <i class="fas fa-copy"></i> Copy
-                                        </button>
-                                    </div>
-                                    <pre>${escapeHtml(codeLines)}</pre>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="lang">📝 ${lang}</span>
+                                    <button class="copy-btn" onclick="copyCode(${codeId})">
+                                        <i class="fas fa-copy"></i> Sao chép
+                                    </button>
                                 </div>
-                            `;
+                                <pre>${escapeHtml(codeLines)}</pre>
+                            </div>
+                        `;
                     } else {
                         html += `<span>${escapeHtml(part)}</span>`;
                     }
@@ -1245,10 +1253,11 @@
             function renderConvList() {
                 if (state.conversations.length === 0) {
                     convList.innerHTML = `
-                            <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">
-                                No conversations yet
-                            </div>
-                        `;
+                        <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">
+                            <i class="far fa-comment" style="font-size:24px;display:block;margin-bottom:8px;"></i>
+                            Chưa có cuộc trò chuyện
+                        </div>
+                    `;
                     return;
                 }
 
@@ -1257,13 +1266,13 @@
                     const conv = state.conversations[i];
                     const active = i === state.currentIndex ? 'active' : '';
                     html += `
-                            <div class="conv-item ${active}" onclick="loadConversation(${i})">
-                                <span class="title">${escapeHtml(conv.title)}</span>
-                                <button class="delete-btn" onclick="event.stopPropagation();deleteConversation(${i})">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        `;
+                        <div class="conv-item ${active}" onclick="loadConversation(${i})">
+                            <span class="title"><i class="far fa-comment-dots" style="margin-right:8px;font-size:12px;"></i>${escapeHtml(conv.title)}</span>
+                            <button class="delete-btn" onclick="event.stopPropagation();deleteConversation(${i})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
                 }
                 convList.innerHTML = html;
             }
@@ -1280,32 +1289,32 @@
 
             function addSystemMessage(text) {
                 const html = `
-                        <div class="message ai">
-                            <div class="avatar">⚠️</div>
-                            <div class="bubble" style="border-color:#f59e0b;">
-                                <span class="label" style="color:#f59e0b;">System</span>
-                                ${escapeHtml(text)}
-                            </div>
+                    <div class="message ai">
+                        <div class="avatar">⚠️</div>
+                        <div class="bubble" style="border-color:#f59e0b;">
+                            <span class="label" style="color:#f59e0b;">Hệ thống</span>
+                            ${escapeHtml(text)}
                         </div>
-                    `;
+                    </div>
+                `;
                 chatMessages.insertAdjacentHTML('beforeend', html);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
             function showThinking() {
                 const html = `
-                        <div class="message ai" id="thinkingMsg">
-                            <div class="avatar">✦</div>
-                            <div class="bubble">
-                                <div class="thinking">
-                                    <span>AI is thinking</span>
-                                    <div class="dots">
-                                        <span></span><span></span><span></span>
-                                    </div>
+                    <div class="message ai" id="thinkingMsg">
+                        <div class="avatar">✦</div>
+                        <div class="bubble">
+                            <div class="thinking">
+                                <span>AI đang suy nghĩ</span>
+                                <div class="dots">
+                                    <span></span><span></span><span></span>
                                 </div>
                             </div>
                         </div>
-                    `;
+                    </div>
+                `;
                 chatMessages.insertAdjacentHTML('beforeend', html);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
@@ -1324,8 +1333,8 @@
                 const input = chatInput.value.trim();
                 if (!input) return;
 
-                if (!API_KEY || API_KEY === 'sk-') {
-                    addSystemMessage('⚠️ Please configure API Key in the code!');
+                if (!API_KEY || API_KEY === '') {
+                    addSystemMessage('⚠️ Vui lòng cấu hình API Key trong code!');
                     return;
                 }
 
@@ -1350,7 +1359,7 @@
                     await askAI(input);
                 } catch (error) {
                     removeThinking();
-                    addSystemMessage(`❌ Error: ${error.message}`);
+                    addSystemMessage(`❌ Lỗi: ${error.message}`);
                 } finally {
                     state.isSending = false;
                     sendBtn.disabled = false;
@@ -1372,7 +1381,7 @@
                         'Authorization': `Bearer ${API_KEY}`,
                     },
                     body: JSON.stringify({
-                        model: 'mn/Minimax-M3',
+                        model: MODEL,
                         messages: messages,
                         stream: false,
                     }),
@@ -1382,13 +1391,13 @@
 
                 if (!response.ok) {
                     if (data.error?.message?.includes('API key')) {
-                        throw new Error('Invalid API Key! Please check your API key.');
+                        throw new Error('API Key không hợp lệ! Vui lòng kiểm tra lại.');
                     }
-                    throw new Error(data.error?.message || 'Unknown API error');
+                    throw new Error(data.error?.message || 'Lỗi không xác định từ API');
                 }
 
                 const aiText = data.choices?.[0]?.message?.content;
-                if (!aiText) throw new Error('No response from AI');
+                if (!aiText) throw new Error('Không nhận được phản hồi từ AI');
 
                 removeThinking();
                 addMessage(aiText, 'assistant');
@@ -1412,7 +1421,7 @@
                 const code = state.codeBlocks[codeId];
                 if (code) {
                     navigator.clipboard?.writeText(code).then(() => {
-                        showToast(`✅ Copied code #${codeId}!`);
+                        showToast(`✅ Đã sao chép code #${codeId}!`);
                     }).catch(() => {
                         const textarea = document.createElement('textarea');
                         textarea.value = code;
@@ -1420,7 +1429,7 @@
                         textarea.select();
                         document.execCommand('copy');
                         document.body.removeChild(textarea);
-                        showToast(`✅ Copied code #${codeId}!`);
+                        showToast(`✅ Đã sao chép code #${codeId}!`);
                     });
                 }
             }
@@ -1436,7 +1445,7 @@
 
             function clearMessages() {
                 if (state.currentIndex < 0) return;
-                if (!confirm('Clear all messages?')) return;
+                if (!confirm('Xóa tất cả tin nhắn trong cuộc trò chuyện này?')) return;
 
                 state.currentHistory = [];
                 state.conversations[state.currentIndex].history = [];
@@ -1445,23 +1454,24 @@
                 saveConversations();
                 renderChat();
                 renderConvList();
+                showToast('🗑️ Đã xóa tất cả tin nhắn');
             }
 
             function exportChat() {
                 if (state.currentHistory.length === 0) {
-                    showToast('No messages to export');
+                    showToast('Không có tin nhắn để xuất');
                     return;
                 }
 
-                let text = '✦ DeepSeek AI - Conversation Export\n';
-                text += `Exported: ${new Date().toLocaleString()}\n`;
+                let text = '✦ Thành Lợi AI - Xuất cuộc trò chuyện\n';
+                text += `Xuất: ${new Date().toLocaleString('vi-VN')}\n`;
                 text += '='.repeat(60) + '\n\n';
 
                 for (const msg of state.currentHistory) {
                     if (msg.role === 'user') {
-                        text += `🧑 You:\n${msg.content}\n\n`;
+                        text += `🧑 Bạn:\n${msg.content}\n\n`;
                     } else {
-                        text += `🤖 DeepSeek AI:\n${msg.content}\n\n`;
+                        text += `🤖 Thành Lợi AI:\n${msg.content}\n\n`;
                     }
                 }
 
@@ -1469,29 +1479,15 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `chat_export_${Date.now()}.txt`;
+                a.download = `thanhloi_chat_${Date.now()}.txt`;
                 a.click();
                 URL.revokeObjectURL(url);
-                showToast('✅ Chat exported!');
+                showToast('✅ Đã xuất cuộc trò chuyện!');
             }
 
             // ============================================================
-            // WINDOW CONTROLS
+            // EXPOSE GLOBALS
             // ============================================================
-            window.minimize = () => {
-                if (window.electron?.minimize) window.electron.minimize();
-                else showToast('Minimize (use in Electron)');
-            };
-            window.maximize = () => {
-                if (window.electron?.maximize) window.electron.maximize();
-                else showToast('Maximize (use in Electron)');
-            };
-            window.close = () => {
-                if (window.electron?.close) window.electron.close();
-                else if (confirm('Close application?')) window.close();
-            };
-
-            // Expose functions globally
             window.toggleSidebar = toggleSidebar;
             window.newChat = newChat;
             window.loadConversation = loadConversation;
