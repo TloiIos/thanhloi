@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DeepSeek AI Chat</title>
-    <!-- Font Awesome cho icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <!-- Google Fonts -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- ===== PRELOAD & PRECONNECT ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://api.vilao.ai" />
+    
+    <!-- ===== PRELOAD FONTS ===== -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" />
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" />
+    
+    <!-- ===== FONTS ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- ===== PWA META ===== -->
+    <link rel="manifest" href="data:application/json,{}" />
+    <meta name="theme-color" content="#0b0b12" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- ===== SEO META ===== -->
+    <title>ThanhLoi AI Chat</title>
+    <meta name="description" content="DeepSeek AI Chat - Intelligent AI Assistant" />
+    <meta name="keywords" content="AI, Chat, ThanhLoi, Assistant" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+    
     <style>
-        /* ===== RESET & VARIABLES ===== */
+        /* ===== CRITICAL CSS (Inline for faster load) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -58,6 +83,52 @@
             display: flex;
             flex-direction: column;
             position: relative;
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-screen .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-screen .logo-text {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .loading-screen .logo-text span {
+            color: var(--secondary);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* ===== TITLE BAR ===== */
@@ -122,14 +193,13 @@
             color: white;
         }
 
-        /* ===== MAIN LAYOUT ===== */
+        /* ===== SIDEBAR & CHAT ===== */
         .main-layout {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 260px;
             background: var(--bg-secondary);
@@ -146,7 +216,7 @@
             width: 64px;
         }
 
-        .sidebar.collapsed .sidebar-content > *:not(.sidebar-header) {
+        .sidebar.collapsed .sidebar-content>*:not(.sidebar-header) {
             opacity: 0;
             pointer-events: none;
         }
@@ -157,7 +227,6 @@
             overflow: hidden;
         }
 
-        /* Sidebar Header */
         .sidebar-header {
             padding: 16px 16px 12px 16px;
             border-bottom: 1px solid var(--border-color);
@@ -237,7 +306,6 @@
             color: var(--text-primary);
         }
 
-        /* New Chat Button */
         .new-chat-btn {
             margin: 12px 12px 8px 12px;
             padding: 10px 16px;
@@ -262,11 +330,6 @@
             box-shadow: var(--shadow-glow);
         }
 
-        .new-chat-btn i {
-            font-size: 14px;
-        }
-
-        /* Conversation List */
         .conv-list {
             flex: 1;
             overflow-y: auto;
@@ -345,7 +408,6 @@
             color: #ef4444;
         }
 
-        /* Sidebar Footer */
         .sidebar-footer {
             padding: 12px 16px;
             border-top: 1px solid var(--border-color);
@@ -373,8 +435,13 @@
         }
 
         @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
         }
 
         .sidebar-footer .actions {
@@ -404,7 +471,6 @@
             color: #ef4444;
         }
 
-        /* ===== CHAT PANEL ===== */
         .chat-panel {
             flex: 1;
             display: flex;
@@ -413,7 +479,6 @@
             min-width: 0;
         }
 
-        /* Chat Header */
         .chat-header {
             padding: 16px 24px;
             background: var(--bg-secondary);
@@ -459,7 +524,6 @@
             font-weight: 500;
         }
 
-        /* Chat Messages */
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -479,7 +543,6 @@
             border-radius: 4px;
         }
 
-        /* Message Styles */
         .message {
             display: flex;
             gap: 12px;
@@ -550,7 +613,6 @@
             display: block;
         }
 
-        /* Code Block */
         .code-block {
             background: #0d0d14;
             border-radius: var(--radius-sm);
@@ -600,7 +662,6 @@
             word-break: break-all;
         }
 
-        /* Thinking Animation */
         .thinking {
             display: flex;
             align-items: center;
@@ -623,15 +684,26 @@
             animation: thinkingDot 1.4s infinite;
         }
 
-        .thinking .dots span:nth-child(2) { animation-delay: 0.2s; }
-        .thinking .dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes thinkingDot {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
-            30% { transform: translateY(-6px); opacity: 1; }
+        .thinking .dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .thinking .dots span:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
-        /* ===== CHAT INPUT ===== */
+        @keyframes thinkingDot {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.3;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+
         .chat-input-container {
             padding: 12px 20px 16px 20px;
             background: var(--bg-secondary);
@@ -700,7 +772,6 @@
             transform: none;
         }
 
-        /* ===== TOAST NOTIFICATION ===== */
         .toast {
             position: fixed;
             top: 20px;
@@ -763,7 +834,7 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: rgba(0,0,0,0.5);
+                background: rgba(0, 0, 0, 0.5);
                 z-index: 99;
             }
             .sidebar-overlay.active {
@@ -783,20 +854,26 @@
 </head>
 <body>
 
-    <!-- Toast Notification -->
+    <!-- ===== LOADING SCREEN ===== -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <div class="logo-text">✦ Deep<span>Seek</span></div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
 
-    <!-- Mobile Overlay -->
+    <!-- ===== MOBILE OVERLAY ===== -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- App Container -->
+    <!-- ===== APP ===== -->
     <div class="app-container">
 
         <!-- Title Bar -->
         <div class="title-bar">
             <div class="title-bar-left">
                 <span class="icon">✦</span>
-                <span>DeepSeek AI</span>
+                <span>ThanhLoi AI</span>
             </div>
             <div class="title-bar-right">
                 <button class="window-btn" onclick="window.minimize()">─</button>
@@ -847,7 +924,6 @@
 
             <!-- Chat Panel -->
             <div class="chat-panel">
-                <!-- Chat Header -->
                 <div class="chat-header">
                     <div class="info">
                         <h2>💬 Chat with DeepSeek</h2>
@@ -856,12 +932,8 @@
                     <span class="model-badge">✦ DeepSeek V4 Pro</span>
                 </div>
 
-                <!-- Messages -->
-                <div class="chat-messages" id="chatMessages">
-                    <!-- Messages will be rendered here -->
-                </div>
+                <div class="chat-messages" id="chatMessages"></div>
 
-                <!-- Input -->
                 <div class="chat-input-container">
                     <div class="chat-input-wrapper">
                         <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
@@ -875,536 +947,561 @@
         </div>
     </div>
 
-    <script>
+    <!-- ===== LOAD SCRIPT DEFERRED ===== -->
+    <script defer>
         // ============================================================
-        // STATE
+        // LAZY LOADING - Defer non-critical JS
         // ============================================================
-        const state = {
-            conversations: [],
-            currentIndex: -1,
-            currentHistory: [],
-            isSending: false,
-            isSidebarCollapsed: false,
-            codeBlocks: {},
-            codeIdCounter: 0,
-        };
+        (function() {
+            'use strict';
 
-        // API Configuration (⚠️ Thay bằng API key của bạn)
-        const API_KEY = 'sk-53ecd824d3610ee9742057d0aa15e9dca39d258950b0a47929e0f9b130f75a9c';
-        const API_URL = 'https://api.vilao.ai/v1/chat/completions';
+            // ============================================================
+            // STATE
+            // ============================================================
+            const state = {
+                conversations: [],
+                currentIndex: -1,
+                currentHistory: [],
+                isSending: false,
+                isSidebarCollapsed: false,
+                codeBlocks: {},
+                codeIdCounter: 0,
+            };
 
-        // DOM refs
-        const $ = (id) => document.getElementById(id);
-        const chatMessages = $('chatMessages');
-        const chatInput = $('chatInput');
-        const sendBtn = $('sendBtn');
-        const convList = $('convList');
-        const sidebar = $('sidebar');
-        const toggleIcon = $('toggleIcon');
-        const toast = $('toast');
-        const overlay = $('sidebarOverlay');
+            // API Configuration
+            const API_KEY = 'sk-da24f47662ffcef39efddaf2265c833ae9bcbbe7aa38122037adc6275fc1c9ae'; // ⚠️ Thay bằng API key của bạn
+            const API_URL = 'https://api.vilao.ai/v1/chat/completions';
 
-        // ============================================================
-        // INIT
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            loadConversations();
-            if (state.conversations.length === 0) {
-                newChat();
-            } else {
-                loadConversation(state.conversations.length - 1);
+            // DOM refs
+            const $ = (id) => document.getElementById(id);
+            const chatMessages = $('chatMessages');
+            const chatInput = $('chatInput');
+            const sendBtn = $('sendBtn');
+            const convList = $('convList');
+            const sidebar = $('sidebar');
+            const toggleIcon = $('toggleIcon');
+            const toast = $('toast');
+            const overlay = $('sidebarOverlay');
+            const loadingScreen = $('loadingScreen');
+
+            // ============================================================
+            // HIDE LOADING SCREEN
+            // ============================================================
+            function hideLoading() {
+                loadingScreen.classList.add('hidden');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
             }
-            renderConvList();
 
-            // Auto-resize textarea
-            chatInput.addEventListener('input', autoResize);
-            chatInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
+            // ============================================================
+            // INIT
+            // ============================================================
+            document.addEventListener('DOMContentLoaded', () => {
+                // Hide loading after a brief delay (or immediately if cached)
+                if (document.readyState === 'complete') {
+                    hideLoading();
+                } else {
+                    window.addEventListener('load', hideLoading);
+                    // Fallback: hide after 1s if load event doesn't fire
+                    setTimeout(hideLoading, 1000);
+                }
+
+                loadConversations();
+                if (state.conversations.length === 0) {
+                    newChat();
+                } else {
+                    loadConversation(state.conversations.length - 1);
+                }
+                renderConvList();
+
+                chatInput.addEventListener('input', autoResize);
+                chatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+
+                // Mobile toggle
+                document.querySelector('.title-bar-left .icon')?.addEventListener('click', () => {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('active');
+                });
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+
+                if (!API_KEY || API_KEY === 'sk-') {
+                    addSystemMessage('⚠️ Please configure API Key in the code!');
                 }
             });
 
-            // Mobile toggle
-            const mobileToggle = document.querySelector('.title-bar-left .icon');
-            mobileToggle?.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('active');
-            });
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-            });
-
-            // Check API key
-            if (!API_KEY || API_KEY === 'sk-') {
-                addSystemMessage('⚠️ Please configure API Key in the code!');
-            }
-        });
-
-        // ============================================================
-        // SIDEBAR TOGGLE
-        // ============================================================
-        function toggleSidebar() {
-            state.isSidebarCollapsed = !state.isSidebarCollapsed;
-            sidebar.classList.toggle('collapsed');
-            toggleIcon.className = state.isSidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
-        }
-
-        // ============================================================
-        // CONVERSATION MANAGEMENT
-        // ============================================================
-        function newChat() {
-            if (state.currentHistory.length > 0) {
-                saveCurrentConversation();
+            // ============================================================
+            // SIDEBAR TOGGLE
+            // ============================================================
+            function toggleSidebar() {
+                state.isSidebarCollapsed = !state.isSidebarCollapsed;
+                sidebar.classList.toggle('collapsed');
+                toggleIcon.className = state.isSidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
             }
 
-            const conv = {
-                id: state.conversations.length,
-                title: `Chat ${state.conversations.length + 1}`,
-                history: [],
-                created_at: new Date().toLocaleString(),
-            };
+            // ============================================================
+            // CONVERSATION MANAGEMENT
+            // ============================================================
+            function newChat() {
+                if (state.currentHistory.length > 0) saveCurrentConversation();
 
-            state.conversations.push(conv);
-            state.currentIndex = state.conversations.length - 1;
-            state.currentHistory = [];
-            state.codeBlocks = {};
-            state.codeIdCounter = 0;
+                const conv = {
+                    id: state.conversations.length,
+                    title: `Chat ${state.conversations.length + 1}`,
+                    history: [],
+                    created_at: new Date().toLocaleString(),
+                };
 
-            renderChat();
-            renderConvList();
-            saveConversations();
-
-            // Close mobile sidebar
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        }
-
-        function loadConversation(index) {
-            if (index < 0 || index >= state.conversations.length) return;
-            saveCurrentConversation();
-
-            state.currentIndex = index;
-            state.currentHistory = state.conversations[index].history.slice();
-            state.codeBlocks = {};
-            state.codeIdCounter = 0;
-
-            renderChat();
-            renderConvList();
-        }
-
-        function deleteConversation(index) {
-            if (!confirm('Delete this conversation?')) return;
-            state.conversations.splice(index, 1);
-
-            if (state.currentIndex === index) {
-                state.currentIndex = -1;
+                state.conversations.push(conv);
+                state.currentIndex = state.conversations.length - 1;
                 state.currentHistory = [];
                 state.codeBlocks = {};
                 state.codeIdCounter = 0;
-                if (state.conversations.length > 0) {
-                    loadConversation(0);
-                } else {
-                    newChat();
-                }
-            } else if (state.currentIndex > index) {
-                state.currentIndex--;
-            }
 
-            renderConvList();
-            saveConversations();
-        }
-
-        function saveCurrentConversation() {
-            if (state.currentIndex >= 0 && state.currentHistory.length > 0) {
-                state.conversations[state.currentIndex].history = state.currentHistory.slice();
+                renderChat();
+                renderConvList();
                 saveConversations();
+
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
             }
-        }
 
-        // ============================================================
-        // STORAGE
-        // ============================================================
-        function saveConversations() {
-            try {
-                localStorage.setItem('deepseek_conversations', JSON.stringify(state.conversations));
-            } catch (e) { /* ignore */ }
-        }
+            function loadConversation(index) {
+                if (index < 0 || index >= state.conversations.length) return;
+                saveCurrentConversation();
 
-        function loadConversations() {
-            try {
-                const data = localStorage.getItem('deepseek_conversations');
-                if (data) {
-                    state.conversations = JSON.parse(data);
+                state.currentIndex = index;
+                state.currentHistory = state.conversations[index].history.slice();
+                state.codeBlocks = {};
+                state.codeIdCounter = 0;
+
+                renderChat();
+                renderConvList();
+            }
+
+            function deleteConversation(index) {
+                if (!confirm('Delete this conversation?')) return;
+                state.conversations.splice(index, 1);
+
+                if (state.currentIndex === index) {
+                    state.currentIndex = -1;
+                    state.currentHistory = [];
+                    state.codeBlocks = {};
+                    state.codeIdCounter = 0;
+                    if (state.conversations.length > 0) {
+                        loadConversation(0);
+                    } else {
+                        newChat();
+                    }
+                } else if (state.currentIndex > index) {
+                    state.currentIndex--;
                 }
-            } catch (e) {
-                state.conversations = [];
-            }
-        }
 
-        // ============================================================
-        // RENDER
-        // ============================================================
-        function renderChat() {
-            chatMessages.innerHTML = '';
-
-            if (state.currentIndex < 0) {
-                chatMessages.innerHTML = `
-                    <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);">
-                        <div style="text-align:center;">
-                            <div style="font-size:48px;margin-bottom:12px;">✦</div>
-                            <p style="font-size:18px;font-weight:600;color:var(--text-secondary);">DeepSeek AI</p>
-                            <p style="font-size:14px;">Start a new conversation to begin</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            const conv = state.conversations[state.currentIndex];
-            if (state.currentHistory.length === 0) {
-                // Welcome message
-                const html = `
-                    <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:16px;">
-                        ${conv.created_at}
-                    </div>
-                    <div class="message ai">
-                        <div class="avatar">✦</div>
-                        <div class="bubble">
-                            <span class="label">DeepSeek AI</span>
-                            👋 Hello! I'm DeepSeek AI, your intelligent assistant.<br>
-                            Ask me anything you'd like to know!
-                        </div>
-                    </div>
-                `;
-                chatMessages.innerHTML = html;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                return;
-            }
-
-            let html = `
-                <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:16px;">
-                    ${conv.created_at}
-                </div>
-            `;
-
-            for (const msg of state.currentHistory) {
-                if (msg.role === 'user') {
-                    html += `
-                        <div class="message user">
-                            <div class="avatar"><i class="fas fa-user"></i></div>
-                            <div class="bubble">
-                                <span class="label">You</span>
-                                ${escapeHtml(msg.content)}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div class="message ai">
-                            <div class="avatar">✦</div>
-                            <div class="bubble">
-                                <span class="label">DeepSeek AI</span>
-                                ${renderContent(msg.content)}
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-
-            chatMessages.innerHTML = html;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function renderContent(text) {
-            // Process code blocks
-            const parts = text.split(/(```[\s\S]*?```)/);
-            let html = '';
-
-            for (const part of parts) {
-                if (!part.trim()) continue;
-
-                if (part.startsWith('```') && part.endsWith('```')) {
-                    const codeContent = part.slice(3, -3).trim();
-                    const lines = codeContent.split('\n');
-                    const lang = lines[0] || '';
-                    const codeLines = lines.slice(1).join('\n');
-
-                    state.codeIdCounter++;
-                    const codeId = state.codeIdCounter;
-                    state.codeBlocks[codeId] = codeLines;
-
-                    html += `
-                        <div class="code-block">
-                            <div class="code-header">
-                                <span class="lang">📝 ${lang}</span>
-                                <button class="copy-btn" onclick="copyCode(${codeId})">
-                                    <i class="fas fa-copy"></i> Copy
-                                </button>
-                            </div>
-                            <pre>${escapeHtml(codeLines)}</pre>
-                        </div>
-                    `;
-                } else {
-                    html += `<span>${escapeHtml(part)}</span>`;
-                }
-            }
-
-            return html;
-        }
-
-        function renderConvList() {
-            if (state.conversations.length === 0) {
-                convList.innerHTML = `
-                    <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">
-                        No conversations yet
-                    </div>
-                `;
-                return;
-            }
-
-            let html = '';
-            for (let i = 0; i < state.conversations.length; i++) {
-                const conv = state.conversations[i];
-                const active = i === state.currentIndex ? 'active' : '';
-                html += `
-                    <div class="conv-item ${active}" onclick="loadConversation(${i})">
-                        <span class="title">${escapeHtml(conv.title)}</span>
-                        <button class="delete-btn" onclick="event.stopPropagation();deleteConversation(${i})">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
-            }
-            convList.innerHTML = html;
-        }
-
-        // ============================================================
-        // MESSAGES
-        // ============================================================
-        function addMessage(content, role) {
-            state.currentHistory.push({ role, content });
-            renderChat();
-            saveCurrentConversation();
-            renderConvList();
-        }
-
-        function addSystemMessage(text) {
-            const html = `
-                <div class="message ai">
-                    <div class="avatar">⚠️</div>
-                    <div class="bubble" style="border-color:#f59e0b;">
-                        <span class="label" style="color:#f59e0b;">System</span>
-                        ${escapeHtml(text)}
-                    </div>
-                </div>
-            `;
-            chatMessages.insertAdjacentHTML('beforeend', html);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function showThinking() {
-            const html = `
-                <div class="message ai" id="thinkingMsg">
-                    <div class="avatar">✦</div>
-                    <div class="bubble">
-                        <div class="thinking">
-                            <span>AI is thinking</span>
-                            <div class="dots">
-                                <span></span><span></span><span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            chatMessages.insertAdjacentHTML('beforeend', html);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function removeThinking() {
-            const el = document.getElementById('thinkingMsg');
-            if (el) el.remove();
-        }
-
-        // ============================================================
-        // SEND MESSAGE
-        // ============================================================
-        async function sendMessage() {
-            if (state.isSending) return;
-
-            const input = chatInput.value.trim();
-            if (!input) return;
-
-            if (!API_KEY || API_KEY === 'sk-') {
-                addSystemMessage('⚠️ Please configure API Key in the code!');
-                return;
-            }
-
-            state.isSending = true;
-            sendBtn.disabled = true;
-            chatInput.disabled = true;
-
-            // Update conversation title
-            if (state.currentHistory.length === 0 && state.currentIndex >= 0) {
-                const title = input.length > 30 ? input.slice(0, 30) + '...' : input;
-                state.conversations[state.currentIndex].title = title;
                 renderConvList();
                 saveConversations();
             }
 
-            addMessage(input, 'user');
-            chatInput.value = '';
-            autoResize();
-
-            showThinking();
-
-            try {
-                await askAI(input);
-            } catch (error) {
-                removeThinking();
-                addSystemMessage(`❌ Error: ${error.message}`);
-            } finally {
-                state.isSending = false;
-                sendBtn.disabled = false;
-                chatInput.disabled = false;
-                chatInput.focus();
-            }
-        }
-
-        async function askAI(userInput) {
-            const messages = state.currentHistory.map(m => ({
-                role: m.role,
-                content: m.content
-            }));
-
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_KEY}`,
-                },
-                body: JSON.stringify({
-                    model: 'deepseek/deepseek-v4-pro',
-                    messages: messages,
-                    stream: false,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                if (data.error?.message?.includes('API key')) {
-                    throw new Error('Invalid API Key! Please check your API key.');
+            function saveCurrentConversation() {
+                if (state.currentIndex >= 0 && state.currentHistory.length > 0) {
+                    state.conversations[state.currentIndex].history = state.currentHistory.slice();
+                    saveConversations();
                 }
-                throw new Error(data.error?.message || 'Unknown API error');
             }
 
-            const aiText = data.choices?.[0]?.message?.content;
-            if (!aiText) throw new Error('No response from AI');
+            // ============================================================
+            // STORAGE
+            // ============================================================
+            function saveConversations() {
+                try {
+                    localStorage.setItem('deepseek_conversations', JSON.stringify(state.conversations));
+                } catch (e) { /* ignore */ }
+            }
 
-            removeThinking();
-            addMessage(aiText, 'assistant');
-        }
+            function loadConversations() {
+                try {
+                    const data = localStorage.getItem('deepseek_conversations');
+                    if (data) state.conversations = JSON.parse(data);
+                } catch (e) {
+                    state.conversations = [];
+                }
+            }
 
-        // ============================================================
-        // UTILITIES
-        // ============================================================
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+            // ============================================================
+            // RENDER
+            // ============================================================
+            function renderChat() {
+                chatMessages.innerHTML = '';
 
-        function autoResize() {
-            chatInput.style.height = 'auto';
-            chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
-        }
+                if (state.currentIndex < 0) {
+                    chatMessages.innerHTML = `
+                            <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);">
+                                <div style="text-align:center;">
+                                    <div style="font-size:48px;margin-bottom:12px;">✦</div>
+                                    <p style="font-size:18px;font-weight:600;color:var(--text-secondary);">DeepSeek AI</p>
+                                    <p style="font-size:14px;">Start a new conversation to begin</p>
+                                </div>
+                            </div>
+                        `;
+                    return;
+                }
 
-        function copyCode(codeId) {
-            const code = state.codeBlocks[codeId];
-            if (code) {
-                navigator.clipboard?.writeText(code).then(() => {
-                    showToast(`✅ Copied code #${codeId}!`);
-                }).catch(() => {
-                    // Fallback
-                    const textarea = document.createElement('textarea');
-                    textarea.value = code;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    showToast(`✅ Copied code #${codeId}!`);
+                const conv = state.conversations[state.currentIndex];
+                if (state.currentHistory.length === 0) {
+                    chatMessages.innerHTML = `
+                            <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:16px;">
+                                ${conv.created_at}
+                            </div>
+                            <div class="message ai">
+                                <div class="avatar">✦</div>
+                                <div class="bubble">
+                                    <span class="label">DeepSeek AI</span>
+                                    👋 Hello! I'm DeepSeek AI, your intelligent assistant.<br>
+                                    Ask me anything you'd like to know!
+                                </div>
+                            </div>
+                        `;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    return;
+                }
+
+                let html = `
+                        <div style="padding:8px 0;text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:16px;">
+                            ${conv.created_at}
+                        </div>
+                    `;
+
+                for (const msg of state.currentHistory) {
+                    if (msg.role === 'user') {
+                        html += `
+                                <div class="message user">
+                                    <div class="avatar"><i class="fas fa-user"></i></div>
+                                    <div class="bubble">
+                                        <span class="label">You</span>
+                                        ${escapeHtml(msg.content)}
+                                    </div>
+                                </div>
+                            `;
+                    } else {
+                        html += `
+                                <div class="message ai">
+                                    <div class="avatar">✦</div>
+                                    <div class="bubble">
+                                        <span class="label">DeepSeek AI</span>
+                                        ${renderContent(msg.content)}
+                                    </div>
+                                </div>
+                            `;
+                    }
+                }
+
+                chatMessages.innerHTML = html;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function renderContent(text) {
+                const parts = text.split(/(```[\s\S]*?```)/);
+                let html = '';
+
+                for (const part of parts) {
+                    if (!part.trim()) continue;
+
+                    if (part.startsWith('```') && part.endsWith('```')) {
+                        const codeContent = part.slice(3, -3).trim();
+                        const lines = codeContent.split('\n');
+                        const lang = lines[0] || '';
+                        const codeLines = lines.slice(1).join('\n');
+
+                        state.codeIdCounter++;
+                        const codeId = state.codeIdCounter;
+                        state.codeBlocks[codeId] = codeLines;
+
+                        html += `
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span class="lang">📝 ${lang}</span>
+                                        <button class="copy-btn" onclick="copyCode(${codeId})">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                    <pre>${escapeHtml(codeLines)}</pre>
+                                </div>
+                            `;
+                    } else {
+                        html += `<span>${escapeHtml(part)}</span>`;
+                    }
+                }
+
+                return html;
+            }
+
+            function renderConvList() {
+                if (state.conversations.length === 0) {
+                    convList.innerHTML = `
+                            <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">
+                                No conversations yet
+                            </div>
+                        `;
+                    return;
+                }
+
+                let html = '';
+                for (let i = 0; i < state.conversations.length; i++) {
+                    const conv = state.conversations[i];
+                    const active = i === state.currentIndex ? 'active' : '';
+                    html += `
+                            <div class="conv-item ${active}" onclick="loadConversation(${i})">
+                                <span class="title">${escapeHtml(conv.title)}</span>
+                                <button class="delete-btn" onclick="event.stopPropagation();deleteConversation(${i})">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                }
+                convList.innerHTML = html;
+            }
+
+            // ============================================================
+            // MESSAGES
+            // ============================================================
+            function addMessage(content, role) {
+                state.currentHistory.push({ role, content });
+                renderChat();
+                saveCurrentConversation();
+                renderConvList();
+            }
+
+            function addSystemMessage(text) {
+                const html = `
+                        <div class="message ai">
+                            <div class="avatar">⚠️</div>
+                            <div class="bubble" style="border-color:#f59e0b;">
+                                <span class="label" style="color:#f59e0b;">System</span>
+                                ${escapeHtml(text)}
+                            </div>
+                        </div>
+                    `;
+                chatMessages.insertAdjacentHTML('beforeend', html);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showThinking() {
+                const html = `
+                        <div class="message ai" id="thinkingMsg">
+                            <div class="avatar">✦</div>
+                            <div class="bubble">
+                                <div class="thinking">
+                                    <span>AI is thinking</span>
+                                    <div class="dots">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                chatMessages.insertAdjacentHTML('beforeend', html);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function removeThinking() {
+                const el = document.getElementById('thinkingMsg');
+                if (el) el.remove();
+            }
+
+            // ============================================================
+            // SEND MESSAGE
+            // ============================================================
+            async function sendMessage() {
+                if (state.isSending) return;
+
+                const input = chatInput.value.trim();
+                if (!input) return;
+
+                if (!API_KEY || API_KEY === 'sk-') {
+                    addSystemMessage('⚠️ Please configure API Key in the code!');
+                    return;
+                }
+
+                state.isSending = true;
+                sendBtn.disabled = true;
+                chatInput.disabled = true;
+
+                if (state.currentHistory.length === 0 && state.currentIndex >= 0) {
+                    const title = input.length > 30 ? input.slice(0, 30) + '...' : input;
+                    state.conversations[state.currentIndex].title = title;
+                    renderConvList();
+                    saveConversations();
+                }
+
+                addMessage(input, 'user');
+                chatInput.value = '';
+                autoResize();
+
+                showThinking();
+
+                try {
+                    await askAI(input);
+                } catch (error) {
+                    removeThinking();
+                    addSystemMessage(`❌ Error: ${error.message}`);
+                } finally {
+                    state.isSending = false;
+                    sendBtn.disabled = false;
+                    chatInput.disabled = false;
+                    chatInput.focus();
+                }
+            }
+
+            async function askAI(userInput) {
+                const messages = state.currentHistory.map(m => ({
+                    role: m.role,
+                    content: m.content
+                }));
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`,
+                    },
+                    body: JSON.stringify({
+                        model: 'mn/Minimax-M3',
+                        messages: messages,
+                        stream: false,
+                    }),
                 });
-            }
-        }
 
-        function showToast(message) {
-            toast.textContent = message;
-            toast.classList.add('show');
-            clearTimeout(toast._timer);
-            toast._timer = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2500);
-        }
+                const data = await response.json();
 
-        function clearMessages() {
-            if (state.currentIndex < 0) return;
-            if (!confirm('Clear all messages?')) return;
+                if (!response.ok) {
+                    if (data.error?.message?.includes('API key')) {
+                        throw new Error('Invalid API Key! Please check your API key.');
+                    }
+                    throw new Error(data.error?.message || 'Unknown API error');
+                }
 
-            state.currentHistory = [];
-            state.conversations[state.currentIndex].history = [];
-            state.codeBlocks = {};
-            state.codeIdCounter = 0;
-            saveConversations();
-            renderChat();
-            renderConvList();
-        }
+                const aiText = data.choices?.[0]?.message?.content;
+                if (!aiText) throw new Error('No response from AI');
 
-        function exportChat() {
-            if (state.currentHistory.length === 0) {
-                showToast('No messages to export');
-                return;
+                removeThinking();
+                addMessage(aiText, 'assistant');
             }
 
-            let text = '✦ DeepSeek AI - Conversation Export\n';
-            text += `Exported: ${new Date().toLocaleString()}\n`;
-            text += '='.repeat(60) + '\n\n';
+            // ============================================================
+            // UTILITIES
+            // ============================================================
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
 
-            for (const msg of state.currentHistory) {
-                if (msg.role === 'user') {
-                    text += `🧑 You:\n${msg.content}\n\n`;
-                } else {
-                    text += `🤖 DeepSeek AI:\n${msg.content}\n\n`;
+            function autoResize() {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+            }
+
+            function copyCode(codeId) {
+                const code = state.codeBlocks[codeId];
+                if (code) {
+                    navigator.clipboard?.writeText(code).then(() => {
+                        showToast(`✅ Copied code #${codeId}!`);
+                    }).catch(() => {
+                        const textarea = document.createElement('textarea');
+                        textarea.value = code;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showToast(`✅ Copied code #${codeId}!`);
+                    });
                 }
             }
 
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `chat_export_${Date.now()}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('✅ Chat exported!');
-        }
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                clearTimeout(toast._timer);
+                toast._timer = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2500);
+            }
 
-        // ============================================================
-        // WINDOW CONTROLS (Electron-like)
-        // ============================================================
-        // These are dummy functions - in a real app, you'd use Electron's IPC
-        window.minimize = () => {
-            if (window.electron?.minimize) window.electron.minimize();
-            else showToast('Minimize (use in Electron)');
-        };
-        window.maximize = () => {
-            if (window.electron?.maximize) window.electron.maximize();
-            else showToast('Maximize (use in Electron)');
-        };
-        window.close = () => {
-            if (window.electron?.close) window.electron.close();
-            else if (confirm('Close application?')) window.close();
-        };
+            function clearMessages() {
+                if (state.currentIndex < 0) return;
+                if (!confirm('Clear all messages?')) return;
+
+                state.currentHistory = [];
+                state.conversations[state.currentIndex].history = [];
+                state.codeBlocks = {};
+                state.codeIdCounter = 0;
+                saveConversations();
+                renderChat();
+                renderConvList();
+            }
+
+            function exportChat() {
+                if (state.currentHistory.length === 0) {
+                    showToast('No messages to export');
+                    return;
+                }
+
+                let text = '✦ DeepSeek AI - Conversation Export\n';
+                text += `Exported: ${new Date().toLocaleString()}\n`;
+                text += '='.repeat(60) + '\n\n';
+
+                for (const msg of state.currentHistory) {
+                    if (msg.role === 'user') {
+                        text += `🧑 You:\n${msg.content}\n\n`;
+                    } else {
+                        text += `🤖 DeepSeek AI:\n${msg.content}\n\n`;
+                    }
+                }
+
+                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `chat_export_${Date.now()}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('✅ Chat exported!');
+            }
+
+            // ============================================================
+            // WINDOW CONTROLS
+            // ============================================================
+            window.minimize = () => {
+                if (window.electron?.minimize) window.electron.minimize();
+                else showToast('Minimize (use in Electron)');
+            };
+            window.maximize = () => {
+                if (window.electron?.maximize) window.electron.maximize();
+                else showToast('Maximize (use in Electron)');
+            };
+            window.close = () => {
+                if (window.electron?.close) window.electron.close();
+                else if (confirm('Close application?')) window.close();
+            };
+
+            // Expose functions globally
+            window.toggleSidebar = toggleSidebar;
+            window.newChat = newChat;
+            window.loadConversation = loadConversation;
+            window.deleteConversation = deleteConversation;
+            window.sendMessage = sendMessage;
+            window.clearMessages = clearMessages;
+            window.exportChat = exportChat;
+            window.copyCode = copyCode;
+
+        })();
     </script>
 
 </body>
