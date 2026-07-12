@@ -2,2088 +2,708 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Thành Lợi Pro - Quản lý người dùng</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thành Lợi Pro - Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        :root {
-            --primary: #7c3aed;
-            --primary-dark: #6d28d9;
-            --primary-light: #a78bfa;
-            --secondary: #8b5cf6;
-            --accent: #c084fc;
-            --success: #34d399;
-            --warning: #fbbf24;
-            --danger: #ef4444;
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #111118;
-            --bg-tertiary: #181825;
-            --bg-card: #1e1e2f;
-            --bg-hover: #2a2a3e;
-            --text-primary: #f0f0ff;
-            --text-secondary: #a0a0c0;
-            --text-muted: #6b6b88;
-            --border-color: #2a2a40;
-            --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.2);
-            --shadow-glow-strong: 0 0 60px rgba(124, 58, 237, 0.3);
-            --radius: 14px;
-            --radius-sm: 10px;
-            --radius-full: 50px;
-            --font-family: 'Inter', sans-serif;
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
-        }
-        [data-theme="light"] {
-            --bg-primary: #f0f0f8;
-            --bg-secondary: #e8e8f2;
-            --bg-tertiary: #dedeec;
-            --bg-card: #ffffff;
-            --bg-hover: #d4d4e4;
-            --text-primary: #1a1a2e;
-            --text-secondary: #4a4a60;
-            --text-muted: #8a8aa0;
-            --border-color: #c8c8dc;
-        }
-        html,
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            height: 100%;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-        body {
-            font-family: var(--font-family);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            transition: background 0.3s ease;
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-        .app-container {
-            width: 100%;
-            height: 100%;
-            max-width: 1400px;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.6s ease;
-        }
-        .loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .loader {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-        .loader .ring {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: var(--primary);
-            border-right-color: var(--secondary);
-            animation: spin 1s linear infinite;
-            position: absolute;
-        }
-        .loader .ring:nth-child(2) {
-            width: 70%;
-            height: 70%;
-            top: 15%;
-            left: 15%;
-            border-top-color: var(--secondary);
-            border-right-color: var(--accent);
-            animation-duration: 0.8s;
-            animation-direction: reverse;
-        }
-        .loader .ring:nth-child(3) {
-            width: 40%;
-            height: 40%;
-            top: 30%;
-            left: 30%;
-            border-top-color: var(--accent);
-            border-right-color: var(--primary-light);
-            animation-duration: 0.6s;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.4;
-                transform: scale(0.8);
-            }
-        }
-        .toast {
-            position: fixed;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-120px);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 14px 28px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-glow-strong);
-            z-index: 1000;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-            font-size: 14px;
-            font-weight: 600;
-            max-width: 90%;
-            text-align: center;
-            opacity: 0;
-            backdrop-filter: blur(20px);
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-        .title-bar {
-            height: 50px;
-            min-height: 50px;
-            background: rgba(17, 17, 24, 0.95);
-            backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            flex-shrink: 0;
-            border-bottom: 1px solid var(--border-color);
-            padding-top: var(--safe-top);
-            z-index: 5;
-        }
-        .title-bar-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow: hidden;
-        }
-        .title-bar-left .icon {
-            color: var(--secondary);
-            font-size: 20px;
-            font-weight: 900;
-        }
-        .title-bar-left .brand-name {
-            font-size: 15px;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-        .title-bar-left .brand-name span {
-            color: var(--secondary);
-        }
-        .title-bar-left .version {
-            font-size: 9px;
-            color: var(--text-muted);
-            background: var(--bg-card);
-            padding: 2px 10px;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-color);
-            font-weight: 600;
-        }
-        .title-bar-right {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .window-btn {
-            width: 34px;
-            height: 34px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        .window-btn:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-        .window-btn .user-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            color: white;
-        }
-        .theme-toggle {
-            width: 34px;
-            height: 34px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .theme-toggle:hover {
-            background: var(--bg-hover);
-        }
-        .main-layout {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-        }
-        .admin-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--bg-primary);
-            min-width: 0;
-            position: relative;
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #f0f0ff;
+            min-height: 100vh;
             padding: 20px;
-            overflow-y: auto;
         }
-        .admin-panel .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #2a2a40;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #8b5cf6;
+        }
+        .header h1 span { color: #a78bfa; }
+        .header p { color: #6b6b88; margin-top: 8px; }
+        
+        .device-card {
+            background: #1e1e2f;
+            border-radius: 14px;
+            border: 1px solid #2a2a40;
+            padding: 24px;
             margin-bottom: 20px;
         }
-        .admin-panel .stats-grid .stat-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-        .admin-panel .stats-grid .stat-card .number {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-        .admin-panel .stats-grid .stat-card .label {
+        .device-card .uid {
             font-size: 12px;
-            color: var(--text-muted);
+            color: #6b6b88;
+            font-family: monospace;
+            background: #0a0a0f;
+            padding: 4px 12px;
+            border-radius: 4px;
+            display: inline-block;
         }
-        .admin-panel .users-table-container {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            flex: 1;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-        }
-        .admin-panel .users-table-container .table-header {
-            padding: 12px 16px;
-            background: var(--bg-tertiary);
-            border-bottom: 1px solid var(--border-color);
+        .device-card .info-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            flex-shrink: 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a40;
         }
-        .admin-panel .users-table-container .table-header h3 {
-            font-size: 14px;
-            font-weight: 700;
-        }
-        .admin-panel .users-table-container .table-header .search-box {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .admin-panel .users-table-container .table-header .search-box input {
-            padding: 6px 12px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 12px;
-            outline: none;
-            min-width: 180px;
-        }
-        .admin-panel .users-table-container .table-header .search-box input:focus {
-            border-color: var(--primary);
-        }
-        .admin-panel .users-table-container .table-header .search-box button {
-            padding: 6px 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 12px;
-            font-family: inherit;
-            transition: 0.3s;
-        }
-        .admin-panel .users-table-container .table-header .search-box button:hover {
-            background: var(--primary-dark);
-        }
-        .admin-panel .users-table-container .table-scroll {
-            overflow-y: auto;
-            flex: 1;
-        }
-        .admin-panel .users-table-container table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        .admin-panel .users-table-container table th {
-            padding: 10px 12px;
-            text-align: left;
-            background: var(--bg-tertiary);
-            color: var(--text-muted);
-            font-weight: 600;
+        .device-card .info-row:last-child { border-bottom: none; }
+        .device-card .label { color: #6b6b88; }
+        .device-card .value { color: #f0f0ff; font-weight: 500; }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
             font-size: 11px;
-            text-transform: uppercase;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-        .admin-panel .users-table-container table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-        .admin-panel .users-table-container table tr:hover td {
-            background: var(--bg-hover);
-        }
-        .admin-panel .users-table-container table .status-badge {
-            padding: 2px 10px;
-            border-radius: var(--radius-full);
-            font-size: 10px;
             font-weight: 600;
             display: inline-block;
         }
-        .admin-panel .users-table-container table .status-badge.active {
-            background: rgba(52, 211, 153, 0.15);
-            color: var(--success);
-        }
-        .admin-panel .users-table-container table .status-badge.inactive {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-        .admin-panel .users-table-container table .status-badge.pro {
-            background: rgba(251, 191, 36, 0.15);
-            color: var(--warning);
-        }
-        .admin-panel .users-table-container table .status-badge.free {
-            background: var(--bg-tertiary);
-            color: var(--text-muted);
-        }
-        .admin-panel .users-table-container table .action-btn {
-            padding: 4px 8px;
+        .status-badge.active { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .status-badge.pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        
+        .btn {
+            padding: 10px 20px;
             border: none;
-            background: transparent;
-            color: var(--text-muted);
+            border-radius: 10px;
+            font-weight: 600;
             cursor: pointer;
-            border-radius: 4px;
-            font-size: 12px;
-            transition: 0.2s;
-        }
-        .admin-panel .users-table-container table .action-btn:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-        .admin-panel .users-table-container table .action-btn.danger:hover {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-        .admin-panel .users-table-container table .action-btn.success:hover {
-            background: rgba(52, 211, 153, 0.15);
-            color: var(--success);
-        }
-        .admin-panel .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: var(--text-muted);
-            padding: 40px 20px;
-        }
-        .admin-panel .empty-state i {
-            font-size: 48px;
-            opacity: 0.3;
-            margin-bottom: 12px;
-        }
-        .sidebar {
-            width: 240px;
-            background: var(--bg-secondary);
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border-color);
-            flex-shrink: 0;
-            overflow: hidden;
-            z-index: 10;
-        }
-        .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-tertiary);
-            flex-shrink: 0;
-            min-height: 64px;
-        }
-        .sidebar-header .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .sidebar-header .brand .logo {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--secondary);
-        }
-        .sidebar-header .brand-text .name {
+            transition: 0.3s;
             font-size: 14px;
-            font-weight: 800;
-            line-height: 1.2;
         }
-        .sidebar-header .brand-text .sub {
-            font-size: 9px;
-            color: var(--text-muted);
-            text-transform: uppercase;
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: #34d399; color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-primary { background: #7c3aed; color: white; }
+        .btn-primary:hover { background: #6d28d9; }
+        .btn-warning { background: #fbbf24; color: #000; }
+        .btn-warning:hover { background: #f59e0b; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b6b88;
         }
-        .sidebar-nav {
-            padding: 12px 8px;
-            flex: 1;
-            overflow-y: auto;
+        .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 14px 28px;
+            background: #1e1e2f;
+            border: 1px solid #2a2a40;
+            border-radius: 14px;
+            box-shadow: 0 0 40px rgba(124, 58, 237, 0.2);
+            display: none;
+            z-index: 1000;
         }
-        .sidebar-nav .nav-item {
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
+        .toast.show { display: block; }
+
+        /* MobileConfig Section */
+        .mobile-config-section {
+            background: linear-gradient(135deg, #1e1e2f, #2a1a3e);
+            border-radius: 14px;
+            border: 2px solid #7c3aed;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mobile-config-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.1), transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+        .mobile-config-section .config-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #f0f0ff;
+            position: relative;
+            z-index: 1;
+        }
+        .mobile-config-section .config-title i {
+            color: #8b5cf6;
+            margin-right: 10px;
+        }
+        .mobile-config-section .config-desc {
+            font-size: 14px;
+            color: #a0a0c0;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .mobile-config-section .config-btn {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.2s;
+            font-weight: 700;
+            font-size: 16px;
+            width: 100%;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        .mobile-config-section .config-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+        }
+        .mobile-config-section .config-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .mobile-config-section .config-info {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #6b6b88;
+            position: relative;
+            z-index: 1;
+        }
+        .mobile-config-section .config-info i {
+            color: #8b5cf6;
+        }
+        .mobile-config-section .config-status {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+        .mobile-config-section .config-status.show {
+            display: block;
+        }
+        .mobile-config-section .config-status.loading {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+        .mobile-config-section .config-status.success {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+        }
+        .mobile-config-section .config-status.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+        
+        .config-steps {
+            background: #0a0a0f;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .config-steps .step {
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--text-secondary);
+            padding: 6px 0;
             font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 2px;
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-family: inherit;
-            text-align: left;
+            color: #a0a0c0;
         }
-        .sidebar-nav .nav-item:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-        .sidebar-nav .nav-item.active {
-            background: var(--bg-card);
-            color: var(--primary);
-            border: 1px solid var(--border-color);
-        }
-        .sidebar-nav .nav-item i {
-            width: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-        .sidebar-nav .nav-item .badge {
-            margin-left: auto;
-            background: var(--bg-tertiary);
-            padding: 2px 8px;
-            border-radius: var(--radius-full);
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-        .sidebar-footer {
-            padding: 12px 16px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-shrink: 0;
-            background: var(--bg-tertiary);
-            min-height: 52px;
-        }
-        .sidebar-footer .status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .sidebar-footer .status .dot {
-            width: 8px;
-            height: 8px;
+        .config-steps .step .num {
+            width: 22px;
+            height: 22px;
+            background: #7c3aed;
+            color: white;
             border-radius: 50%;
-            background: var(--success);
-            animation: pulse-dot 2s infinite;
-        }
-        .sidebar-footer .actions {
-            display: flex;
-            gap: 2px;
-        }
-        .sidebar-footer .actions button {
-            width: 30px;
-            height: 30px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
-        }
-        .sidebar-footer .actions button:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 9;
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            backdrop-filter: blur(4px);
-        }
-        .sidebar-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-        .menu-toggle {
-            display: none;
-            width: 34px;
-            height: 34px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 8px;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            z-index: 99999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal-content {
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            padding: 32px 28px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-content h3 {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 16px;
-        }
-        .modal-content .form-group {
-            margin-bottom: 14px;
-        }
-        .modal-content .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        .modal-content .form-group input,
-        .modal-content .form-group select {
-            width: 100%;
-            padding: 10px 14px;
-            background: var(--bg-tertiary);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 13px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .modal-content .form-group input:focus,
-        .modal-content .form-group select:focus {
-            border-color: var(--primary);
-        }
-        .modal-content .form-group select option {
-            background: var(--bg-secondary);
-        }
-        .modal-content .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-        }
-        .modal-content .modal-actions button {
-            padding: 10px 24px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 14px;
-            font-family: inherit;
-            cursor: pointer;
-            transition: 0.3s;
-            flex: 1;
-        }
-        .modal-content .modal-actions .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
-        .modal-content .modal-actions .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
-        }
-        .modal-content .modal-actions .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
-        .modal-content .modal-actions .btn-secondary:hover {
-            background: var(--bg-hover);
-        }
-        .firebase-status {
             font-size: 11px;
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-        }
-        .firebase-status.connected {
-            color: var(--success);
-            border-color: var(--success);
-        }
-        .firebase-status.disconnected {
-            color: var(--danger);
-            border-color: var(--danger);
-        }
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex !important;
-            }
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                z-index: 10;
-                width: 280px;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                padding-top: var(--safe-top);
-                box-shadow: 4px 0 40px rgba(0, 0, 0, 0.6);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .sidebar-overlay.active {
-                display: block;
-            }
-            .admin-panel {
-                padding: 12px;
-            }
-            .admin-panel .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .admin-panel .users-table-container .table-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .admin-panel .users-table-container .table-header .search-box {
-                flex-direction: column;
-            }
-            .admin-panel .users-table-container .table-header .search-box input {
-                min-width: auto;
-                width: 100%;
-            }
-            .title-bar-left .version {
-                display: none;
-            }
-        }
-        @media (max-width: 480px) {
-            .admin-panel .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .admin-panel .stats-grid .stat-card .number {
-                font-size: 20px;
-            }
-            .admin-panel .users-table-container table {
-                font-size: 11px;
-            }
-            .admin-panel .users-table-container table th,
-            .admin-panel .users-table-container table td {
-                padding: 6px 8px;
-            }
-        }
-        .vip-badge {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #000;
-            padding: 2px 10px;
-            border-radius: var(--radius-full);
-            font-size: 8px;
             font-weight: 700;
-            text-transform: uppercase;
+            flex-shrink: 0;
         }
-        .free-badge {
-            background: var(--bg-tertiary);
-            color: var(--text-muted);
-            padding: 2px 10px;
-            border-radius: var(--radius-full);
-            font-size: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .pro-badge {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 2px 10px;
-            border-radius: var(--radius-full);
-            font-size: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .form-group {
-            margin-bottom: 14px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 14px;
-            background: var(--bg-tertiary);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-family: inherit;
+        
+        .generated-uid {
+            background: #0a0a0f;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: monospace;
             font-size: 13px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-        }
-        .form-group select option {
-            background: var(--bg-secondary);
+            color: #a78bfa;
+            border: 1px solid #2a2a40;
+            margin: 8px 0;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>✦ Thành <span>Lợi</span> Pro</h1>
+            <p>🔑 Quản lý thiết bị và key</p>
+        </div>
 
-    <!-- Loading -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loader"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
-        <div style="font-size:20px;font-weight:800;margin-top:16px;">✦ Thành <span style="color:var(--secondary);">Lợi</span> Pro</div>
-        <div style="font-size:12px;color:var(--text-muted);">Quản lý người dùng</div>
+        <!-- MobileConfig Section -->
+        <div class="mobile-config-section" id="mobileConfigSection">
+            <div class="config-title">
+                <i class="fas fa-mobile-alt"></i> Tải MobileConfig
+            </div>
+            <div class="config-desc">
+                Tải file cấu hình để đăng ký thiết bị vào hệ thống. 
+                <strong style="color:#8b5cf6;">Bắt buộc</strong> để sử dụng ứng dụng.
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <span style="font-size:12px; color:#6b6b88;">🔑 UID của thiết bị:</span>
+                <div class="generated-uid" id="generatedUid">Đang tạo...</div>
+            </div>
+
+            <button class="config-btn" id="downloadConfigBtn" onclick="downloadMobileConfig()">
+                <i class="fas fa-download"></i> Tải MobileConfig
+            </button>
+
+            <div class="config-status" id="configStatus"></div>
+
+            <div class="config-steps">
+                <div style="font-size:12px; font-weight:600; color:#6b6b88; margin-bottom:8px;">
+                    📋 Hướng dẫn cài đặt:
+                </div>
+                <div class="step">
+                    <span class="num">1</span>
+                    <span>Nhấn <strong>"Tải MobileConfig"</strong></span>
+                </div>
+                <div class="step">
+                    <span class="num">2</span>
+                    <span>Mở file <strong>.mobileconfig</strong> vừa tải</span>
+                </div>
+                <div class="step">
+                    <span class="num">3</span>
+                    <span>Chọn <strong>"Cài đặt"</strong> và nhập mật khẩu (nếu có)</span>
+                </div>
+                <div class="step">
+                    <span class="num">4</span>
+                    <span>Chọn <strong>"Cài đặt"</strong> lần nữa để hoàn tất</span>
+                </div>
+                <div class="step">
+                    <span class="num">5</span>
+                    <span>Quay lại ứng dụng và nhập <strong>API Key</strong></span>
+                </div>
+            </div>
+
+            <div class="config-info">
+                <span><i class="fas fa-info-circle"></i> File sẽ tự động tải xuống</span>
+                <span><i class="fas fa-shield-alt"></i> Bảo mật cao</span>
+            </div>
+        </div>
+
+        <!-- Device Info -->
+        <div id="deviceInfo">
+            <div class="device-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3>📱 Thông tin thiết bị</h3>
+                    <span class="uid" id="uidDisplay">Đang tải...</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Tên thiết bị</span>
+                    <span class="value" id="deviceNameDisplay">Đang tải...</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Trạng thái</span>
+                    <span class="value" id="statusDisplay">Đang tải...</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Số lần thử</span>
+                    <span class="value" id="attemptsDisplay">0</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Thành công</span>
+                    <span class="value" id="successDisplay">0</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Ngày đăng ký</span>
+                    <span class="value" id="dateDisplay">Đang tải...</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="actions" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn btn-danger" onclick="banDevice()"><i class="fas fa-ban"></i> Khóa thiết bị</button>
+            <button class="btn btn-success" onclick="unbanDevice()"><i class="fas fa-unlock"></i> Mở khóa</button>
+            <button class="btn btn-primary" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Làm mới</button>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <i class="fas fa-mobile-alt"></i>
+            <p>Không tìm thấy thông tin thiết bị</p>
+            <p style="font-size:13px; margin-top:8px;">Vui lòng tải MobileConfig trước</p>
+        </div>
     </div>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
-    <!-- App -->
-    <div class="app-container">
-        <div class="title-bar">
-            <div class="title-bar-left">
-                <button class="menu-toggle" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
-                <span class="icon">✦</span>
-                <span class="brand-name">Thành <span>Lợi</span> Pro</span>
-                <span class="version"><span class="vip-badge">✦ ADMIN</span> v2.0</span>
-            </div>
-            <div class="title-bar-right">
-                <span id="planBadge" class="vip-badge">⭐ Admin</span>
-                <span class="firebase-status" id="firebaseStatus">⏳ Firebase</span>
-                <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
-                <button class="window-btn" onclick="syncKeysFromFirebase()" title="Đồng bộ key từ Firebase">
-                    <i class="fas fa-cloud-download-alt" style="color:var(--primary-light);"></i>
-                </button>
-                <button class="window-btn" onclick="window.location.reload()"><i class="fas fa-sync-alt"></i></button>
-                <button class="window-btn" onclick="resetData()" title="Reset dữ liệu">
-                    <i class="fas fa-database" style="color:var(--warning);"></i>
-                </button>
-                <button class="window-btn" id="accountBtn">
-                    <div class="user-avatar" id="headerAvatar">AD</div>
-                </button>
-            </div>
-        </div>
-
-        <div class="main-layout">
-            <!-- Sidebar -->
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-header">
-                    <div class="brand">
-                        <span class="logo">✦</span>
-                        <div class="brand-text">
-                            <span class="name">Thành Lợi</span>
-                            <span class="sub">Admin Panel</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="sidebar-nav">
-                    <button class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')">
-                        <i class="fas fa-chart-pie"></i> Dashboard
-                    </button>
-                    <button class="nav-item" data-page="users" onclick="switchPage('users')">
-                        <i class="fas fa-users"></i> Người dùng
-                        <span class="badge" id="userCountBadge">0</span>
-                    </button>
-                    <button class="nav-item" data-page="keys" onclick="switchPage('keys')">
-                        <i class="fas fa-key"></i> Quản lý Key
-                        <span class="badge" id="keyCountBadge">0</span>
-                    </button>
-                    <button class="nav-item" data-page="settings" onclick="switchPage('settings')">
-                        <i class="fas fa-cog"></i> Cài đặt
-                    </button>
-                </div>
-                <div class="sidebar-footer">
-                    <div class="status"><span class="dot"></span><span>Online</span></div>
-                    <div class="actions">
-                        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
-                        <button onclick="importData()"><i class="fas fa-file-import"></i></button>
-                        <button onclick="clearAllData()" class="danger"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar overlay (mobile) -->
-            <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
-
-            <!-- Main Content -->
-            <div class="admin-panel" id="mainPanel">
-                <!-- Dashboard -->
-                <div id="pageDashboard">
-                    <div class="stats-grid" id="statsGrid">
-                        <div class="stat-card">
-                            <div class="number" id="statUsers">0</div>
-                            <div class="label">👥 Tổng người dùng</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="number" id="statPro">0</div>
-                            <div class="label">⭐ Pro</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="number" id="statKeys">0</div>
-                            <div class="label">🔑 Key đã tạo</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="number" id="statActive">0</div>
-                            <div class="label">🟢 Active</div>
-                        </div>
-                    </div>
-                    <div style="background:var(--bg-card);border-radius:var(--radius-sm);border:1px solid var(--border-color);padding:20px;min-height:200px;">
-                        <h3 style="font-size:14px;font-weight:700;margin-bottom:12px;">📊 Hoạt động gần đây</h3>
-                        <div id="recentActivity" style="color:var(--text-muted);font-size:13px;line-height:2;">
-                            <div style="padding:4px 0;border-bottom:1px solid var(--border-color);">✦ Hệ thống đã sẵn sàng</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Users -->
-                <div id="pageUsers" style="display:none;">
-                    <div class="users-table-container">
-                        <div class="table-header">
-                            <h3><i class="fas fa-users"></i> Danh sách người dùng</h3>
-                            <div class="search-box">
-                                <input type="text" id="userSearchInput" placeholder="Tìm kiếm..." oninput="filterUsers()" />
-                                <button onclick="openAddUserModal()"><i class="fas fa-plus"></i> Thêm user</button>
-                            </div>
-                        </div>
-                        <div class="table-scroll">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th style="width:50px;">STT</th>
-                                        <th>Họ tên</th>
-                                        <th>Email</th>
-                                        <th>Key</th>
-                                        <th>Gói</th>
-                                        <th>Trạng thái</th>
-                                        <th style="width:140px;">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersTableBody">
-                                    <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted);">Đang tải...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Keys -->
-                <div id="pageKeys" style="display:none;">
-                    <div class="users-table-container">
-                        <div class="table-header">
-                            <h3><i class="fas fa-key"></i> Quản lý Key</h3>
-                            <div class="search-box">
-                                <input type="text" id="keySearchInput" placeholder="Tìm kiếm key..." oninput="filterKeys()" />
-                                <button onclick="openAddKeyModal()"><i class="fas fa-plus"></i> Tạo Key mới</button>
-                                <button onclick="syncKeysFromFirebase()" style="background:var(--secondary);">
-                                    <i class="fas fa-cloud-download-alt"></i> Đồng bộ
-                                </button>
-                            </div>
-                        </div>
-                        <div class="table-scroll">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Key</th>
-                                        <th>Gói</th>
-                                        <th>Người dùng</th>
-                                        <th>Hạn sử dụng</th>
-                                        <th>Trạng thái</th>
-                                        <th style="width:120px;">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="keysTableBody">
-                                    <tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted);">Đang tải...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Settings -->
-                <div id="pageSettings" style="display:none;">
-                    <div style="background:var(--bg-card);border-radius:var(--radius-sm);border:1px solid var(--border-color);padding:20px;max-width:600px;">
-                        <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">⚙️ Cài đặt hệ thống</h3>
-                        <div class="form-group">
-                            <label>Tên hệ thống</label>
-                            <input type="text" id="systemName" value="Thành Lợi Pro" />
-                        </div>
-                        <div class="form-group">
-                            <label>Thời hạn key mặc định (ngày)</label>
-                            <input type="number" id="defaultKeyDuration" value="30" />
-                        </div>
-                        <div class="form-group">
-                            <label>Firebase Database URL</label>
-                            <input type="text" id="firebaseUrl" value="https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app/keys" />
-                        </div>
-                        <button onclick="saveSettings()" style="padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-family:inherit;transition:0.3s;width:100%;">
-                            <i class="fas fa-save"></i> Lưu cài đặt
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add User Modal -->
-    <div class="modal-overlay" id="addUserModal">
-        <div class="modal-content">
-            <h3><i class="fas fa-user-plus"></i> Thêm người dùng</h3>
-            <div class="form-group">
-                <label>Họ và tên <span style="color:var(--danger);">*</span></label>
-                <input type="text" id="newUserName" placeholder="Nhập họ tên" />
-            </div>
-            <div class="form-group">
-                <label>Email <span style="color:var(--danger);">*</span></label>
-                <input type="email" id="newUserEmail" placeholder="email@example.com" />
-            </div>
-            <div class="form-group">
-                <label>Mật khẩu <span style="color:var(--danger);">*</span></label>
-                <input type="password" id="newUserPassword" placeholder="Mật khẩu (ít nhất 4 ký tự)" />
-            </div>
-            <div class="form-group">
-                <label>Gói</label>
-                <select id="newUserPlan">
-                    <option value="free">🆓 Free</option>
-                    <option value="pro">⭐ Pro</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Key (tùy chọn)</label>
-                <input type="text" id="newUserKey" placeholder="Để trống nếu chưa có" />
-            </div>
-            <div class="modal-actions">
-                <button class="btn-secondary" onclick="closeAddUserModal()">Hủy</button>
-                <button class="btn-primary" onclick="addUser()"><i class="fas fa-plus"></i> Thêm</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit User Modal -->
-    <div class="modal-overlay" id="editUserModal">
-        <div class="modal-content">
-            <h3><i class="fas fa-user-edit"></i> Sửa người dùng</h3>
-            <input type="hidden" id="editUserId" />
-            <div class="form-group">
-                <label>Họ và tên</label>
-                <input type="text" id="editUserName" placeholder="Nhập họ tên" />
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="editUserEmail" placeholder="email@example.com" />
-            </div>
-            <div class="form-group">
-                <label>Gói</label>
-                <select id="editUserPlan">
-                    <option value="free">🆓 Free</option>
-                    <option value="pro">⭐ Pro</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Trạng thái</label>
-                <select id="editUserStatus">
-                    <option value="true">🟢 Hoạt động</option>
-                    <option value="false">🔴 Đã khóa</option>
-                </select>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-secondary" onclick="closeEditUserModal()">Hủy</button>
-                <button class="btn-primary" onclick="updateUser()"><i class="fas fa-save"></i> Cập nhật</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Key Modal -->
-    <div class="modal-overlay" id="addKeyModal">
-        <div class="modal-content">
-            <h3><i class="fas fa-key"></i> Tạo Key mới</h3>
-            <div class="form-group">
-                <label>Key</label>
-                <input type="text" id="newKeyValue" placeholder="Nhập key hoặc để trống tự tạo" />
-                <button onclick="fillGeneratedKey()" style="margin-top:6px;padding:4px 12px;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-secondary);cursor:pointer;font-size:11px;font-family:inherit;">
-                    <i class="fas fa-sync-alt"></i> Tạo tự động
-                </button>
-            </div>
-            <div class="form-group">
-                <label>Gói</label>
-                <select id="newKeyPlan">
-                    <option value="free">🆓 Free</option>
-                    <option value="pro" selected>⭐ Pro</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Thời hạn (ngày)</label>
-                <input type="number" id="newKeyDuration" value="30" />
-            </div>
-            <div class="form-group">
-                <label>Người dùng (email)</label>
-                <input type="text" id="newKeyUser" placeholder="Để trống nếu chưa gán" />
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="syncToFirebase" checked />
-                    Đồng bộ lên Firebase
-                </label>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-secondary" onclick="closeAddKeyModal()">Hủy</button>
-                <button class="btn-primary" onclick="submitAddKey()"><i class="fas fa-plus"></i> Tạo</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // ============================================================
-        // FULL JAVASCRIPT - QUẢN LÝ NGƯỜI DÙNG & KEY HOÀN CHỈNH
-        // ============================================================
-        (function() {
-            'use strict';
+        const FIREBASE_URL = 'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app';
+        const ADMIN_URL = window.location.origin + window.location.pathname;
+        let currentUid = '';
+        let deviceData = null;
+        let generatedUID = '';
 
-            const CONFIG = {
-                STORAGE_KEY: 'thanhloi_pro_data',
-                THEME_KEY: 'thanhloi_pro_theme',
-                TOAST_DURATION: 3000,
-                FIREBASE_URL_KEY: 'firebase_database_url',
-            };
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tạo UID mới
+            generatedUID = generateUID();
+            document.getElementById('generatedUid').textContent = generatedUID;
 
-            // STATE
-            const state = {
-                users: [],
-                keys: [],
-                currentPage: 'dashboard',
-                firebaseConnected: false,
-            };
-
-            // ==================== UTILITY ====================
-            function escapeHtml(text) {
-                if (!text) return '';
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
+            // Lấy UID từ URL
+            const params = new URLSearchParams(window.location.search);
+            currentUid = params.get('uid');
+            
+            if (currentUid) {
+                document.getElementById('uidDisplay').textContent = currentUid;
+                loadDeviceData();
+            } else {
+                document.getElementById('deviceInfo').style.display = 'none';
+                document.getElementById('actions').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
             }
+        });
 
-            function generateId() {
-                return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-            }
+        function generateUID() {
+            return 'UID-' + Date.now().toString(36).toUpperCase() + '-' + 
+                   Math.random().toString(36).slice(2, 7).toUpperCase();
+        }
 
-            function getInitials(name) {
-                if (!name) return 'AD';
-                const parts = name.trim().split(' ');
-                if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-            }
+        async function downloadMobileConfig() {
+            const btn = document.getElementById('downloadConfigBtn');
+            const status = document.getElementById('configStatus');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tạo...';
+            
+            showConfigStatus('⏳ Đang tạo MobileConfig...', 'loading');
 
-            function formatDateTime(ts) {
-                if (!ts) return '—';
-                return new Date(ts).toLocaleString('vi-VN');
-            }
-
-            function generateRandomKey() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let key = '';
-                for (let i = 0; i < 32; i++) {
-                    key += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return key;
-            }
-
-            function showToast(message, type = 'info', duration = CONFIG.TOAST_DURATION) {
-                const toast = document.getElementById('toast');
-                const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
-                toast.innerHTML = (icons[type] || 'ℹ️') + ' ' + message;
-                toast.className = 'toast ' + type;
-                toast.classList.add('show');
-                clearTimeout(toast._timer);
-                toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
-            }
-
-            function hideLoading() {
-                document.getElementById('loadingScreen').classList.add('hidden');
-            }
-
-            function getFirebaseUrl() {
-                return localStorage.getItem(CONFIG.FIREBASE_URL_KEY) || 
-                       'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app/keys';
-            }
-
-            // ==================== FIREBASE API ====================
-            async function syncKeysFromFirebase() {
-                const url = getFirebaseUrl();
-                const statusEl = document.getElementById('firebaseStatus');
+            try {
+                const uid = generatedUID;
+                const deviceName = 'iPhone';
+                const dateStr = new Date().toISOString();
+                const configUUID = generateUUID();
+                const configUUID2 = generateUUID();
                 
-                try {
-                    statusEl.textContent = '⏳ Đang đồng bộ...';
-                    statusEl.className = 'firebase-status';
-                    
-                    const response = await fetch(url + '.json');
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    if (!data) {
-                        showToast('Không có dữ liệu từ Firebase', 'warning');
-                        statusEl.textContent = '📭 Firebase';
-                        statusEl.className = 'firebase-status';
-                        return;
-                    }
+                // Tạo nội dung MobileConfig
+                const configXML = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadDescription</key>
+            <string>Cấu hình thiết bị Thành Lợi Pro</string>
+            <key>PayloadDisplayName</key>
+            <string>Thành Lợi Pro Config</string>
+            <key>PayloadIdentifier</key>
+            <string>com.thanhloi.pro.device.config</string>
+            <key>PayloadOrganization</key>
+            <string>Thành Lợi Pro</string>
+            <key>PayloadType</key>
+            <string>com.apple.donotdisturb</string>
+            <key>PayloadUUID</key>
+            <string>${configUUID}</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadEnabled</key>
+            <true/>
+            <key>DeviceUID</key>
+            <string>${uid}</string>
+            <key>DeviceName</key>
+            <string>${deviceName}</string>
+            <key>RegisteredAt</key>
+            <string>${dateStr}</string>
+            <key>AdminLink</key>
+            <string>${ADMIN_URL}?uid=${uid}</string>
+            <key>ApiKeyURL</key>
+            <string>${FIREBASE_URL}/keys.json</string>
+            <key>FirebaseURL</key>
+            <string>${FIREBASE_URL}</string>
+        </dict>
+    </array>
+    <key>PayloadDescription</key>
+    <string>Cấu hình thiết bị cho hệ thống Thành Lợi Pro</string>
+    <key>PayloadDisplayName</key>
+    <string>Thành Lợi Pro Configuration</string>
+    <key>PayloadIdentifier</key>
+    <string>com.thanhloi.pro.device</string>
+    <key>PayloadOrganization</key>
+    <string>Thành Lợi Pro</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>${configUUID2}</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>`;
 
-                    // Chuyển đổi dữ liệu từ Firebase sang định dạng key
-                    const firebaseKeys = [];
-                    for (const [keyId, keyData] of Object.entries(data)) {
-                        if (keyData && typeof keyData === 'object') {
-                            firebaseKeys.push({
-                                id: keyId,
-                                value: keyData.key || keyData.value || keyId,
-                                plan: keyData.plan || 'pro',
-                                created_at: keyData.created_at || Date.now(),
-                                expires_at: keyData.expires_at || (Date.now() + 30 * 24 * 60 * 60 * 1000),
-                                user_id: keyData.user_id || null,
-                                used_at: keyData.used_at || null,
-                                used_by: keyData.used_by || null,
-                                active: keyData.active !== undefined ? keyData.active : true,
-                            });
-                        }
-                    }
-
-                    if (firebaseKeys.length === 0) {
-                        showToast('Không có key nào trong Firebase', 'warning');
-                        statusEl.textContent = '📭 Firebase';
-                        statusEl.className = 'firebase-status';
-                        return;
-                    }
-
-                    // Merge với key hiện có (tránh trùng lặp)
-                    const existingValues = new Set(state.keys.map(k => k.value));
-                    let addedCount = 0;
-                    
-                    for (const fbKey of firebaseKeys) {
-                        if (!existingValues.has(fbKey.value)) {
-                            state.keys.push(fbKey);
-                            addedCount++;
-                        }
-                    }
-
-                    saveData();
-                    renderAll();
-                    
-                    statusEl.textContent = `✅ Firebase (${firebaseKeys.length} keys)`;
-                    statusEl.className = 'firebase-status connected';
-                    state.firebaseConnected = true;
-                    
-                    showToast(`Đã đồng bộ ${addedCount} key mới từ Firebase`, 'success');
-                    
-                } catch (error) {
-                    console.error('Firebase sync error:', error);
-                    statusEl.textContent = '❌ Lỗi Firebase';
-                    statusEl.className = 'firebase-status disconnected';
-                    state.firebaseConnected = false;
-                    showToast('Lỗi đồng bộ Firebase: ' + error.message, 'error');
-                }
-            }
-
-            async function pushKeyToFirebase(keyData) {
-                const url = getFirebaseUrl();
-                const statusEl = document.getElementById('firebaseStatus');
-                
-                try {
-                    const response = await fetch(url + '.json', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            key: keyData.value,
-                            plan: keyData.plan,
-                            created_at: keyData.created_at || Date.now(),
-                            expires_at: keyData.expires_at || (Date.now() + 30 * 24 * 60 * 60 * 1000),
-                            user_id: keyData.user_id || null,
-                            used_at: keyData.used_at || null,
-                            used_by: keyData.used_by || null,
-                            active: keyData.active !== undefined ? keyData.active : true,
-                        }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-
-                    const result = await response.json();
-                    
-                    statusEl.textContent = '✅ Firebase';
-                    statusEl.className = 'firebase-status connected';
-                    state.firebaseConnected = true;
-                    
-                    return { success: true, firebaseId: result.name };
-                    
-                } catch (error) {
-                    console.error('Push to Firebase error:', error);
-                    statusEl.textContent = '❌ Lỗi Firebase';
-                    statusEl.className = 'firebase-status disconnected';
-                    state.firebaseConnected = false;
-                    return { success: false, error: error.message };
-                }
-            }
-
-            async function deleteKeyFromFirebase(keyValue) {
-                // Firebase Realtime Database doesn't support deleting by value directly
-                // We need to find the key ID first by fetching all keys
-                const url = getFirebaseUrl();
-                
-                try {
-                    const response = await fetch(url + '.json');
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    
-                    const data = await response.json();
-                    if (!data) return { success: true };
-                    
-                    // Find the key ID
-                    let keyId = null;
-                    for (const [id, keyData] of Object.entries(data)) {
-                        if (keyData.key === keyValue || keyData.value === keyValue) {
-                            keyId = id;
-                            break;
-                        }
-                    }
-                    
-                    if (keyId) {
-                        const deleteResponse = await fetch(`${url}/${keyId}.json`, {
-                            method: 'DELETE',
-                        });
-                        if (!deleteResponse.ok) {
-                            throw new Error(`HTTP ${deleteResponse.status}`);
-                        }
-                    }
-                    
-                    return { success: true };
-                    
-                } catch (error) {
-                    console.error('Delete from Firebase error:', error);
-                    return { success: false, error: error.message };
-                }
-            }
-
-            // ==================== DATA MANAGEMENT ====================
-            function loadData() {
-                try {
-                    const data = localStorage.getItem(CONFIG.STORAGE_KEY);
-                    if (data) {
-                        const parsed = JSON.parse(data);
-                        state.users = parsed.users || [];
-                        state.keys = parsed.keys || [];
-                        return true;
-                    }
-                } catch (e) {
-                    console.error('Lỗi load data:', e);
-                }
-                state.users = [];
-                state.keys = [];
-                return false;
-            }
-
-            function saveData() {
-                try {
-                    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify({
-                        users: state.users,
-                        keys: state.keys,
-                        updated_at: Date.now()
-                    }));
-                } catch (e) {
-                    console.error('Lỗi save data:', e);
-                }
-            }
-
-            // ==================== USER FUNCTIONS ====================
-            function findUserByEmail(email) {
-                return state.users.find(u => u.email.toLowerCase() === email.toLowerCase());
-            }
-
-            function findUserById(id) {
-                return state.users.find(u => u.id === id);
-            }
-
-            function findKeyByValue(value) {
-                return state.keys.find(k => k.value === value);
-            }
-
-            function createUser(name, email, password, plan = 'free', key = null) {
-                if (findUserByEmail(email)) return { success: false, error: 'Email đã tồn tại!' };
-                if (password.length < 4) return { success: false, error: 'Mật khẩu phải có ít nhất 4 ký tự!' };
-                if (!name) return { success: false, error: 'Vui lòng nhập họ tên!' };
-                if (!email) return { success: false, error: 'Vui lòng nhập email!' };
-
-                if (key) {
-                    const keyObj = findKeyByValue(key);
-                    if (!keyObj) return { success: false, error: 'Key không tồn tại!' };
-                    if (!keyObj.active) return { success: false, error: 'Key đã bị vô hiệu!' };
-                    if (Date.now() > keyObj.expires_at) return { success: false, error: 'Key đã hết hạn!' };
-                    if (keyObj.user_id) return { success: false, error: 'Key đã được sử dụng!' };
-                }
-
-                const user = {
-                    id: generateId(),
-                    name: name.trim(),
-                    email: email.trim().toLowerCase(),
-                    password: password,
-                    plan: plan,
-                    key: key || null,
-                    created_at: Date.now(),
-                    last_login: null,
-                    active: true,
-                };
-                state.users.push(user);
-
-                if (key) {
-                    const keyObj = findKeyByValue(key);
-                    if (keyObj) {
-                        keyObj.user_id = user.id;
-                        keyObj.used_at = Date.now();
-                        keyObj.used_by = user.email;
-                    }
-                }
-
-                saveData();
-                renderAll();
-                return { success: true, user: user };
-            }
-
-            function editUserData(id, data) {
-                const user = findUserById(id);
-                if (!user) return { success: false, error: 'Không tìm thấy người dùng!' };
-
-                if (data.email && data.email !== user.email) {
-                    const existing = findUserByEmail(data.email);
-                    if (existing && existing.id !== id) {
-                        return { success: false, error: 'Email đã được sử dụng!' };
-                    }
-                }
-
-                Object.assign(user, data);
-                saveData();
-                renderAll();
-                return { success: true, user: user };
-            }
-
-            function deleteUser(id) {
-                const user = findUserById(id);
-                if (!user) return { success: false, error: 'Không tìm thấy người dùng!' };
-
-                state.users = state.users.filter(u => u.id !== id);
-
-                state.keys.forEach(k => {
-                    if (k.user_id === id) {
-                        k.user_id = null;
-                        k.used_at = null;
-                        k.used_by = null;
-                    }
+                // Tạo file và tải xuống
+                const blob = new Blob([configXML], { 
+                    type: 'application/x-apple-aspen-config' 
                 });
-
-                saveData();
-                renderAll();
-                return { success: true };
-            }
-
-            function toggleUserStatus(id) {
-                const user = findUserById(id);
-                if (user) {
-                    user.active = !user.active;
-                    saveData();
-                    renderAll();
-                    return { success: true };
-                }
-                return { success: false };
-            }
-
-            // ==================== KEY FUNCTIONS ====================
-            async function createKey(value, plan = 'pro', durationDays = 30, userEmail = null, syncToFirebase = true) {
-                if (!value) return { success: false, error: 'Vui lòng nhập key!' };
-                if (findKeyByValue(value)) return { success: false, error: 'Key đã tồn tại!' };
-
-                const key = {
-                    value: value.trim(),
-                    plan: plan,
-                    created_at: Date.now(),
-                    expires_at: Date.now() + durationDays * 24 * 60 * 60 * 1000,
-                    user_id: null,
-                    used_at: null,
-                    used_by: null,
-                    active: true,
-                };
-
-                if (userEmail) {
-                    const user = findUserByEmail(userEmail.trim());
-                    if (user) {
-                        key.user_id = user.id;
-                        key.used_by = user.email;
-                        key.used_at = Date.now();
-                        user.key = value.trim();
-                    } else {
-                        return { success: false, error: 'Không tìm thấy người dùng với email này!' };
-                    }
-                }
-
-                state.keys.push(key);
-                saveData();
-                renderAll();
-
-                // Đồng bộ lên Firebase
-                if (syncToFirebase) {
-                    const result = await pushKeyToFirebase(key);
-                    if (!result.success) {
-                        showToast('Key đã tạo local nhưng lỗi đồng bộ Firebase: ' + result.error, 'warning');
-                    } else {
-                        showToast('Đã đồng bộ key lên Firebase', 'success');
-                    }
-                }
-
-                return { success: true, key: key };
-            }
-
-            async function deleteKey(value) {
-                const key = findKeyByValue(value);
-                if (!key) return { success: false, error: 'Không tìm thấy key!' };
-
-                state.keys = state.keys.filter(k => k.value !== value);
-
-                state.users.forEach(u => {
-                    if (u.key === value) u.key = null;
-                });
-
-                saveData();
-                renderAll();
-
-                // Xóa trên Firebase
-                const result = await deleteKeyFromFirebase(value);
-                if (!result.success) {
-                    showToast('Đã xóa local nhưng lỗi xóa Firebase: ' + result.error, 'warning');
-                }
-
-                return { success: true };
-            }
-
-            function toggleKeyStatus(value) {
-                const key = findKeyByValue(value);
-                if (key) {
-                    key.active = !key.active;
-                    saveData();
-                    renderAll();
-                    return { success: true };
-                }
-                return { success: false };
-            }
-
-            function checkKeyExpiry(value) {
-                const key = findKeyByValue(value);
-                if (!key) return { valid: false, message: 'Key không tồn tại' };
-                if (!key.active) return { valid: false, message: 'Key đã bị vô hiệu hóa' };
-                if (Date.now() > key.expires_at) return { valid: false, message: 'Key đã hết hạn' };
-                return { valid: true, message: 'Key hợp lệ', data: key };
-            }
-
-            // ==================== RENDER ====================
-            function renderStats() {
-                const total = state.users.length;
-                const pro = state.users.filter(u => u.plan === 'pro').length;
-                const keys = state.keys.length;
-                const active = state.users.filter(u => u.active).length;
-
-                document.getElementById('statUsers').textContent = total;
-                document.getElementById('statPro').textContent = pro;
-                document.getElementById('statKeys').textContent = keys;
-                document.getElementById('statActive').textContent = active;
-                document.getElementById('userCountBadge').textContent = total;
-                document.getElementById('keyCountBadge').textContent = keys;
-            }
-
-            function renderUsers(filter = '') {
-                const tbody = document.getElementById('usersTableBody');
-                let filtered = state.users;
-
-                if (filter) {
-                    const f = filter.toLowerCase();
-                    filtered = filtered.filter(u =>
-                        u.name.toLowerCase().includes(f) ||
-                        u.email.toLowerCase().includes(f) ||
-                        (u.key && u.key.toLowerCase().includes(f))
-                    );
-                }
-
-                if (filtered.length === 0) {
-                    tbody.innerHTML =
-                        `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">📭 Không có người dùng</td></tr>`;
-                    return;
-                }
-
-                let html = '';
-                filtered.forEach((user, index) => {
-                    const status = user.active ? 'active' : 'inactive';
-                    const statusText = user.active ? '🟢 Hoạt động' : '🔴 Đã khóa';
-                    const planLabel = user.plan === 'pro' ? '⭐ Pro' : '🆓 Free';
-                    const planClass = user.plan === 'pro' ? 'pro' : 'free';
-
-                    html += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td><strong>${escapeHtml(user.name)}</strong></td>
-                            <td>${escapeHtml(user.email)}</td>
-                            <td><code style="font-size:10px;background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">${user.key ? escapeHtml(user.key.slice(0,8))+'...' : '—'}</code></td>
-                            <td><span class="status-badge ${planClass}">${planLabel}</span></td>
-                            <td><span class="status-badge ${status}">${statusText}</span></td>
-                            <td>
-                                <button class="action-btn" onclick="openEditUserModal('${user.id}')" title="Sửa"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn ${user.active ? 'danger' : 'success'}" onclick="toggleUserStatus('${user.id}')" title="${user.active ? 'Khóa' : 'Mở khóa'}">
-                                    <i class="fas ${user.active ? 'fa-lock' : 'fa-unlock'}"></i>
-                                </button>
-                                <button class="action-btn danger" onclick="deleteUser('${user.id}')" title="Xóa"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                tbody.innerHTML = html;
-            }
-
-            function renderKeys(filter = '') {
-                const tbody = document.getElementById('keysTableBody');
-                let filtered = state.keys;
-
-                if (filter) {
-                    const f = filter.toLowerCase();
-                    filtered = filtered.filter(k =>
-                        k.value.toLowerCase().includes(f) ||
-                        (k.used_by && k.used_by.toLowerCase().includes(f))
-                    );
-                }
-
-                if (filtered.length === 0) {
-                    tbody.innerHTML =
-                        `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted);">📭 Chưa có key nào</td></tr>`;
-                    return;
-                }
-
-                let html = '';
-                filtered.forEach((key) => {
-                    const isExpired = Date.now() > key.expires_at;
-                    const status = key.active && !isExpired ? 'active' : 'inactive';
-                    const statusText = key.active ? (isExpired ? '🔴 Hết hạn' : '🟢 Hoạt động') : '🔴 Đã vô hiệu';
-                    const planLabel = key.plan === 'pro' ? '⭐ Pro' : '🆓 Free';
-                    const planClass = key.plan === 'pro' ? 'pro' : 'free';
-                    const user = findUserById(key.user_id);
-
-                    html += `
-                        <tr>
-                            <td><code style="font-size:11px;background:var(--bg-tertiary);padding:4px 8px;border-radius:4px;">${escapeHtml(key.value)}</code></td>
-                            <td><span class="status-badge ${planClass}">${planLabel}</span></td>
-                            <td>${user ? escapeHtml(user.name) : (key.used_by ? escapeHtml(key.used_by) : '—')}</td>
-                            <td style="font-size:11px;">${formatDateTime(key.expires_at)}</td>
-                            <td><span class="status-badge ${status}">${statusText}</span></td>
-                            <td>
-                                <button class="action-btn ${key.active ? 'danger' : 'success'}" onclick="toggleKeyStatus('${key.value}')" title="${key.active ? 'Vô hiệu' : 'Kích hoạt'}">
-                                    <i class="fas ${key.active ? 'fa-pause' : 'fa-play'}"></i>
-                                </button>
-                                <button class="action-btn danger" onclick="deleteKey('${key.value}')" title="Xóa"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                tbody.innerHTML = html;
-            }
-
-            function renderActivity() {
-                const container = document.getElementById('recentActivity');
-                const activities = [];
-
-                const recentUsers = [...state.users].sort((a, b) => b.created_at - a.created_at).slice(0, 5);
-                recentUsers.forEach(u => {
-                    activities.push(`👤 ${escapeHtml(u.name)} đã đăng ký (${formatDateTime(u.created_at)})`);
-                });
-
-                const recentKeys = [...state.keys].filter(k => k.used_at).sort((a, b) => b.used_at - a.used_at).slice(0, 3);
-                recentKeys.forEach(k => {
-                    const user = findUserById(k.user_id);
-                    activities.push(
-                        `🔑 Key ${k.value.slice(0,8)}... được sử dụng bởi ${user ? escapeHtml(user.name) : k.used_by || 'unknown'}`
-                        );
-                });
-
-                if (activities.length === 0) {
-                    container.innerHTML = '<div style="padding:4px 0;color:var(--text-muted);">✦ Hệ thống đã sẵn sàng</div>';
-                } else {
-                    container.innerHTML = activities.slice(0, 10).map(a =>
-                        `<div style="padding:4px 0;border-bottom:1px solid var(--border-color);">${a}</div>`
-                    ).join('');
-                }
-            }
-
-            function renderAll() {
-                renderStats();
-                renderUsers(document.getElementById('userSearchInput')?.value || '');
-                renderKeys(document.getElementById('keySearchInput')?.value || '');
-                renderActivity();
-                updateUI();
-            }
-
-            function updateUI() {
-                document.getElementById('headerAvatar').textContent = 'AD';
-                document.getElementById('planBadge').className = 'vip-badge';
-                document.getElementById('planBadge').textContent = '⭐ Admin';
-            }
-
-            // ==================== PAGE SWITCHING ====================
-            function switchPage(page) {
-                state.currentPage = page;
-
-                document.querySelectorAll('.sidebar-nav .nav-item').forEach(el => {
-                    el.classList.toggle('active', el.dataset.page === page);
-                });
-
-                document.querySelectorAll('#mainPanel > div').forEach(el => {
-                    const id = el.id;
-                    if (id === 'pageDashboard' && page === 'dashboard') {
-                        el.style.display = 'block';
-                    } else if (id === 'pageUsers' && page === 'users') {
-                        el.style.display = 'block';
-                        renderUsers(document.getElementById('userSearchInput')?.value || '');
-                    } else if (id === 'pageKeys' && page === 'keys') {
-                        el.style.display = 'block';
-                        renderKeys(document.getElementById('keySearchInput')?.value || '');
-                    } else if (id === 'pageSettings' && page === 'settings') {
-                        el.style.display = 'block';
-                    } else {
-                        el.style.display = 'none';
-                    }
-                });
-
-                closeMobileSidebar();
-            }
-
-            // ==================== FILTERS ====================
-            function filterUsers() {
-                const search = document.getElementById('userSearchInput').value;
-                renderUsers(search);
-            }
-
-            function filterKeys() {
-                const search = document.getElementById('keySearchInput').value;
-                renderKeys(search);
-            }
-
-            // ==================== USER MODALS ====================
-            function openAddUserModal() {
-                document.getElementById('addUserModal').classList.add('active');
-                document.getElementById('newUserName').value = '';
-                document.getElementById('newUserEmail').value = '';
-                document.getElementById('newUserPassword').value = '';
-                document.getElementById('newUserPlan').value = 'free';
-                document.getElementById('newUserKey').value = '';
-            }
-
-            function closeAddUserModal() {
-                document.getElementById('addUserModal').classList.remove('active');
-            }
-
-            function submitAddUser() {
-                const name = document.getElementById('newUserName').value.trim();
-                const email = document.getElementById('newUserEmail').value.trim();
-                const password = document.getElementById('newUserPassword').value.trim();
-                const plan = document.getElementById('newUserPlan').value;
-                const key = document.getElementById('newUserKey').value.trim() || null;
-
-                const result = createUser(name, email, password, plan, key);
-                if (!result.success) {
-                    showToast(result.error, 'error');
-                    return;
-                }
-                showToast('Đã thêm người dùng: ' + name, 'success');
-                closeAddUserModal();
-                renderAll();
-            }
-
-            function openEditUserModal(id) {
-                const user = findUserById(id);
-                if (!user) {
-                    showToast('Không tìm thấy người dùng!', 'error');
-                    return;
-                }
-
-                document.getElementById('editUserId').value = id;
-                document.getElementById('editUserName').value = user.name;
-                document.getElementById('editUserEmail').value = user.email;
-                document.getElementById('editUserPlan').value = user.plan;
-                document.getElementById('editUserStatus').value = user.active ? 'true' : 'false';
-                document.getElementById('editUserModal').classList.add('active');
-            }
-
-            function closeEditUserModal() {
-                document.getElementById('editUserModal').classList.remove('active');
-            }
-
-            function submitUpdateUser() {
-                const id = document.getElementById('editUserId').value;
-                const name = document.getElementById('editUserName').value.trim();
-                const email = document.getElementById('editUserEmail').value.trim();
-                const plan = document.getElementById('editUserPlan').value;
-                const active = document.getElementById('editUserStatus').value === 'true';
-
-                if (!name) {
-                    showToast('Vui lòng nhập họ tên!', 'warning');
-                    return;
-                }
-                if (!email) {
-                    showToast('Vui lòng nhập email!', 'warning');
-                    return;
-                }
-
-                const result = editUserData(id, { name, email, plan, active });
-                if (!result.success) {
-                    showToast(result.error, 'error');
-                    return;
-                }
-                showToast('Đã cập nhật người dùng!', 'success');
-                closeEditUserModal();
-                renderAll();
-            }
-
-            // ==================== KEY MODALS ====================
-            function fillGeneratedKey() {
-                document.getElementById('newKeyValue').value = generateRandomKey();
-            }
-
-            function openAddKeyModal() {
-                document.getElementById('addKeyModal').classList.add('active');
-                document.getElementById('newKeyValue').value = generateRandomKey();
-                document.getElementById('newKeyPlan').value = 'pro';
-                document.getElementById('newKeyDuration').value = document.getElementById('defaultKeyDuration').value || 30;
-                document.getElementById('newKeyUser').value = '';
-                document.getElementById('syncToFirebase').checked = true;
-            }
-
-            function closeAddKeyModal() {
-                document.getElementById('addKeyModal').classList.remove('active');
-            }
-
-            async function submitAddKey() {
-                let value = document.getElementById('newKeyValue').value.trim();
-                const plan = document.getElementById('newKeyPlan').value;
-                const duration = parseInt(document.getElementById('newKeyDuration').value) || 30;
-                const userEmail = document.getElementById('newKeyUser').value.trim() || null;
-                const syncToFirebase = document.getElementById('syncToFirebase').checked;
-
-                if (!value) {
-                    value = generateRandomKey();
-                    document.getElementById('newKeyValue').value = value;
-                }
-
-                const result = await createKey(value, plan, duration, userEmail, syncToFirebase);
-                if (!result.success) {
-                    showToast(result.error, 'error');
-                    return;
-                }
-                showToast('Đã tạo key: ' + value.slice(0, 8) + '...' + (syncToFirebase ? ' (đã đồng bộ Firebase)' : ' (local)'), 'success');
-                closeAddKeyModal();
-                renderAll();
-            }
-
-            // ==================== SETTINGS ====================
-            function saveSettings() {
-                const name = document.getElementById('systemName').value.trim();
-                const duration = document.getElementById('defaultKeyDuration').value;
-                const firebaseUrl = document.getElementById('firebaseUrl').value.trim();
-
-                localStorage.setItem('system_name', name);
-                localStorage.setItem('default_key_duration', duration);
-                localStorage.setItem(CONFIG.FIREBASE_URL_KEY, firebaseUrl);
-
-                showToast('Đã lưu cài đặt', 'success');
-            }
-
-            function loadSettings() {
-                document.getElementById('systemName').value = localStorage.getItem('system_name') || 'Thành Lợi Pro';
-                document.getElementById('defaultKeyDuration').value = localStorage.getItem('default_key_duration') || '30';
-                document.getElementById('firebaseUrl').value = localStorage.getItem(CONFIG.FIREBASE_URL_KEY) || 
-                    'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app/keys';
-            }
-
-            // ==================== SIDEBAR ====================
-            function toggleMobileSidebar() {
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('sidebarOverlay');
-                sidebar.classList.toggle('open');
-                if (overlay) overlay.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-            }
-
-            function closeMobileSidebar() {
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('sidebarOverlay');
-                sidebar.classList.remove('open');
-                if (overlay) overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-
-            // ==================== THEME ====================
-            function toggleTheme() {
-                const current = document.documentElement.getAttribute('data-theme');
-                const next = current === 'light' ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', next);
-                localStorage.setItem(CONFIG.THEME_KEY, next);
-                document.getElementById('themeIcon').className = next === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-            }
-
-            function loadTheme() {
-                const saved = localStorage.getItem(CONFIG.THEME_KEY);
-                if (saved === 'light') {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    document.getElementById('themeIcon').className = 'fas fa-sun';
-                }
-            }
-
-            // ==================== EXPORT / IMPORT / CLEAR ====================
-            function exportData() {
-                const data = {
-                    users: state.users,
-                    keys: state.keys,
-                    exported_at: new Date().toISOString(),
-                    version: '2.0'
-                };
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'thanhloi_pro_data_' + new Date().toISOString().slice(0, 10) + '.json';
+                a.href = url;
+                a.download = `device_config_${uid.slice(0, 8)}.mobileconfig`;
+                document.body.appendChild(a);
                 a.click();
-                showToast('Đã xuất dữ liệu', 'success');
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // Lưu thông tin lên Firebase
+                await saveDeviceInfo(uid, deviceName);
+
+                showConfigStatus('✅ Tải thành công! Mở file để cài đặt.', 'success');
+                showToast('✅ Đã tạo và tải MobileConfig', 'success');
+                
+                // Cập nhật UID hiển thị
+                currentUid = uid;
+                document.getElementById('uidDisplay').textContent = uid;
+                
+            } catch (error) {
+                console.error('Lỗi:', error);
+                showConfigStatus('❌ Lỗi tải file: ' + error.message, 'error');
+                showToast('❌ Lỗi tạo MobileConfig', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-download"></i> Tải MobileConfig';
+                setTimeout(() => {
+                    document.getElementById('configStatus').classList.remove('show');
+                }, 5000);
             }
+        }
 
-            function importData() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.json';
-                input.onchange = function(e) {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        try {
-                            const data = JSON.parse(event.target.result);
-                            if (data.users && data.keys) {
-                                if (confirm('Import sẽ ghi đè dữ liệu hiện tại. Tiếp tục?')) {
-                                    state.users = data.users;
-                                    state.keys = data.keys;
-                                    saveData();
-                                    renderAll();
-                                    showToast('Import thành công!', 'success');
-                                }
-                            } else {
-                                showToast('File không hợp lệ!', 'error');
-                            }
-                        } catch (err) {
-                            showToast('Lỗi đọc file!', 'error');
-                        }
-                    };
-                    reader.readAsText(file);
-                };
-                input.click();
-            }
+        async function saveDeviceInfo(uid, deviceName) {
+            const deviceData = {
+                uid: uid,
+                device_name: deviceName,
+                created_at: Date.now(),
+                status: 'pending',
+                attempts: 0,
+                success_count: 0,
+                admin_link: `${ADMIN_URL}?uid=${uid}`
+            };
 
-            function clearAllData() {
-                if (!confirm('Xóa TẤT CẢ dữ liệu?')) return;
-                if (!confirm('Bạn có chắc chắn? Dữ liệu sẽ không thể khôi phục!')) return;
-                state.users = [];
-                state.keys = [];
-                saveData();
-                renderAll();
-                showToast('Đã xóa tất cả dữ liệu', 'success');
-            }
+            try {
+                const response = await fetch(`${FIREBASE_URL}/devices.json`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(deviceData)
+                });
 
-            function resetData() {
-                if (!confirm('Reset toàn bộ dữ liệu về mặc định?')) return;
-                state.users = [];
-                state.keys = [];
-                saveData();
-                renderAll();
-                showToast('Đã reset dữ liệu', 'success');
-            }
-
-            // ==================== INIT ====================
-            window.switchPage = switchPage;
-            window.toggleMobileSidebar = toggleMobileSidebar;
-            window.closeMobileSidebar = closeMobileSidebar;
-            window.toggleTheme = toggleTheme;
-            window.filterUsers = filterUsers;
-            window.filterKeys = filterKeys;
-            window.openAddUserModal = openAddUserModal;
-            window.closeAddUserModal = closeAddUserModal;
-            window.addUser = submitAddUser;
-            window.openEditUserModal = openEditUserModal;
-            window.closeEditUserModal = closeEditUserModal;
-            window.updateUser = submitUpdateUser;
-            window.deleteUser = deleteUser;
-            window.toggleUserStatus = toggleUserStatus;
-            window.fillGeneratedKey = fillGeneratedKey;
-            window.openAddKeyModal = openAddKeyModal;
-            window.closeAddKeyModal = closeAddKeyModal;
-            window.submitAddKey = submitAddKey;
-            window.deleteKey = deleteKey;
-            window.toggleKeyStatus = toggleKeyStatus;
-            window.saveSettings = saveSettings;
-            window.exportData = exportData;
-            window.importData = importData;
-            window.clearAllData = clearAllData;
-            window.resetData = resetData;
-            window.checkKeyExpiry = checkKeyExpiry;
-            window.syncKeysFromFirebase = syncKeysFromFirebase;
-
-            document.addEventListener('DOMContentLoaded', function() {
-                try {
-                    hideLoading();
-                    loadTheme();
-                    loadSettings();
-                    loadData();
-                    renderAll();
-                    switchPage('dashboard');
-                    
-                    // Tự động đồng bộ Firebase khi khởi động
-                    setTimeout(() => {
-                        syncKeysFromFirebase();
-                    }, 1000);
-                    
-                    console.log('✦ Thành Lợi Pro - Quản lý người dùng v2.0');
-                    console.log(`${state.users.length} người dùng, ${state.keys.length} keys`);
-                    console.log(`Firebase URL: ${getFirebaseUrl()}`);
-                } catch (err) {
-                    console.error('Lỗi khởi tạo:', err);
-                    hideLoading();
+                if (!response.ok) {
+                    throw new Error('Không thể lưu thông tin thiết bị');
                 }
+
+                console.log('✅ Đã lưu thông tin thiết bị lên Firebase');
+                return true;
+            } catch (error) {
+                console.error('❌ Lỗi lưu device:', error);
+                throw error;
+            }
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
             });
+        }
 
-        })();
+        function showConfigStatus(message, type) {
+            const status = document.getElementById('configStatus');
+            status.textContent = message;
+            status.className = 'config-status show ' + type;
+        }
+
+        async function loadDeviceData() {
+            try {
+                const response = await fetch(`${FIREBASE_URL}/devices.json`);
+                if (!response.ok) throw new Error('Không thể tải dữ liệu');
+                
+                const data = await response.json();
+                if (!data) {
+                    showEmptyState();
+                    return;
+                }
+
+                let found = false;
+                for (const [key, device] of Object.entries(data)) {
+                    if (device.uid === currentUid) {
+                        deviceData = { ...device, key };
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    displayDeviceInfo();
+                } else {
+                    // Tạo mới nếu chưa có
+                    await createNewDevice();
+                }
+            } catch (error) {
+                console.error('Lỗi:', error);
+                showToast('Lỗi tải dữ liệu', 'error');
+            }
+        }
+
+        async function createNewDevice() {
+            const newDevice = {
+                uid: currentUid,
+                device_name: 'iPhone',
+                created_at: Date.now(),
+                status: 'active',
+                attempts: 0,
+                success_count: 0
+            };
+
+            try {
+                const response = await fetch(`${FIREBASE_URL}/devices.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newDevice)
+                });
+
+                if (!response.ok) throw new Error('Không thể tạo thiết bị');
+                
+                const result = await response.json();
+                deviceData = { ...newDevice, key: result.name };
+                displayDeviceInfo();
+                showToast('✅ Đã tạo thiết bị mới', 'success');
+            } catch (error) {
+                console.error('Lỗi:', error);
+                showToast('Lỗi tạo thiết bị', 'error');
+            }
+        }
+
+        function displayDeviceInfo() {
+            if (!deviceData) return;
+
+            document.getElementById('deviceNameDisplay').textContent = deviceData.device_name || 'Unknown';
+            document.getElementById('attemptsDisplay').textContent = deviceData.attempts || 0;
+            document.getElementById('successDisplay').textContent = deviceData.success_count || 0;
+            
+            const status = deviceData.status || 'active';
+            const statusEl = document.getElementById('statusDisplay');
+            const statusMap = {
+                'active': '🟢 Hoạt động',
+                'banned': '🚫 Bị khóa',
+                'pending': '⏳ Chờ xác nhận'
+            };
+            statusEl.innerHTML = `<span class="status-badge ${status}">${statusMap[status] || status}</span>`;
+            
+            const date = deviceData.created_at ? new Date(deviceData.created_at) : new Date();
+            document.getElementById('dateDisplay').textContent = date.toLocaleString('vi-VN');
+        }
+
+        async function banDevice() {
+            if (!deviceData || !deviceData.key) {
+                showToast('Không tìm thấy thiết bị', 'error');
+                return;
+            }
+
+            if (!confirm('Bạn có chắc muốn khóa thiết bị này?')) return;
+
+            try {
+                const response = await fetch(`${FIREBASE_URL}/devices/${deviceData.key}.json`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'banned' })
+                });
+
+                if (!response.ok) throw new Error('Không thể khóa thiết bị');
+
+                deviceData.status = 'banned';
+                displayDeviceInfo();
+                showToast('✅ Đã khóa thiết bị', 'success');
+            } catch (error) {
+                showToast('Lỗi: ' + error.message, 'error');
+            }
+        }
+
+        async function unbanDevice() {
+            if (!deviceData || !deviceData.key) {
+                showToast('Không tìm thấy thiết bị', 'error');
+                return;
+            }
+
+            if (!confirm('Bạn có chắc muốn mở khóa thiết bị này?')) return;
+
+            try {
+                const response = await fetch(`${FIREBASE_URL}/devices/${deviceData.key}.json`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'active' })
+                });
+
+                if (!response.ok) throw new Error('Không thể mở khóa thiết bị');
+
+                deviceData.status = 'active';
+                displayDeviceInfo();
+                showToast('✅ Đã mở khóa thiết bị', 'success');
+            } catch (error) {
+                showToast('Lỗi: ' + error.message, 'error');
+            }
+        }
+
+        function refreshData() {
+            loadDeviceData();
+            showToast('🔄 Đang làm mới...', 'info');
+        }
+
+        function showEmptyState() {
+            document.getElementById('deviceInfo').style.display = 'none';
+            document.getElementById('actions').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'block';
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show';
+            
+            const colors = {
+                success: 'rgba(52, 211, 153, 0.15)',
+                error: 'rgba(239, 68, 68, 0.15)',
+                info: 'rgba(59, 130, 246, 0.15)'
+            };
+            toast.style.borderColor = colors[type] || 'transparent';
+            
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
     </script>
-
 </body>
 </html>
