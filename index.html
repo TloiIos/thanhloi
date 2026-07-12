@@ -2,31 +2,72 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Thành Lợi Pro - Xác nhận thiết bị</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --primary-light: #a78bfa;
+            --secondary: #8b5cf6;
+            --accent: #c084fc;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-tertiary: #181825;
+            --bg-card: #1e1e2f;
+            --bg-hover: #2a2a3e;
+            --text-primary: #f0f0ff;
+            --text-secondary: #a0a0c0;
+            --text-muted: #6b6b88;
+            --border-color: #2a2a40;
+            --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.2);
+            --shadow-glow-strong: 0 0 60px rgba(124, 58, 237, 0.3);
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-full: 50px;
+            --font-family: 'Inter', sans-serif;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
         body {
-            font-family: -apple-system, 'Inter', sans-serif;
-            background: #0a0a0f;
-            color: #f0f0ff;
-            min-height: 100vh;
+            font-family: var(--font-family);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            margin: 0;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
         .container {
-            max-width: 500px;
+            max-width: 480px;
             width: 100%;
-            background: #1e1e2f;
-            border-radius: 20px;
-            border: 1px solid #2a2a40;
-            padding: 40px 32px;
-            box-shadow: 0 0 60px rgba(124, 58, 237, 0.15);
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 32px 24px;
+            margin: 20px;
+            box-shadow: var(--shadow-glow-strong);
             position: relative;
             overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .container::before {
             content: '';
@@ -35,59 +76,75 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #7c3aed, #8b5cf6, #a78bfa);
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
         }
         .logo {
             text-align: center;
             font-size: 48px;
             font-weight: 900;
-            color: #8b5cf6;
-            margin-bottom: 8px;
+            color: var(--secondary);
+            margin-bottom: 4px;
         }
-        .logo span { color: #a78bfa; }
+        .logo span { color: var(--primary-light); }
         .title {
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         .subtitle {
             text-align: center;
-            font-size: 14px;
-            color: #6b6b88;
-            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .device-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 12px;
         }
         .device-info {
-            background: #0a0a0f;
-            border-radius: 12px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
             padding: 16px;
-            margin-bottom: 24px;
-            border: 1px solid #2a2a40;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
         }
         .device-info .row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
-            border-bottom: 1px solid #2a2a40;
+            border-bottom: 1px solid var(--border-color);
             font-size: 13px;
         }
         .device-info .row:last-child { border-bottom: none; }
-        .device-info .label { color: #6b6b88; }
-        .device-info .value { 
-            color: #a78bfa; 
+        .device-info .label { color: var(--text-muted); font-weight: 500; }
+        .device-info .value {
+            color: var(--primary-light);
             font-family: monospace;
             font-weight: 600;
             word-break: break-all;
             max-width: 60%;
             text-align: right;
+            font-size: 12px;
+        }
+        .device-info .value .model-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(124, 58, 237, 0.2);
+            color: var(--primary-light);
+            border: 1px solid rgba(124, 58, 237, 0.3);
         }
         .btn-confirm {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
@@ -96,6 +153,7 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
+            font-family: inherit;
         }
         .btn-confirm:hover {
             transform: translateY(-2px);
@@ -106,44 +164,41 @@
             cursor: not-allowed;
             transform: none;
         }
-        .btn-confirm i { font-size: 20px; }
+        .btn-confirm i { font-size: 18px; }
+        .btn-confirm .spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
         .status-msg {
-            margin-top: 16px;
+            margin-top: 14px;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             font-size: 14px;
             display: none;
             text-align: center;
+            font-weight: 600;
         }
         .status-msg.show { display: block; }
-        .status-msg.loading { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-        .status-msg.success { background: rgba(52, 211, 153, 0.15); color: #34d399; }
-        .status-msg.error { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .status-msg.loading { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .status-msg.success { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+        .status-msg.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .status-msg.warning { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
         
         .note {
-            margin-top: 16px;
+            margin-top: 14px;
             font-size: 12px;
-            color: #6b6b88;
+            color: var(--text-muted);
             text-align: center;
         }
-        .note i { color: #8b5cf6; }
-        
-        .spinner {
-            display: inline-block;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        .note i { color: var(--secondary); }
         
         .back-to-app {
             margin-top: 12px;
             text-align: center;
-            font-size: 13px;
-            color: #6b6b88;
+            font-size: 14px;
+            color: var(--text-muted);
         }
         .back-to-app a {
-            color: #8b5cf6;
+            color: var(--secondary);
             text-decoration: none;
             font-weight: 600;
         }
@@ -151,31 +206,63 @@
         
         .status-badge {
             padding: 2px 10px;
-            border-radius: 50px;
+            border-radius: var(--radius-full);
             font-size: 10px;
             font-weight: 600;
             display: inline-block;
         }
-        .status-badge.active { background: rgba(52, 211, 153, 0.15); color: #34d399; }
-        .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-        .status-badge.pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .status-badge.active { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+        .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .status-badge.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
         
-        /* iPhone Model Badge */
-        .model-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 50px;
+        .firebase-link {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
             font-size: 11px;
-            font-weight: 700;
-            background: rgba(124, 58, 237, 0.2);
-            color: #a78bfa;
-            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: var(--text-muted);
+            word-break: break-all;
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+        .firebase-link.show { display: block; }
+        .firebase-link .label { font-weight: 600; color: var(--text-secondary); }
+        .firebase-link .link { color: var(--primary-light); font-family: monospace; }
+        .firebase-link .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .firebase-link .copy-btn:hover { color: var(--primary-light); }
+        
+        .check-status-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: inherit;
+            transition: 0.3s;
+            margin-top: 8px;
+        }
+        .check-status-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
         }
         
-        .device-icon {
-            font-size: 32px;
-            text-align: center;
-            margin-bottom: 8px;
+        @media (max-width: 480px) {
+            .container { padding: 20px 16px; margin: 12px; }
+            .logo { font-size: 36px; }
+            .title { font-size: 18px; }
+            .device-info .row { font-size: 12px; padding: 6px 0; }
+            .device-info .value { font-size: 10px; max-width: 50%; }
+            .btn-confirm { font-size: 16px; padding: 14px; }
         }
     </style>
 </head>
@@ -210,6 +297,12 @@
             </div>
         </div>
 
+        <div class="firebase-link" id="firebaseLink">
+            <div class="label">🔗 Link Firebase:</div>
+            <div class="link" id="firebaseLinkUrl"></div>
+            <button class="copy-btn" onclick="copyFirebaseLink()"><i class="fas fa-copy"></i> Sao chép</button>
+        </div>
+
         <button class="btn-confirm" id="confirmBtn" onclick="confirmDevice()">
             <i class="fas fa-check-circle"></i> Xác nhận thiết bị
         </button>
@@ -221,16 +314,20 @@
             <a href="#" onclick="goBackToApp()">Quay lại ứng dụng</a>
         </div>
 
+        <button class="check-status-btn" onclick="checkDeviceStatus()">
+            <i class="fas fa-sync-alt"></i> Kiểm tra trạng thái
+        </button>
+
         <div class="note">
             <i class="fas fa-info-circle"></i> Sau khi xác nhận, bạn sẽ được chuyển về ứng dụng để nhập API Key
         </div>
     </div>
 
     <script>
-        // Firebase Config
-        const FIREBASE_URL = 'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app';
-        const DEVICES_URL = FIREBASE_URL + '/devices';
-        const BANNED_URL = FIREBASE_URL + '/banned_devices';
+        // ============================================================
+        // CẤU HÌNH FIREBASE - MỖI UID LÀ MỘT ENDPOINT RIÊNG
+        // ============================================================
+        const FIREBASE_BASE_URL = 'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app';
         
         // URL Scheme để quay lại app
         const APP_SCHEME = 'pubg://';
@@ -238,9 +335,13 @@
         let currentUid = '';
         let deviceName = '';
         let deviceModel = '';
-        let isRegistered = false;
-        let deviceKey = null;
+        let isConfirmed = false;
+        let isBanned = false;
+        let existingData = null;
 
+        // ============================================================
+        // KHỞI TẠO
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             // Lấy thông tin từ URL
             const params = new URLSearchParams(window.location.search);
@@ -253,6 +354,13 @@
             document.getElementById('deviceNameDisplay').textContent = deviceName || 'Không có tên';
             document.getElementById('modelDisplay').innerHTML = `<span class="model-badge">${deviceModel}</span>`;
             document.getElementById('timeDisplay').textContent = new Date().toLocaleString('vi-VN');
+            
+            // Hiển thị link Firebase
+            if (currentUid) {
+                const firebaseUrl = `${FIREBASE_BASE_URL}/${currentUid}.json`;
+                document.getElementById('firebaseLinkUrl').textContent = firebaseUrl;
+                document.getElementById('firebaseLink').classList.add('show');
+            }
             
             // Set icon theo model
             updateDeviceIcon(deviceModel);
@@ -267,91 +375,62 @@
             checkDeviceStatus();
         });
 
+        // ============================================================
+        // DETECT DEVICE
+        // ============================================================
         function getDeviceModel() {
             const ua = navigator.userAgent;
             
             // iPhone Models
             if (ua.includes('iPhone')) {
-                // iPhone 16 series
                 if (ua.includes('iPhone17,1')) return 'iPhone 16 Pro';
                 if (ua.includes('iPhone17,2')) return 'iPhone 16 Pro Max';
                 if (ua.includes('iPhone17,3')) return 'iPhone 16';
                 if (ua.includes('iPhone17,4')) return 'iPhone 16 Plus';
-                
-                // iPhone 15 series
                 if (ua.includes('iPhone16,1')) return 'iPhone 15 Pro';
                 if (ua.includes('iPhone16,2')) return 'iPhone 15 Pro Max';
                 if (ua.includes('iPhone16,3')) return 'iPhone 15';
                 if (ua.includes('iPhone16,4')) return 'iPhone 15 Plus';
-                
-                // iPhone 14 series
                 if (ua.includes('iPhone15,2')) return 'iPhone 14 Pro';
                 if (ua.includes('iPhone15,3')) return 'iPhone 14 Pro Max';
                 if (ua.includes('iPhone15,4')) return 'iPhone 14';
                 if (ua.includes('iPhone15,5')) return 'iPhone 14 Plus';
-                
-                // iPhone 13 series
                 if (ua.includes('iPhone14,5')) return 'iPhone 13';
                 if (ua.includes('iPhone14,2')) return 'iPhone 13 Pro';
                 if (ua.includes('iPhone14,3')) return 'iPhone 13 Pro Max';
                 if (ua.includes('iPhone14,4')) return 'iPhone 13 Mini';
-                
-                // iPhone 12 series
                 if (ua.includes('iPhone13,1')) return 'iPhone 12 Mini';
                 if (ua.includes('iPhone13,2')) return 'iPhone 12';
                 if (ua.includes('iPhone13,3')) return 'iPhone 12 Pro';
                 if (ua.includes('iPhone13,4')) return 'iPhone 12 Pro Max';
-                
-                // iPhone 11 series
                 if (ua.includes('iPhone12,1')) return 'iPhone 11';
                 if (ua.includes('iPhone12,3')) return 'iPhone 11 Pro';
                 if (ua.includes('iPhone12,5')) return 'iPhone 11 Pro Max';
-                
-                // iPhone XS/XS Max/XR
                 if (ua.includes('iPhone11,2')) return 'iPhone XS';
                 if (ua.includes('iPhone11,4') || ua.includes('iPhone11,6')) return 'iPhone XS Max';
                 if (ua.includes('iPhone11,8')) return 'iPhone XR';
-                
-                // iPhone X
                 if (ua.includes('iPhone10,3') || ua.includes('iPhone10,6')) return 'iPhone X';
-                
-                // iPhone 8 series
                 if (ua.includes('iPhone10,1') || ua.includes('iPhone10,4')) return 'iPhone 8';
                 if (ua.includes('iPhone10,2') || ua.includes('iPhone10,5')) return 'iPhone 8 Plus';
-                
-                // iPhone 7 series
                 if (ua.includes('iPhone9,1') || ua.includes('iPhone9,3')) return 'iPhone 7';
                 if (ua.includes('iPhone9,2') || ua.includes('iPhone9,4')) return 'iPhone 7 Plus';
-                
-                // iPhone SE series
                 if (ua.includes('iPhone8,4')) return 'iPhone SE (1st gen)';
                 if (ua.includes('iPhone14,6')) return 'iPhone SE (2nd gen)';
                 if (ua.includes('iPhone15,6')) return 'iPhone SE (3rd gen)';
-                
                 return 'iPhone';
             }
-            
-            // iPad Models
-            if (ua.includes('iPad')) {
-                if (ua.includes('iPad13,4') || ua.includes('iPad13,5') || 
-                    ua.includes('iPad13,6') || ua.includes('iPad13,7')) return 'iPad Pro 11" (3rd gen)';
-                if (ua.includes('iPad13,8') || ua.includes('iPad13,9') || 
-                    ua.includes('iPad13,10') || ua.includes('iPad13,11')) return 'iPad Pro 12.9" (5th gen)';
-                if (ua.includes('iPad14,1') || ua.includes('iPad14,2')) return 'iPad Mini (6th gen)';
-                if (ua.includes('iPad14,3') || ua.includes('iPad14,4')) return 'iPad Air (4th gen)';
-                return 'iPad';
-            }
-            
-            // Mac
-            if (ua.includes('Macintosh')) {
-                return 'Mac';
-            }
-            
-            // Android
-            if (ua.includes('Android')) {
-                return 'Android';
-            }
-            
+            if (ua.includes('iPad')) return 'iPad';
+            if (ua.includes('Macintosh')) return 'Mac';
+            if (ua.includes('Android')) return 'Android';
+            return 'Unknown Device';
+        }
+
+        function getDeviceName() {
+            const ua = navigator.userAgent;
+            if (ua.includes('iPhone')) return 'iPhone';
+            if (ua.includes('iPad')) return 'iPad';
+            if (ua.includes('Mac')) return 'Mac';
+            if (ua.includes('Android')) return 'Android';
             return 'Unknown Device';
         }
 
@@ -365,65 +444,85 @@
                 icon.textContent = '📄';
             } else if (model.includes('Mac')) {
                 icon.textContent = '💻';
-            } else if (model.includes('Android')) {
-                icon.textContent = '📱';
             } else {
                 icon.textContent = '📱';
             }
         }
 
-        function getDeviceName() {
-            const ua = navigator.userAgent;
-            if (ua.includes('iPhone')) return 'iPhone';
-            if (ua.includes('iPad')) return 'iPad';
-            if (ua.includes('Mac')) return 'Mac';
-            if (ua.includes('Android')) return 'Android';
-            if (ua.includes('Windows')) return 'Windows PC';
-            return 'Unknown Device';
-        }
-
+        // ============================================================
+        // KIỂM TRA TRẠNG THÁI TỪ FIREBASE - THEO UID RIÊNG
+        // ============================================================
         async function checkDeviceStatus() {
+            if (!currentUid) return;
+            
+            const statusEl = document.getElementById('statusDisplay');
+            const btn = document.getElementById('confirmBtn');
+            
             try {
-                const response = await fetch(`${DEVICES_URL}.json?orderBy="uid"&equalTo="${currentUid}"`);
-                if (!response.ok) throw new Error('Không thể kiểm tra');
+                // Mỗi UID là một endpoint riêng trên Firebase
+                const url = `${FIREBASE_BASE_URL}/${currentUid}.json`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 
                 const data = await response.json();
-                let found = false;
+                existingData = data;
                 
-                for (const [key, device] of Object.entries(data)) {
-                    if (device.uid === currentUid) {
-                        found = true;
-                        deviceKey = key;
-                        const status = device.status || 'pending';
-                        const statusMap = {
-                            'active': '<span class="status-badge active">✅ Đã xác nhận</span>',
-                            'banned': '<span class="status-badge banned">🚫 Bị khóa</span>',
-                            'pending': '<span class="status-badge pending">⏳ Chờ xác nhận</span>'
-                        };
-                        document.getElementById('statusDisplay').innerHTML = statusMap[status] || statusMap.pending;
-                        isRegistered = true;
-                        
-                        // Nếu đã active, hiển thị nút quay lại
-                        if (status === 'active') {
-                            document.getElementById('backToApp').style.display = 'block';
-                            document.getElementById('confirmBtn').disabled = true;
-                            document.getElementById('confirmBtn').innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
-                        }
-                        break;
+                if (data) {
+                    const status = data.status || 'pending';
+                    const statusMap = {
+                        'active': '<span class="status-badge active">✅ Đã xác nhận</span>',
+                        'banned': '<span class="status-badge banned">🚫 Bị khóa</span>',
+                        'pending': '<span class="status-badge pending">⏳ Chờ xác nhận</span>'
+                    };
+                    statusEl.innerHTML = statusMap[status] || statusMap.pending;
+                    
+                    if (status === 'active') {
+                        isConfirmed = true;
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
+                        document.getElementById('backToApp').style.display = 'block';
+                        showStatus('✅ Thiết bị đã được xác nhận trước đó!', 'success');
+                    } else if (status === 'banned') {
+                        isBanned = true;
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-ban"></i> Đã bị khóa';
+                        showStatus('🚫 Thiết bị đã bị khóa!', 'error');
+                    } else {
+                        isConfirmed = false;
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
                     }
+                } else {
+                    // Chưa có dữ liệu
+                    statusEl.innerHTML = '<span class="status-badge pending">⏳ Chưa đăng ký</span>';
+                    isConfirmed = false;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
                 }
                 
-                if (!found) {
-                    document.getElementById('statusDisplay').innerHTML = '<span class="status-badge pending">⏳ Chưa đăng ký</span>';
-                }
+                return data;
+                
             } catch (error) {
                 console.error('Lỗi kiểm tra:', error);
+                statusEl.innerHTML = '<span class="status-badge pending">❌ Lỗi kiểm tra</span>';
+                showStatus('❌ Lỗi kiểm tra: ' + error.message, 'error');
+                return null;
             }
         }
 
+        // ============================================================
+        // XÁC NHẬN THIẾT BỊ - LƯU VÀO ENDPOINT RIÊNG THEO UID
+        // ============================================================
         async function confirmDevice() {
+            if (!currentUid) {
+                showStatus('❌ Không có UID!', 'error');
+                return;
+            }
+            
             const btn = document.getElementById('confirmBtn');
-            const status = document.getElementById('statusMsg');
             
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Đang xác nhận...';
@@ -431,93 +530,78 @@
             showStatus('⏳ Đang xác nhận thiết bị...', 'loading');
 
             try {
-                // Kiểm tra thiết bị đã tồn tại chưa
-                const checkResponse = await fetch(`${DEVICES_URL}.json?orderBy="uid"&equalTo="${currentUid}"`);
-                const checkData = await checkResponse.json();
+                // Kiểm tra trạng thái hiện tại
+                const currentData = await checkDeviceStatus();
                 
-                let exists = false;
-                let existingKey = null;
-                
-                for (const [key, device] of Object.entries(checkData)) {
-                    if (device.uid === currentUid) {
-                        exists = true;
-                        existingKey = key;
-                        break;
-                    }
+                if (currentData && currentData.status === 'active') {
+                    showStatus('✅ Thiết bị đã được xác nhận!', 'success');
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
+                    document.getElementById('backToApp').style.display = 'block';
+                    return;
                 }
                 
-                let result;
-                
-                if (exists && existingKey) {
-                    // Cập nhật thiết bị đã tồn tại
-                    const updateData = {
-                        status: 'active',
-                        device_name: deviceName,
-                        device_model: deviceModel,
-                        confirmed_at: Date.now(),
-                        last_active: Date.now(),
-                        updated_at: Date.now()
-                    };
-                    
-                    const updateResponse = await fetch(`${DEVICES_URL}/${existingKey}.json`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(updateData)
-                    });
-                    
-                    if (!updateResponse.ok) throw new Error('Không thể cập nhật');
-                    result = await updateResponse.json();
-                } else {
-                    // Tạo mới thiết bị
-                    const newDevice = {
-                        uid: currentUid,
-                        device_name: deviceName,
-                        device_model: deviceModel,
-                        registered_at: Date.now(),
-                        confirmed_at: Date.now(),
-                        status: 'active',
-                        attempts: 0,
-                        success_count: 0,
-                        last_active: Date.now(),
-                        created_at: Date.now()
-                    };
-                    
-                    const createResponse = await fetch(`${DEVICES_URL}.json`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(newDevice)
-                    });
-                    
-                    if (!createResponse.ok) throw new Error('Không thể tạo thiết bị');
-                    result = await createResponse.json();
+                if (currentData && currentData.status === 'banned') {
+                    showStatus('🚫 Thiết bị đã bị khóa!', 'error');
+                    btn.innerHTML = '<i class="fas fa-ban"></i> Đã bị khóa';
+                    return;
                 }
-                
+
+                // Tạo dữ liệu thiết bị
+                const deviceData = {
+                    uid: currentUid,
+                    device_name: deviceName,
+                    device_model: deviceModel,
+                    status: 'active',
+                    confirmed_at: Date.now(),
+                    last_active: Date.now(),
+                    created_at: Date.now(),
+                    attempts: 0,
+                    success_count: 0
+                };
+
+                // Lưu vào Firebase tại endpoint riêng theo UID
+                const url = `${FIREBASE_BASE_URL}/${currentUid}.json`;
+                const response = await fetch(url, {
+                    method: 'PUT', // PUT để ghi đè hoặc tạo mới tại path này
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(deviceData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('✅ Đã lưu vào Firebase:', result);
+
+                // Cập nhật UI
                 showStatus('✅ Xác nhận thành công! Thiết bị đã được đăng ký.', 'success');
                 document.getElementById('statusDisplay').innerHTML = '<span class="status-badge active">✅ Đã xác nhận</span>';
                 document.getElementById('backToApp').style.display = 'block';
-                document.getElementById('confirmBtn').innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
-                
-                // Lưu vào localStorage để biết đã xác nhận
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
+                btn.disabled = true;
+                isConfirmed = true;
+
+                // Lưu vào localStorage
                 localStorage.setItem('device_confirmed', 'true');
                 localStorage.setItem('device_uid', currentUid);
-                localStorage.setItem('device_model', deviceModel);
-                
+
                 // Tự động quay lại app sau 2 giây
                 setTimeout(() => {
                     goBackToApp();
                 }, 2000);
-                
+
             } catch (error) {
-                console.error('Lỗi:', error);
+                console.error('Lỗi xác nhận:', error);
                 showStatus('❌ Lỗi xác nhận: ' + error.message, 'error');
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
-                setTimeout(() => {
-                    document.getElementById('statusMsg').classList.remove('show');
-                }, 5000);
             }
         }
 
+        // ============================================================
+        // CÁC HÀM HỖ TRỢ
+        // ============================================================
         function showStatus(message, type) {
             const status = document.getElementById('statusMsg');
             status.textContent = message;
@@ -525,11 +609,10 @@
         }
 
         function goBackToApp() {
-            // Thử mở app bằng URL Scheme
             const appUrl = `${APP_SCHEME}?action=confirmed&uid=${currentUid}&model=${encodeURIComponent(deviceModel)}`;
             window.location.href = appUrl;
             
-            // Fallback: nếu không mở được, hiển thị hướng dẫn
+            // Fallback
             setTimeout(() => {
                 document.getElementById('backToApp').innerHTML = `
                     <i class="fas fa-exclamation-triangle"></i> 
@@ -543,7 +626,6 @@
             navigator.clipboard.writeText(currentUid).then(() => {
                 showStatus('✅ Đã sao chép UID: ' + currentUid, 'success');
             }).catch(() => {
-                // Fallback
                 const textarea = document.createElement('textarea');
                 textarea.value = currentUid;
                 document.body.appendChild(textarea);
@@ -553,9 +635,30 @@
                 showStatus('✅ Đã sao chép UID: ' + currentUid, 'success');
             });
         }
-        
-        // Tự động kiểm tra lại trạng thái mỗi 10 giây
-        setInterval(checkDeviceStatus, 10000);
+
+        function copyFirebaseLink() {
+            const link = document.getElementById('firebaseLinkUrl').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showStatus('✅ Đã sao chép link Firebase', 'success');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = link;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showStatus('✅ Đã sao chép link Firebase', 'success');
+            });
+        }
+
+        // ============================================================
+        // EXPORT TO GLOBAL
+        // ============================================================
+        window.confirmDevice = confirmDevice;
+        window.checkDeviceStatus = checkDeviceStatus;
+        window.goBackToApp = goBackToApp;
+        window.copyUid = copyUid;
+        window.copyFirebaseLink = copyFirebaseLink;
     </script>
 </body>
 </html>
