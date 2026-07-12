@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thành Lợi Pro - Admin</title>
+    <title>Thành Lợi Pro - Xác nhận thiết bị</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,697 +12,397 @@
             background: #0a0a0f;
             color: #f0f0ff;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            padding: 40px 0;
-            border-bottom: 1px solid #2a2a40;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            font-size: 32px;
-            font-weight: 800;
-            color: #8b5cf6;
-        }
-        .header h1 span { color: #a78bfa; }
-        .header p { color: #6b6b88; margin-top: 8px; }
-        
-        .device-card {
+            max-width: 500px;
+            width: 100%;
             background: #1e1e2f;
-            border-radius: 14px;
+            border-radius: 20px;
             border: 1px solid #2a2a40;
-            padding: 24px;
-            margin-bottom: 20px;
+            padding: 40px 32px;
+            box-shadow: 0 0 60px rgba(124, 58, 237, 0.15);
+            position: relative;
+            overflow: hidden;
         }
-        .device-card .uid {
-            font-size: 12px;
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #7c3aed, #8b5cf6, #a78bfa);
+        }
+        .logo {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 900;
+            color: #8b5cf6;
+            margin-bottom: 8px;
+        }
+        .logo span { color: #a78bfa; }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
             color: #6b6b88;
-            font-family: monospace;
-            background: #0a0a0f;
-            padding: 4px 12px;
-            border-radius: 4px;
-            display: inline-block;
+            margin-bottom: 24px;
         }
-        .device-card .info-row {
+        .device-info {
+            background: #0a0a0f;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px solid #2a2a40;
+        }
+        .device-info .row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid #2a2a40;
+            font-size: 13px;
         }
-        .device-card .info-row:last-child { border-bottom: none; }
-        .device-card .label { color: #6b6b88; }
-        .device-card .value { color: #f0f0ff; font-weight: 500; }
+        .device-info .row:last-child { border-bottom: none; }
+        .device-info .label { color: #6b6b88; }
+        .device-info .value { 
+            color: #a78bfa; 
+            font-family: monospace;
+            font-weight: 600;
+            word-break: break-all;
+            max-width: 60%;
+            text-align: right;
+        }
+        .btn-confirm {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 30px rgba(124, 58, 237, 0.4);
+        }
+        .btn-confirm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-confirm i { font-size: 20px; }
+        .status-msg {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+        }
+        .status-msg.show { display: block; }
+        .status-msg.loading { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .status-msg.success { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .status-msg.error { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        
+        .note {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #6b6b88;
+            text-align: center;
+        }
+        .note i { color: #8b5cf6; }
+        
+        .spinner {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .back-to-app {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b6b88;
+        }
+        .back-to-app a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-to-app a:hover { text-decoration: underline; }
         
         .status-badge {
-            padding: 4px 12px;
+            padding: 2px 10px;
             border-radius: 50px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             display: inline-block;
         }
         .status-badge.active { background: rgba(52, 211, 153, 0.15); color: #34d399; }
         .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
         .status-badge.pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 14px;
-        }
-        .btn-danger { background: #ef4444; color: white; }
-        .btn-danger:hover { background: #dc2626; }
-        .btn-success { background: #34d399; color: white; }
-        .btn-success:hover { background: #059669; }
-        .btn-primary { background: #7c3aed; color: white; }
-        .btn-primary:hover { background: #6d28d9; }
-        .btn-warning { background: #fbbf24; color: #000; }
-        .btn-warning:hover { background: #f59e0b; }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6b6b88;
-        }
-        .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
-        
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 14px 28px;
-            background: #1e1e2f;
-            border: 1px solid #2a2a40;
-            border-radius: 14px;
-            box-shadow: 0 0 40px rgba(124, 58, 237, 0.2);
-            display: none;
-            z-index: 1000;
-        }
-        .toast.show { display: block; }
-
-        /* MobileConfig Section */
-        .mobile-config-section {
-            background: linear-gradient(135deg, #1e1e2f, #2a1a3e);
-            border-radius: 14px;
-            border: 2px solid #7c3aed;
-            padding: 24px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .mobile-config-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(124, 58, 237, 0.1), transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-        @keyframes rotate {
-            to { transform: rotate(360deg); }
-        }
-        .mobile-config-section .config-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #f0f0ff;
-            position: relative;
-            z-index: 1;
-        }
-        .mobile-config-section .config-title i {
-            color: #8b5cf6;
-            margin-right: 10px;
-        }
-        .mobile-config-section .config-desc {
-            font-size: 14px;
-            color: #a0a0c0;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-        }
-        .mobile-config-section .config-btn {
-            padding: 14px 24px;
-            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 16px;
-            width: 100%;
-            transition: 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-        .mobile-config-section .config-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
-        }
-        .mobile-config-section .config-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .mobile-config-section .config-info {
-            display: flex;
-            gap: 16px;
-            margin-top: 12px;
-            font-size: 12px;
-            color: #6b6b88;
-            position: relative;
-            z-index: 1;
-        }
-        .mobile-config-section .config-info i {
-            color: #8b5cf6;
-        }
-        .mobile-config-section .config-status {
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            display: none;
-            position: relative;
-            z-index: 1;
-        }
-        .mobile-config-section .config-status.show {
-            display: block;
-        }
-        .mobile-config-section .config-status.loading {
-            background: rgba(59, 130, 246, 0.15);
-            color: #3b82f6;
-        }
-        .mobile-config-section .config-status.success {
-            background: rgba(52, 211, 153, 0.15);
-            color: #34d399;
-        }
-        .mobile-config-section .config-status.error {
-            background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-        }
-        
-        .config-steps {
-            background: #0a0a0f;
-            border-radius: 10px;
-            padding: 16px;
-            margin-top: 12px;
-            position: relative;
-            z-index: 1;
-        }
-        .config-steps .step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 6px 0;
-            font-size: 13px;
-            color: #a0a0c0;
-        }
-        .config-steps .step .num {
-            width: 22px;
-            height: 22px;
-            background: #7c3aed;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        
-        .generated-uid {
-            background: #0a0a0f;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-family: monospace;
-            font-size: 13px;
-            color: #a78bfa;
-            border: 1px solid #2a2a40;
-            margin: 8px 0;
-            word-break: break-all;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>✦ Thành <span>Lợi</span> Pro</h1>
-            <p>🔑 Quản lý thiết bị và key</p>
-        </div>
+        <div class="logo">✦ Thành <span>Lợi</span></div>
+        <div class="title">📱 Xác nhận thiết bị</div>
+        <div class="subtitle">Xác nhận thiết bị để sử dụng ứng dụng</div>
 
-        <!-- MobileConfig Section -->
-        <div class="mobile-config-section" id="mobileConfigSection">
-            <div class="config-title">
-                <i class="fas fa-mobile-alt"></i> Tải MobileConfig
+        <div class="device-info">
+            <div class="row">
+                <span class="label">📱 Tên thiết bị</span>
+                <span class="value" id="deviceNameDisplay">Đang tải...</span>
             </div>
-            <div class="config-desc">
-                Tải file cấu hình để đăng ký thiết bị vào hệ thống. 
-                <strong style="color:#8b5cf6;">Bắt buộc</strong> để sử dụng ứng dụng.
+            <div class="row">
+                <span class="label">🔑 UID</span>
+                <span class="value" id="uidDisplay">Đang tải...</span>
             </div>
-
-            <div style="margin-bottom:12px;">
-                <span style="font-size:12px; color:#6b6b88;">🔑 UID của thiết bị:</span>
-                <div class="generated-uid" id="generatedUid">Đang tạo...</div>
+            <div class="row">
+                <span class="label">📅 Thời gian</span>
+                <span class="value" id="timeDisplay">Đang tải...</span>
             </div>
-
-            <button class="config-btn" id="downloadConfigBtn" onclick="downloadMobileConfig()">
-                <i class="fas fa-download"></i> Tải MobileConfig
-            </button>
-
-            <div class="config-status" id="configStatus"></div>
-
-            <div class="config-steps">
-                <div style="font-size:12px; font-weight:600; color:#6b6b88; margin-bottom:8px;">
-                    📋 Hướng dẫn cài đặt:
-                </div>
-                <div class="step">
-                    <span class="num">1</span>
-                    <span>Nhấn <strong>"Tải MobileConfig"</strong></span>
-                </div>
-                <div class="step">
-                    <span class="num">2</span>
-                    <span>Mở file <strong>.mobileconfig</strong> vừa tải</span>
-                </div>
-                <div class="step">
-                    <span class="num">3</span>
-                    <span>Chọn <strong>"Cài đặt"</strong> và nhập mật khẩu (nếu có)</span>
-                </div>
-                <div class="step">
-                    <span class="num">4</span>
-                    <span>Chọn <strong>"Cài đặt"</strong> lần nữa để hoàn tất</span>
-                </div>
-                <div class="step">
-                    <span class="num">5</span>
-                    <span>Quay lại ứng dụng và nhập <strong>API Key</strong></span>
-                </div>
-            </div>
-
-            <div class="config-info">
-                <span><i class="fas fa-info-circle"></i> File sẽ tự động tải xuống</span>
-                <span><i class="fas fa-shield-alt"></i> Bảo mật cao</span>
+            <div class="row">
+                <span class="label">📊 Trạng thái</span>
+                <span class="value" id="statusDisplay"><span class="status-badge pending">⏳ Chờ xác nhận</span></span>
             </div>
         </div>
 
-        <!-- Device Info -->
-        <div id="deviceInfo">
-            <div class="device-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h3>📱 Thông tin thiết bị</h3>
-                    <span class="uid" id="uidDisplay">Đang tải...</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Tên thiết bị</span>
-                    <span class="value" id="deviceNameDisplay">Đang tải...</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Trạng thái</span>
-                    <span class="value" id="statusDisplay">Đang tải...</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Số lần thử</span>
-                    <span class="value" id="attemptsDisplay">0</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Thành công</span>
-                    <span class="value" id="successDisplay">0</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Ngày đăng ký</span>
-                    <span class="value" id="dateDisplay">Đang tải...</span>
-                </div>
-            </div>
+        <button class="btn-confirm" id="confirmBtn" onclick="confirmDevice()">
+            <i class="fas fa-check-circle"></i> Xác nhận thiết bị
+        </button>
+
+        <div class="status-msg" id="statusMsg"></div>
+
+        <div class="back-to-app" id="backToApp" style="display:none;">
+            <i class="fas fa-arrow-left"></i> 
+            <a href="#" onclick="goBackToApp()">Quay lại ứng dụng</a>
         </div>
 
-        <div id="actions" style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button class="btn btn-danger" onclick="banDevice()"><i class="fas fa-ban"></i> Khóa thiết bị</button>
-            <button class="btn btn-success" onclick="unbanDevice()"><i class="fas fa-unlock"></i> Mở khóa</button>
-            <button class="btn btn-primary" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Làm mới</button>
-        </div>
-
-        <div id="emptyState" class="empty-state" style="display:none;">
-            <i class="fas fa-mobile-alt"></i>
-            <p>Không tìm thấy thông tin thiết bị</p>
-            <p style="font-size:13px; margin-top:8px;">Vui lòng tải MobileConfig trước</p>
+        <div class="note">
+            <i class="fas fa-info-circle"></i> Sau khi xác nhận, bạn sẽ được chuyển về ứng dụng để nhập API Key
         </div>
     </div>
 
-    <div class="toast" id="toast"></div>
-
     <script>
+        // Firebase Config
         const FIREBASE_URL = 'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app';
-        const ADMIN_URL = window.location.origin + window.location.pathname;
+        const DEVICES_URL = FIREBASE_URL + '/devices';
+        const BANNED_URL = FIREBASE_URL + '/banned_devices';
+        
+        // URL Scheme để quay lại app
+        const APP_SCHEME = 'thanhloipro://';
+        
         let currentUid = '';
-        let deviceData = null;
-        let generatedUID = '';
+        let deviceName = '';
+        let isRegistered = false;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Tạo UID mới
-            generatedUID = generateUID();
-            document.getElementById('generatedUid').textContent = generatedUID;
-
-            // Lấy UID từ URL
+            // Lấy thông tin từ URL
             const params = new URLSearchParams(window.location.search);
-            currentUid = params.get('uid');
+            currentUid = params.get('uid') || '';
+            deviceName = params.get('device') || getDeviceName();
             
-            if (currentUid) {
-                document.getElementById('uidDisplay').textContent = currentUid;
-                loadDeviceData();
-            } else {
-                document.getElementById('deviceInfo').style.display = 'none';
-                document.getElementById('actions').style.display = 'none';
-                document.getElementById('emptyState').style.display = 'block';
+            // Hiển thị thông tin
+            document.getElementById('uidDisplay').textContent = currentUid || 'Không có UID';
+            document.getElementById('deviceNameDisplay').textContent = deviceName || 'Không có tên';
+            document.getElementById('timeDisplay').textContent = new Date().toLocaleString('vi-VN');
+            
+            if (!currentUid) {
+                showStatus('❌ Không tìm thấy UID. Vui lòng mở lại từ ứng dụng.', 'error');
+                document.getElementById('confirmBtn').disabled = true;
+                return;
             }
+            
+            // Kiểm tra trạng thái thiết bị
+            checkDeviceStatus();
         });
 
-        function generateUID() {
-            return 'UID-' + Date.now().toString(36).toUpperCase() + '-' + 
-                   Math.random().toString(36).slice(2, 7).toUpperCase();
+        function getDeviceName() {
+            const ua = navigator.userAgent;
+            if (ua.includes('iPhone')) return 'iPhone';
+            if (ua.includes('iPad')) return 'iPad';
+            if (ua.includes('Mac')) return 'Mac';
+            if (ua.includes('Android')) return 'Android';
+            if (ua.includes('Windows')) return 'Windows PC';
+            return 'Unknown Device';
         }
 
-        async function downloadMobileConfig() {
-            const btn = document.getElementById('downloadConfigBtn');
-            const status = document.getElementById('configStatus');
+        async function checkDeviceStatus() {
+            try {
+                const response = await fetch(`${DEVICES_URL}.json?orderBy="uid"&equalTo="${currentUid}"`);
+                if (!response.ok) throw new Error('Không thể kiểm tra');
+                
+                const data = await response.json();
+                let found = false;
+                
+                for (const [key, device] of Object.entries(data)) {
+                    if (device.uid === currentUid) {
+                        found = true;
+                        const status = device.status || 'pending';
+                        const statusMap = {
+                            'active': '<span class="status-badge active">✅ Đã xác nhận</span>',
+                            'banned': '<span class="status-badge banned">🚫 Bị khóa</span>',
+                            'pending': '<span class="status-badge pending">⏳ Chờ xác nhận</span>'
+                        };
+                        document.getElementById('statusDisplay').innerHTML = statusMap[status] || statusMap.pending;
+                        isRegistered = true;
+                        break;
+                    }
+                }
+                
+                if (!found) {
+                    document.getElementById('statusDisplay').innerHTML = '<span class="status-badge pending">⏳ Chưa đăng ký</span>';
+                }
+            } catch (error) {
+                console.error('Lỗi kiểm tra:', error);
+            }
+        }
+
+        async function confirmDevice() {
+            const btn = document.getElementById('confirmBtn');
+            const status = document.getElementById('statusMsg');
             
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tạo...';
+            btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Đang xác nhận...';
             
-            showConfigStatus('⏳ Đang tạo MobileConfig...', 'loading');
+            showStatus('⏳ Đang xác nhận thiết bị...', 'loading');
 
             try {
-                const uid = generatedUID;
-                const deviceName = 'iPhone';
-                const dateStr = new Date().toISOString();
-                const configUUID = generateUUID();
-                const configUUID2 = generateUUID();
+                // Kiểm tra thiết bị đã tồn tại chưa
+                const checkResponse = await fetch(`${DEVICES_URL}.json?orderBy="uid"&equalTo="${currentUid}"`);
+                const checkData = await checkResponse.json();
                 
-                // Tạo nội dung MobileConfig
-                const configXML = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>PayloadContent</key>
-    <array>
-        <dict>
-            <key>PayloadDescription</key>
-            <string>Cấu hình thiết bị Thành Lợi Pro</string>
-            <key>PayloadDisplayName</key>
-            <string>Thành Lợi Pro Config</string>
-            <key>PayloadIdentifier</key>
-            <string>com.thanhloi.pro.device.config</string>
-            <key>PayloadOrganization</key>
-            <string>Thành Lợi Pro</string>
-            <key>PayloadType</key>
-            <string>com.apple.donotdisturb</string>
-            <key>PayloadUUID</key>
-            <string>${configUUID}</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>PayloadEnabled</key>
-            <true/>
-            <key>DeviceUID</key>
-            <string>${uid}</string>
-            <key>DeviceName</key>
-            <string>${deviceName}</string>
-            <key>RegisteredAt</key>
-            <string>${dateStr}</string>
-            <key>AdminLink</key>
-            <string>${ADMIN_URL}?uid=${uid}</string>
-            <key>ApiKeyURL</key>
-            <string>${FIREBASE_URL}/keys.json</string>
-            <key>FirebaseURL</key>
-            <string>${FIREBASE_URL}</string>
-        </dict>
-    </array>
-    <key>PayloadDescription</key>
-    <string>Cấu hình thiết bị cho hệ thống Thành Lợi Pro</string>
-    <key>PayloadDisplayName</key>
-    <string>Thành Lợi Pro Configuration</string>
-    <key>PayloadIdentifier</key>
-    <string>com.thanhloi.pro.device</string>
-    <key>PayloadOrganization</key>
-    <string>Thành Lợi Pro</string>
-    <key>PayloadRemovalDisallowed</key>
-    <false/>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadUUID</key>
-    <string>${configUUID2}</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
-</dict>
-</plist>`;
-
-                // Tạo file và tải xuống
-                const blob = new Blob([configXML], { 
-                    type: 'application/x-apple-aspen-config' 
-                });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `device_config_${uid.slice(0, 8)}.mobileconfig`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                // Lưu thông tin lên Firebase
-                await saveDeviceInfo(uid, deviceName);
-
-                showConfigStatus('✅ Tải thành công! Mở file để cài đặt.', 'success');
-                showToast('✅ Đã tạo và tải MobileConfig', 'success');
+                let exists = false;
+                let deviceKey = null;
                 
-                // Cập nhật UID hiển thị
-                currentUid = uid;
-                document.getElementById('uidDisplay').textContent = uid;
+                for (const [key, device] of Object.entries(checkData)) {
+                    if (device.uid === currentUid) {
+                        exists = true;
+                        deviceKey = key;
+                        break;
+                    }
+                }
+                
+                let result;
+                
+                if (exists && deviceKey) {
+                    // Cập nhật thiết bị đã tồn tại
+                    const updateData = {
+                        status: 'active',
+                        device_name: deviceName,
+                        confirmed_at: Date.now(),
+                        last_active: Date.now()
+                    };
+                    
+                    const updateResponse = await fetch(`${DEVICES_URL}/${deviceKey}.json`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updateData)
+                    });
+                    
+                    if (!updateResponse.ok) throw new Error('Không thể cập nhật');
+                    result = await updateResponse.json();
+                } else {
+                    // Tạo mới thiết bị
+                    const newDevice = {
+                        uid: currentUid,
+                        device_name: deviceName,
+                        registered_at: Date.now(),
+                        confirmed_at: Date.now(),
+                        status: 'active',
+                        attempts: 0,
+                        success_count: 0,
+                        last_active: Date.now()
+                    };
+                    
+                    const createResponse = await fetch(`${DEVICES_URL}.json`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newDevice)
+                    });
+                    
+                    if (!createResponse.ok) throw new Error('Không thể tạo thiết bị');
+                    result = await createResponse.json();
+                }
+                
+                showStatus('✅ Xác nhận thành công! Thiết bị đã được đăng ký.', 'success');
+                document.getElementById('statusDisplay').innerHTML = '<span class="status-badge active">✅ Đã xác nhận</span>';
+                document.getElementById('backToApp').style.display = 'block';
+                
+                // Lưu vào localStorage để biết đã xác nhận
+                localStorage.setItem('device_confirmed', 'true');
+                localStorage.setItem('device_uid', currentUid);
+                
+                // Tự động quay lại app sau 2 giây
+                setTimeout(() => {
+                    goBackToApp();
+                }, 2000);
                 
             } catch (error) {
                 console.error('Lỗi:', error);
-                showConfigStatus('❌ Lỗi tải file: ' + error.message, 'error');
-                showToast('❌ Lỗi tạo MobileConfig', 'error');
+                showStatus('❌ Lỗi xác nhận: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-download"></i> Tải MobileConfig';
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
                 setTimeout(() => {
-                    document.getElementById('configStatus').classList.remove('show');
+                    document.getElementById('statusMsg').classList.remove('show');
                 }, 5000);
             }
         }
 
-        async function saveDeviceInfo(uid, deviceName) {
-            const deviceData = {
-                uid: uid,
-                device_name: deviceName,
-                created_at: Date.now(),
-                status: 'pending',
-                attempts: 0,
-                success_count: 0,
-                admin_link: `${ADMIN_URL}?uid=${uid}`
-            };
-
-            try {
-                const response = await fetch(`${FIREBASE_URL}/devices.json`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(deviceData)
-                });
-
-                if (!response.ok) {
-                    throw new Error('Không thể lưu thông tin thiết bị');
-                }
-
-                console.log('✅ Đã lưu thông tin thiết bị lên Firebase');
-                return true;
-            } catch (error) {
-                console.error('❌ Lỗi lưu device:', error);
-                throw error;
-            }
-        }
-
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0;
-                const v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
-
-        function showConfigStatus(message, type) {
-            const status = document.getElementById('configStatus');
+        function showStatus(message, type) {
+            const status = document.getElementById('statusMsg');
             status.textContent = message;
-            status.className = 'config-status show ' + type;
+            status.className = 'status-msg show ' + type;
         }
 
-        async function loadDeviceData() {
-            try {
-                const response = await fetch(`${FIREBASE_URL}/devices.json`);
-                if (!response.ok) throw new Error('Không thể tải dữ liệu');
-                
-                const data = await response.json();
-                if (!data) {
-                    showEmptyState();
-                    return;
-                }
-
-                let found = false;
-                for (const [key, device] of Object.entries(data)) {
-                    if (device.uid === currentUid) {
-                        deviceData = { ...device, key };
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) {
-                    displayDeviceInfo();
-                } else {
-                    // Tạo mới nếu chưa có
-                    await createNewDevice();
-                }
-            } catch (error) {
-                console.error('Lỗi:', error);
-                showToast('Lỗi tải dữ liệu', 'error');
-            }
-        }
-
-        async function createNewDevice() {
-            const newDevice = {
-                uid: currentUid,
-                device_name: 'iPhone',
-                created_at: Date.now(),
-                status: 'active',
-                attempts: 0,
-                success_count: 0
-            };
-
-            try {
-                const response = await fetch(`${FIREBASE_URL}/devices.json`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newDevice)
-                });
-
-                if (!response.ok) throw new Error('Không thể tạo thiết bị');
-                
-                const result = await response.json();
-                deviceData = { ...newDevice, key: result.name };
-                displayDeviceInfo();
-                showToast('✅ Đã tạo thiết bị mới', 'success');
-            } catch (error) {
-                console.error('Lỗi:', error);
-                showToast('Lỗi tạo thiết bị', 'error');
-            }
-        }
-
-        function displayDeviceInfo() {
-            if (!deviceData) return;
-
-            document.getElementById('deviceNameDisplay').textContent = deviceData.device_name || 'Unknown';
-            document.getElementById('attemptsDisplay').textContent = deviceData.attempts || 0;
-            document.getElementById('successDisplay').textContent = deviceData.success_count || 0;
+        function goBackToApp() {
+            // Thử mở app bằng URL Scheme
+            const appUrl = APP_SCHEME + '?action=confirmed&uid=' + currentUid;
+            window.location.href = appUrl;
             
-            const status = deviceData.status || 'active';
-            const statusEl = document.getElementById('statusDisplay');
-            const statusMap = {
-                'active': '🟢 Hoạt động',
-                'banned': '🚫 Bị khóa',
-                'pending': '⏳ Chờ xác nhận'
-            };
-            statusEl.innerHTML = `<span class="status-badge ${status}">${statusMap[status] || status}</span>`;
-            
-            const date = deviceData.created_at ? new Date(deviceData.created_at) : new Date();
-            document.getElementById('dateDisplay').textContent = date.toLocaleString('vi-VN');
-        }
-
-        async function banDevice() {
-            if (!deviceData || !deviceData.key) {
-                showToast('Không tìm thấy thiết bị', 'error');
-                return;
-            }
-
-            if (!confirm('Bạn có chắc muốn khóa thiết bị này?')) return;
-
-            try {
-                const response = await fetch(`${FIREBASE_URL}/devices/${deviceData.key}.json`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: 'banned' })
-                });
-
-                if (!response.ok) throw new Error('Không thể khóa thiết bị');
-
-                deviceData.status = 'banned';
-                displayDeviceInfo();
-                showToast('✅ Đã khóa thiết bị', 'success');
-            } catch (error) {
-                showToast('Lỗi: ' + error.message, 'error');
-            }
-        }
-
-        async function unbanDevice() {
-            if (!deviceData || !deviceData.key) {
-                showToast('Không tìm thấy thiết bị', 'error');
-                return;
-            }
-
-            if (!confirm('Bạn có chắc muốn mở khóa thiết bị này?')) return;
-
-            try {
-                const response = await fetch(`${FIREBASE_URL}/devices/${deviceData.key}.json`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: 'active' })
-                });
-
-                if (!response.ok) throw new Error('Không thể mở khóa thiết bị');
-
-                deviceData.status = 'active';
-                displayDeviceInfo();
-                showToast('✅ Đã mở khóa thiết bị', 'success');
-            } catch (error) {
-                showToast('Lỗi: ' + error.message, 'error');
-            }
-        }
-
-        function refreshData() {
-            loadDeviceData();
-            showToast('🔄 Đang làm mới...', 'info');
-        }
-
-        function showEmptyState() {
-            document.getElementById('deviceInfo').style.display = 'none';
-            document.getElementById('actions').style.display = 'none';
-            document.getElementById('emptyState').style.display = 'block';
-        }
-
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast show';
-            
-            const colors = {
-                success: 'rgba(52, 211, 153, 0.15)',
-                error: 'rgba(239, 68, 68, 0.15)',
-                info: 'rgba(59, 130, 246, 0.15)'
-            };
-            toast.style.borderColor = colors[type] || 'transparent';
-            
-            clearTimeout(toast._timer);
-            toast._timer = setTimeout(() => {
-                toast.className = 'toast';
+            // Fallback: nếu không mở được, hiển thị hướng dẫn
+            setTimeout(() => {
+                document.getElementById('backToApp').innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    Không thể mở ứng dụng? 
+                    <a href="#" onclick="copyUid()">Sao chép UID</a> và mở lại ứng dụng
+                `;
             }, 3000);
+        }
+
+        function copyUid() {
+            navigator.clipboard.writeText(currentUid).then(() => {
+                showStatus('✅ Đã sao chép UID: ' + currentUid, 'success');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = currentUid;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showStatus('✅ Đã sao chép UID: ' + currentUid, 'success');
+            });
         }
     </script>
 </body>
