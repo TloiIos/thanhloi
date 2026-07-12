@@ -155,7 +155,7 @@
             gap: 12px;
             font-family: inherit;
         }
-        .btn-confirm:hover {
+        .btn-confirm:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 4px 30px rgba(124, 58, 237, 0.4);
         }
@@ -256,6 +256,52 @@
             border-color: var(--primary);
         }
         
+        .uid-list-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: inherit;
+            transition: 0.3s;
+            margin-top: 8px;
+            margin-left: 8px;
+        }
+        .uid-list-toggle:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
+        }
+        
+        .uid-list-container {
+            display: none;
+            margin-top: 10px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .uid-list-container.show { display: block; }
+        .uid-list-container .uid-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-family: monospace;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .uid-list-container .uid-item:last-child { border-bottom: none; }
+        .uid-list-container .uid-item .uid-status {
+            font-weight: 600;
+        }
+        .uid-list-container .uid-item .uid-status.active { color: var(--success); }
+        .uid-list-container .uid-item .uid-status.banned { color: var(--danger); }
+        .uid-list-container .uid-item .uid-status.pending { color: var(--warning); }
+        
         @media (max-width: 480px) {
             .container { padding: 20px 16px; margin: 12px; }
             .logo { font-size: 36px; }
@@ -314,9 +360,23 @@
             <a href="#" onclick="goBackToApp()">Quay lại ứng dụng</a>
         </div>
 
-        <button class="check-status-btn" onclick="checkDeviceStatus()">
-            <i class="fas fa-sync-alt"></i> Kiểm tra trạng thái
-        </button>
+        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px;">
+            <button class="check-status-btn" onclick="checkDeviceStatus()">
+                <i class="fas fa-sync-alt"></i> Kiểm tra
+            </button>
+            <button class="uid-list-toggle" onclick="toggleUidList()">
+                <i class="fas fa-list"></i> Danh sách UID
+            </button>
+        </div>
+
+        <div class="uid-list-container" id="uidListContainer">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">
+                📋 Danh sách UID đã xác nhận
+            </div>
+            <div id="uidListContent">
+                <div style="text-align: center; color: var(--text-muted); font-size: 12px;">Đang tải...</div>
+            </div>
+        </div>
 
         <div class="note">
             <i class="fas fa-info-circle"></i> Sau khi xác nhận, bạn sẽ được chuyển về ứng dụng để nhập API Key
@@ -325,9 +385,10 @@
 
     <script>
         // ============================================================
-        // CẤU HÌNH FIREBASE - MỖI UID LÀ MỘT ENDPOINT RIÊNG
+        // CẤU HÌNH FIREBASE
         // ============================================================
         const FIREBASE_BASE_URL = 'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app';
+        const UID_LIST_PATH = '/uid.json'; // File chứa danh sách UID đã xác nhận
         
         // URL Scheme để quay lại app
         const APP_SCHEME = 'pubg://';
@@ -338,6 +399,7 @@
         let isConfirmed = false;
         let isBanned = false;
         let existingData = null;
+        let uidListData = null;
 
         // ============================================================
         // KHỞI TẠO
@@ -373,6 +435,9 @@
             
             // Kiểm tra trạng thái thiết bị
             checkDeviceStatus();
+            
+            // Tải danh sách UID
+            loadUidList();
         });
 
         // ============================================================
@@ -381,7 +446,6 @@
         function getDeviceModel() {
             const ua = navigator.userAgent;
             
-            // iPhone Models
             if (ua.includes('iPhone')) {
                 if (ua.includes('iPhone17,1')) return 'iPhone 16 Pro';
                 if (ua.includes('iPhone17,2')) return 'iPhone 16 Pro Max';
@@ -450,7 +514,74 @@
         }
 
         // ============================================================
-        // KIỂM TRA TRẠNG THÁI TỪ FIREBASE - THEO UID RIÊNG
+        // LOAD UID LIST FROM FIREBASE
+        // ============================================================
+        async function loadUidList() {
+            try {
+                const url = `${FIREBASE_BASE_URL}${UID_LIST_PATH}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                uidListData = data;
+                renderUidList(data);
+                return data;
+            } catch (error) {
+                console.error('Lỗi tải danh sách UID:', error);
+                document.getElementById('uidListContent').innerHTML = 
+                    '<div style="text-align: center; color: var(--danger); font-size: 12px;">❌ Lỗi tải danh sách</div>';
+                return null;
+            }
+        }
+
+        function renderUidList(data) {
+            const container = document.getElementById('uidListContent');
+            
+            if (!data || Object.keys(data).length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 12px;">Chưa có UID nào được xác nhận</div>';
+                return;
+            }
+            
+            let html = '';
+            // Sắp xếp theo thời gian mới nhất
+            const sortedKeys = Object.keys(data).sort((a, b) => {
+                return (data[b].confirmed_at || 0) - (data[a].confirmed_at || 0);
+            });
+            
+            for (const key of sortedKeys) {
+                const item = data[key];
+                const status = item.status || 'pending';
+                const statusClass = status === 'active' ? 'active' : status === 'banned' ? 'banned' : 'pending';
+                const statusText = status === 'active' ? '✅' : status === 'banned' ? '🚫' : '⏳';
+                const deviceName = item.device_name || 'Unknown';
+                const confirmedAt = item.confirmed_at ? new Date(item.confirmed_at).toLocaleDateString('vi-VN') : 'N/A';
+                
+                html += `
+                    <div class="uid-item">
+                        <span>${key}</span>
+                        <span style="font-size: 10px; color: var(--text-muted);">${deviceName}</span>
+                        <span class="uid-status ${statusClass}">${statusText} ${confirmedAt}</span>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function toggleUidList() {
+            const container = document.getElementById('uidListContainer');
+            container.classList.toggle('show');
+            
+            if (container.classList.contains('show') && !uidListData) {
+                loadUidList();
+            }
+        }
+
+        // ============================================================
+        // KIỂM TRA TRẠNG THÁI TỪ FIREBASE
         // ============================================================
         async function checkDeviceStatus() {
             if (!currentUid) return;
@@ -459,7 +590,17 @@
             const btn = document.getElementById('confirmBtn');
             
             try {
-                // Mỗi UID là một endpoint riêng trên Firebase
+                // Kiểm tra trong uid.json trước
+                const uidList = await loadUidList();
+                let isInList = false;
+                let uidStatus = 'pending';
+                
+                if (uidList && uidList[currentUid]) {
+                    isInList = true;
+                    uidStatus = uidList[currentUid].status || 'pending';
+                }
+                
+                // Kiểm tra endpoint riêng
                 const url = `${FIREBASE_BASE_URL}/${currentUid}.json`;
                 const response = await fetch(url);
                 
@@ -470,34 +611,32 @@
                 const data = await response.json();
                 existingData = data;
                 
+                let status = 'pending';
                 if (data) {
-                    const status = data.status || 'pending';
-                    const statusMap = {
-                        'active': '<span class="status-badge active">✅ Đã xác nhận</span>',
-                        'banned': '<span class="status-badge banned">🚫 Bị khóa</span>',
-                        'pending': '<span class="status-badge pending">⏳ Chờ xác nhận</span>'
-                    };
-                    statusEl.innerHTML = statusMap[status] || statusMap.pending;
-                    
-                    if (status === 'active') {
-                        isConfirmed = true;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
-                        document.getElementById('backToApp').style.display = 'block';
-                        showStatus('✅ Thiết bị đã được xác nhận trước đó!', 'success');
-                    } else if (status === 'banned') {
-                        isBanned = true;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-ban"></i> Đã bị khóa';
-                        showStatus('🚫 Thiết bị đã bị khóa!', 'error');
-                    } else {
-                        isConfirmed = false;
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
-                    }
+                    status = data.status || 'pending';
+                } else if (isInList) {
+                    status = uidStatus;
+                }
+                
+                const statusMap = {
+                    'active': '<span class="status-badge active">✅ Đã xác nhận</span>',
+                    'banned': '<span class="status-badge banned">🚫 Bị khóa</span>',
+                    'pending': '<span class="status-badge pending">⏳ Chờ xác nhận</span>'
+                };
+                statusEl.innerHTML = statusMap[status] || statusMap.pending;
+                
+                if (status === 'active') {
+                    isConfirmed = true;
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
+                    document.getElementById('backToApp').style.display = 'block';
+                    showStatus('✅ Thiết bị đã được xác nhận trước đó!', 'success');
+                } else if (status === 'banned') {
+                    isBanned = true;
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-ban"></i> Đã bị khóa';
+                    showStatus('🚫 Thiết bị đã bị khóa!', 'error');
                 } else {
-                    // Chưa có dữ liệu
-                    statusEl.innerHTML = '<span class="status-badge pending">⏳ Chưa đăng ký</span>';
                     isConfirmed = false;
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
@@ -514,7 +653,7 @@
         }
 
         // ============================================================
-        // XÁC NHẬN THIẾT BỊ - LƯU VÀO ENDPOINT RIÊNG THEO UID
+        // XÁC NHẬN THIẾT BỊ - LƯU VÀO uid.json VÀ ENDPOINT RIÊNG
         // ============================================================
         async function confirmDevice() {
             if (!currentUid) {
@@ -559,10 +698,10 @@
                     success_count: 0
                 };
 
-                // Lưu vào Firebase tại endpoint riêng theo UID
+                // 1. Lưu vào endpoint riêng theo UID
                 const url = `${FIREBASE_BASE_URL}/${currentUid}.json`;
                 const response = await fetch(url, {
-                    method: 'PUT', // PUT để ghi đè hoặc tạo mới tại path này
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(deviceData)
                 });
@@ -571,8 +710,34 @@
                     throw new Error(`HTTP ${response.status}`);
                 }
 
-                const result = await response.json();
-                console.log('✅ Đã lưu vào Firebase:', result);
+                // 2. Cập nhật vào uid.json
+                const uidListUrl = `${FIREBASE_BASE_URL}${UID_LIST_PATH}`;
+                
+                // Lấy danh sách hiện tại
+                const listResponse = await fetch(uidListUrl);
+                let uidList = {};
+                if (listResponse.ok) {
+                    uidList = await listResponse.json() || {};
+                }
+                
+                // Thêm UID mới vào danh sách
+                uidList[currentUid] = {
+                    device_name: deviceName,
+                    device_model: deviceModel,
+                    status: 'active',
+                    confirmed_at: Date.now()
+                };
+                
+                // Lưu lại uid.json
+                const updateResponse = await fetch(uidListUrl, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(uidList)
+                });
+
+                if (!updateResponse.ok) {
+                    console.warn('⚠️ Không thể cập nhật uid.json:', updateResponse.status);
+                }
 
                 // Cập nhật UI
                 showStatus('✅ Xác nhận thành công! Thiết bị đã được đăng ký.', 'success');
@@ -585,6 +750,9 @@
                 // Lưu vào localStorage
                 localStorage.setItem('device_confirmed', 'true');
                 localStorage.setItem('device_uid', currentUid);
+
+                // Tải lại danh sách UID
+                loadUidList();
 
                 // Tự động quay lại app sau 2 giây
                 setTimeout(() => {
@@ -659,6 +827,8 @@
         window.goBackToApp = goBackToApp;
         window.copyUid = copyUid;
         window.copyFirebaseLink = copyFirebaseLink;
+        window.toggleUidList = toggleUidList;
+        window.loadUidList = loadUidList;
     </script>
 </body>
 </html>
