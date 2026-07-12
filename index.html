@@ -717,6 +717,22 @@
         .modal-content .modal-actions .btn-secondary:hover {
             background: var(--bg-hover);
         }
+        .firebase-status {
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+        .firebase-status.connected {
+            color: var(--success);
+            border-color: var(--success);
+        }
+        .firebase-status.disconnected {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
         @media (max-width: 768px) {
             .menu-toggle {
                 display: flex !important;
@@ -860,7 +876,11 @@
             </div>
             <div class="title-bar-right">
                 <span id="planBadge" class="vip-badge">⭐ Admin</span>
+                <span class="firebase-status" id="firebaseStatus">⏳ Firebase</span>
                 <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <button class="window-btn" onclick="syncKeysFromFirebase()" title="Đồng bộ key từ Firebase">
+                    <i class="fas fa-cloud-download-alt" style="color:var(--primary-light);"></i>
+                </button>
                 <button class="window-btn" onclick="window.location.reload()"><i class="fas fa-sync-alt"></i></button>
                 <button class="window-btn" onclick="resetData()" title="Reset dữ liệu">
                     <i class="fas fa-database" style="color:var(--warning);"></i>
@@ -981,6 +1001,9 @@
                             <div class="search-box">
                                 <input type="text" id="keySearchInput" placeholder="Tìm kiếm key..." oninput="filterKeys()" />
                                 <button onclick="openAddKeyModal()"><i class="fas fa-plus"></i> Tạo Key mới</button>
+                                <button onclick="syncKeysFromFirebase()" style="background:var(--secondary);">
+                                    <i class="fas fa-cloud-download-alt"></i> Đồng bộ
+                                </button>
                             </div>
                         </div>
                         <div class="table-scroll">
@@ -1014,6 +1037,10 @@
                         <div class="form-group">
                             <label>Thời hạn key mặc định (ngày)</label>
                             <input type="number" id="defaultKeyDuration" value="30" />
+                        </div>
+                        <div class="form-group">
+                            <label>Firebase Database URL</label>
+                            <input type="text" id="firebaseUrl" value="https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app/keys" />
                         </div>
                         <button onclick="saveSettings()" style="padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-family:inherit;transition:0.3s;width:100%;">
                             <i class="fas fa-save"></i> Lưu cài đặt
@@ -1118,6 +1145,12 @@
                 <label>Người dùng (email)</label>
                 <input type="text" id="newKeyUser" placeholder="Để trống nếu chưa gán" />
             </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="syncToFirebase" checked />
+                    Đồng bộ lên Firebase
+                </label>
+            </div>
             <div class="modal-actions">
                 <button class="btn-secondary" onclick="closeAddKeyModal()">Hủy</button>
                 <button class="btn-primary" onclick="submitAddKey()"><i class="fas fa-plus"></i> Tạo</button>
@@ -1136,6 +1169,7 @@
                 STORAGE_KEY: 'thanhloi_pro_data',
                 THEME_KEY: 'thanhloi_pro_theme',
                 TOAST_DURATION: 3000,
+                FIREBASE_URL_KEY: 'firebase_database_url',
             };
 
             // STATE
@@ -1143,6 +1177,7 @@
                 users: [],
                 keys: [],
                 currentPage: 'dashboard',
+                firebaseConnected: false,
             };
 
             // ==================== UTILITY ====================
@@ -1169,9 +1204,6 @@
                 return new Date(ts).toLocaleString('vi-VN');
             }
 
-            // Random key string generator (renamed from generateKeyValue to avoid
-            // clashing with the button handler of the same name, which previously
-            // caused infinite recursion and crashed the whole init routine).
             function generateRandomKey() {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                 let key = '';
@@ -1195,6 +1227,169 @@
                 document.getElementById('loadingScreen').classList.add('hidden');
             }
 
+            function getFirebaseUrl() {
+                return localStorage.getItem(CONFIG.FIREBASE_URL_KEY) || 
+                       'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app/keys';
+            }
+
+            // ==================== FIREBASE API ====================
+            async function syncKeysFromFirebase() {
+                const url = getFirebaseUrl();
+                const statusEl = document.getElementById('firebaseStatus');
+                
+                try {
+                    statusEl.textContent = '⏳ Đang đồng bộ...';
+                    statusEl.className = 'firebase-status';
+                    
+                    const response = await fetch(url + '.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (!data) {
+                        showToast('Không có dữ liệu từ Firebase', 'warning');
+                        statusEl.textContent = '📭 Firebase';
+                        statusEl.className = 'firebase-status';
+                        return;
+                    }
+
+                    // Chuyển đổi dữ liệu từ Firebase sang định dạng key
+                    const firebaseKeys = [];
+                    for (const [keyId, keyData] of Object.entries(data)) {
+                        if (keyData && typeof keyData === 'object') {
+                            firebaseKeys.push({
+                                id: keyId,
+                                value: keyData.key || keyData.value || keyId,
+                                plan: keyData.plan || 'pro',
+                                created_at: keyData.created_at || Date.now(),
+                                expires_at: keyData.expires_at || (Date.now() + 30 * 24 * 60 * 60 * 1000),
+                                user_id: keyData.user_id || null,
+                                used_at: keyData.used_at || null,
+                                used_by: keyData.used_by || null,
+                                active: keyData.active !== undefined ? keyData.active : true,
+                            });
+                        }
+                    }
+
+                    if (firebaseKeys.length === 0) {
+                        showToast('Không có key nào trong Firebase', 'warning');
+                        statusEl.textContent = '📭 Firebase';
+                        statusEl.className = 'firebase-status';
+                        return;
+                    }
+
+                    // Merge với key hiện có (tránh trùng lặp)
+                    const existingValues = new Set(state.keys.map(k => k.value));
+                    let addedCount = 0;
+                    
+                    for (const fbKey of firebaseKeys) {
+                        if (!existingValues.has(fbKey.value)) {
+                            state.keys.push(fbKey);
+                            addedCount++;
+                        }
+                    }
+
+                    saveData();
+                    renderAll();
+                    
+                    statusEl.textContent = `✅ Firebase (${firebaseKeys.length} keys)`;
+                    statusEl.className = 'firebase-status connected';
+                    state.firebaseConnected = true;
+                    
+                    showToast(`Đã đồng bộ ${addedCount} key mới từ Firebase`, 'success');
+                    
+                } catch (error) {
+                    console.error('Firebase sync error:', error);
+                    statusEl.textContent = '❌ Lỗi Firebase';
+                    statusEl.className = 'firebase-status disconnected';
+                    state.firebaseConnected = false;
+                    showToast('Lỗi đồng bộ Firebase: ' + error.message, 'error');
+                }
+            }
+
+            async function pushKeyToFirebase(keyData) {
+                const url = getFirebaseUrl();
+                const statusEl = document.getElementById('firebaseStatus');
+                
+                try {
+                    const response = await fetch(url + '.json', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            key: keyData.value,
+                            plan: keyData.plan,
+                            created_at: keyData.created_at || Date.now(),
+                            expires_at: keyData.expires_at || (Date.now() + 30 * 24 * 60 * 60 * 1000),
+                            user_id: keyData.user_id || null,
+                            used_at: keyData.used_at || null,
+                            used_by: keyData.used_by || null,
+                            active: keyData.active !== undefined ? keyData.active : true,
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    statusEl.textContent = '✅ Firebase';
+                    statusEl.className = 'firebase-status connected';
+                    state.firebaseConnected = true;
+                    
+                    return { success: true, firebaseId: result.name };
+                    
+                } catch (error) {
+                    console.error('Push to Firebase error:', error);
+                    statusEl.textContent = '❌ Lỗi Firebase';
+                    statusEl.className = 'firebase-status disconnected';
+                    state.firebaseConnected = false;
+                    return { success: false, error: error.message };
+                }
+            }
+
+            async function deleteKeyFromFirebase(keyValue) {
+                // Firebase Realtime Database doesn't support deleting by value directly
+                // We need to find the key ID first by fetching all keys
+                const url = getFirebaseUrl();
+                
+                try {
+                    const response = await fetch(url + '.json');
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    
+                    const data = await response.json();
+                    if (!data) return { success: true };
+                    
+                    // Find the key ID
+                    let keyId = null;
+                    for (const [id, keyData] of Object.entries(data)) {
+                        if (keyData.key === keyValue || keyData.value === keyValue) {
+                            keyId = id;
+                            break;
+                        }
+                    }
+                    
+                    if (keyId) {
+                        const deleteResponse = await fetch(`${url}/${keyId}.json`, {
+                            method: 'DELETE',
+                        });
+                        if (!deleteResponse.ok) {
+                            throw new Error(`HTTP ${deleteResponse.status}`);
+                        }
+                    }
+                    
+                    return { success: true };
+                    
+                } catch (error) {
+                    console.error('Delete from Firebase error:', error);
+                    return { success: false, error: error.message };
+                }
+            }
+
             // ==================== DATA MANAGEMENT ====================
             function loadData() {
                 try {
@@ -1208,7 +1403,6 @@
                 } catch (e) {
                     console.error('Lỗi load data:', e);
                 }
-                // Dữ liệu mẫu
                 state.users = [];
                 state.keys = [];
                 return false;
@@ -1245,7 +1439,6 @@
                 if (!name) return { success: false, error: 'Vui lòng nhập họ tên!' };
                 if (!email) return { success: false, error: 'Vui lòng nhập email!' };
 
-                // Kiểm tra key nếu có
                 if (key) {
                     const keyObj = findKeyByValue(key);
                     if (!keyObj) return { success: false, error: 'Key không tồn tại!' };
@@ -1267,7 +1460,6 @@
                 };
                 state.users.push(user);
 
-                // Cập nhật key nếu có
                 if (key) {
                     const keyObj = findKeyByValue(key);
                     if (keyObj) {
@@ -1286,7 +1478,6 @@
                 const user = findUserById(id);
                 if (!user) return { success: false, error: 'Không tìm thấy người dùng!' };
 
-                // Kiểm tra email trùng
                 if (data.email && data.email !== user.email) {
                     const existing = findUserByEmail(data.email);
                     if (existing && existing.id !== id) {
@@ -1306,7 +1497,6 @@
 
                 state.users = state.users.filter(u => u.id !== id);
 
-                // Giải phóng key
                 state.keys.forEach(k => {
                     if (k.user_id === id) {
                         k.user_id = null;
@@ -1332,7 +1522,7 @@
             }
 
             // ==================== KEY FUNCTIONS ====================
-            function createKey(value, plan = 'pro', durationDays = 30, userEmail = null) {
+            async function createKey(value, plan = 'pro', durationDays = 30, userEmail = null, syncToFirebase = true) {
                 if (!value) return { success: false, error: 'Vui lòng nhập key!' };
                 if (findKeyByValue(value)) return { success: false, error: 'Key đã tồn tại!' };
 
@@ -1347,7 +1537,6 @@
                     active: true,
                 };
 
-                // Gán cho user nếu có email
                 if (userEmail) {
                     const user = findUserByEmail(userEmail.trim());
                     if (user) {
@@ -1363,22 +1552,39 @@
                 state.keys.push(key);
                 saveData();
                 renderAll();
+
+                // Đồng bộ lên Firebase
+                if (syncToFirebase) {
+                    const result = await pushKeyToFirebase(key);
+                    if (!result.success) {
+                        showToast('Key đã tạo local nhưng lỗi đồng bộ Firebase: ' + result.error, 'warning');
+                    } else {
+                        showToast('Đã đồng bộ key lên Firebase', 'success');
+                    }
+                }
+
                 return { success: true, key: key };
             }
 
-            function deleteKey(value) {
+            async function deleteKey(value) {
                 const key = findKeyByValue(value);
                 if (!key) return { success: false, error: 'Không tìm thấy key!' };
 
                 state.keys = state.keys.filter(k => k.value !== value);
 
-                // Xóa key khỏi user
                 state.users.forEach(u => {
                     if (u.key === value) u.key = null;
                 });
 
                 saveData();
                 renderAll();
+
+                // Xóa trên Firebase
+                const result = await deleteKeyFromFirebase(value);
+                if (!result.success) {
+                    showToast('Đã xóa local nhưng lỗi xóa Firebase: ' + result.error, 'warning');
+                }
+
                 return { success: true };
             }
 
@@ -1513,13 +1719,11 @@
                 const container = document.getElementById('recentActivity');
                 const activities = [];
 
-                // Người dùng mới nhất
                 const recentUsers = [...state.users].sort((a, b) => b.created_at - a.created_at).slice(0, 5);
                 recentUsers.forEach(u => {
                     activities.push(`👤 ${escapeHtml(u.name)} đã đăng ký (${formatDateTime(u.created_at)})`);
                 });
 
-                // Key được sử dụng gần đây
                 const recentKeys = [...state.keys].filter(k => k.used_at).sort((a, b) => b.used_at - a.used_at).slice(0, 3);
                 recentKeys.forEach(k => {
                     const user = findUserById(k.user_id);
@@ -1677,29 +1881,31 @@
                 document.getElementById('newKeyPlan').value = 'pro';
                 document.getElementById('newKeyDuration').value = document.getElementById('defaultKeyDuration').value || 30;
                 document.getElementById('newKeyUser').value = '';
+                document.getElementById('syncToFirebase').checked = true;
             }
 
             function closeAddKeyModal() {
                 document.getElementById('addKeyModal').classList.remove('active');
             }
 
-            function submitAddKey() {
+            async function submitAddKey() {
                 let value = document.getElementById('newKeyValue').value.trim();
                 const plan = document.getElementById('newKeyPlan').value;
                 const duration = parseInt(document.getElementById('newKeyDuration').value) || 30;
                 const userEmail = document.getElementById('newKeyUser').value.trim() || null;
+                const syncToFirebase = document.getElementById('syncToFirebase').checked;
 
                 if (!value) {
                     value = generateRandomKey();
                     document.getElementById('newKeyValue').value = value;
                 }
 
-                const result = createKey(value, plan, duration, userEmail);
+                const result = await createKey(value, plan, duration, userEmail, syncToFirebase);
                 if (!result.success) {
                     showToast(result.error, 'error');
                     return;
                 }
-                showToast('Đã tạo key: ' + value.slice(0, 8) + '...', 'success');
+                showToast('Đã tạo key: ' + value.slice(0, 8) + '...' + (syncToFirebase ? ' (đã đồng bộ Firebase)' : ' (local)'), 'success');
                 closeAddKeyModal();
                 renderAll();
             }
@@ -1708,9 +1914,11 @@
             function saveSettings() {
                 const name = document.getElementById('systemName').value.trim();
                 const duration = document.getElementById('defaultKeyDuration').value;
+                const firebaseUrl = document.getElementById('firebaseUrl').value.trim();
 
                 localStorage.setItem('system_name', name);
                 localStorage.setItem('default_key_duration', duration);
+                localStorage.setItem(CONFIG.FIREBASE_URL_KEY, firebaseUrl);
 
                 showToast('Đã lưu cài đặt', 'success');
             }
@@ -1718,6 +1926,8 @@
             function loadSettings() {
                 document.getElementById('systemName').value = localStorage.getItem('system_name') || 'Thành Lợi Pro';
                 document.getElementById('defaultKeyDuration').value = localStorage.getItem('default_key_duration') || '30';
+                document.getElementById('firebaseUrl').value = localStorage.getItem(CONFIG.FIREBASE_URL_KEY) || 
+                    'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app/keys';
             }
 
             // ==================== SIDEBAR ====================
@@ -1821,10 +2031,6 @@
             }
 
             // ==================== INIT ====================
-            // Expose globals FIRST, before any rendering runs, so that even if
-            // something later throws, all onclick="..." handlers in the HTML
-            // still resolve (previously they were assigned last, so one error
-            // during startup could silently break every button/tab).
             window.switchPage = switchPage;
             window.toggleMobileSidebar = toggleMobileSidebar;
             window.closeMobileSidebar = closeMobileSidebar;
@@ -1839,11 +2045,9 @@
             window.updateUser = submitUpdateUser;
             window.deleteUser = deleteUser;
             window.toggleUserStatus = toggleUserStatus;
-            window.generateKeyValue = fillGeneratedKey;
             window.fillGeneratedKey = fillGeneratedKey;
             window.openAddKeyModal = openAddKeyModal;
             window.closeAddKeyModal = closeAddKeyModal;
-            window.addKey = submitAddKey;
             window.submitAddKey = submitAddKey;
             window.deleteKey = deleteKey;
             window.toggleKeyStatus = toggleKeyStatus;
@@ -1853,6 +2057,7 @@
             window.clearAllData = clearAllData;
             window.resetData = resetData;
             window.checkKeyExpiry = checkKeyExpiry;
+            window.syncKeysFromFirebase = syncKeysFromFirebase;
 
             document.addEventListener('DOMContentLoaded', function() {
                 try {
@@ -1862,8 +2067,15 @@
                     loadData();
                     renderAll();
                     switchPage('dashboard');
+                    
+                    // Tự động đồng bộ Firebase khi khởi động
+                    setTimeout(() => {
+                        syncKeysFromFirebase();
+                    }, 1000);
+                    
                     console.log('✦ Thành Lợi Pro - Quản lý người dùng v2.0');
                     console.log(`${state.users.length} người dùng, ${state.keys.length} keys`);
+                    console.log(`Firebase URL: ${getFirebaseUrl()}`);
                 } catch (err) {
                     console.error('Lỗi khởi tạo:', err);
                     hideLoading();
