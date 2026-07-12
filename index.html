@@ -8,7 +8,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, 'Inter', sans-serif;
             background: #0a0a0f;
             color: #f0f0ff;
             min-height: 100vh;
@@ -159,6 +159,24 @@
         .status-badge.active { background: rgba(52, 211, 153, 0.15); color: #34d399; }
         .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
         .status-badge.pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        
+        /* iPhone Model Badge */
+        .model-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(124, 58, 237, 0.2);
+            color: #a78bfa;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        
+        .device-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -166,11 +184,17 @@
         <div class="logo">✦ Thành <span>Lợi</span></div>
         <div class="title">📱 Xác nhận thiết bị</div>
         <div class="subtitle">Xác nhận thiết bị để sử dụng ứng dụng</div>
+        
+        <div class="device-icon" id="deviceIcon">📱</div>
 
         <div class="device-info">
             <div class="row">
-                <span class="label">📱 Tên thiết bị</span>
+                <span class="label">📱 Thiết bị</span>
                 <span class="value" id="deviceNameDisplay">Đang tải...</span>
+            </div>
+            <div class="row">
+                <span class="label">🏷️ Model</span>
+                <span class="value" id="modelDisplay"><span class="model-badge">iPhone</span></span>
             </div>
             <div class="row">
                 <span class="label">🔑 UID</span>
@@ -209,22 +233,29 @@
         const BANNED_URL = FIREBASE_URL + '/banned_devices';
         
         // URL Scheme để quay lại app
-        const APP_SCHEME = 'thanhloipro://';
+        const APP_SCHEME = 'pubg://';
         
         let currentUid = '';
         let deviceName = '';
+        let deviceModel = '';
         let isRegistered = false;
+        let deviceKey = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             // Lấy thông tin từ URL
             const params = new URLSearchParams(window.location.search);
             currentUid = params.get('uid') || '';
             deviceName = params.get('device') || getDeviceName();
+            deviceModel = getDeviceModel();
             
             // Hiển thị thông tin
             document.getElementById('uidDisplay').textContent = currentUid || 'Không có UID';
             document.getElementById('deviceNameDisplay').textContent = deviceName || 'Không có tên';
+            document.getElementById('modelDisplay').innerHTML = `<span class="model-badge">${deviceModel}</span>`;
             document.getElementById('timeDisplay').textContent = new Date().toLocaleString('vi-VN');
+            
+            // Set icon theo model
+            updateDeviceIcon(deviceModel);
             
             if (!currentUid) {
                 showStatus('❌ Không tìm thấy UID. Vui lòng mở lại từ ứng dụng.', 'error');
@@ -235,6 +266,111 @@
             // Kiểm tra trạng thái thiết bị
             checkDeviceStatus();
         });
+
+        function getDeviceModel() {
+            const ua = navigator.userAgent;
+            
+            // iPhone Models
+            if (ua.includes('iPhone')) {
+                // iPhone 16 series
+                if (ua.includes('iPhone17,1')) return 'iPhone 16 Pro';
+                if (ua.includes('iPhone17,2')) return 'iPhone 16 Pro Max';
+                if (ua.includes('iPhone17,3')) return 'iPhone 16';
+                if (ua.includes('iPhone17,4')) return 'iPhone 16 Plus';
+                
+                // iPhone 15 series
+                if (ua.includes('iPhone16,1')) return 'iPhone 15 Pro';
+                if (ua.includes('iPhone16,2')) return 'iPhone 15 Pro Max';
+                if (ua.includes('iPhone16,3')) return 'iPhone 15';
+                if (ua.includes('iPhone16,4')) return 'iPhone 15 Plus';
+                
+                // iPhone 14 series
+                if (ua.includes('iPhone15,2')) return 'iPhone 14 Pro';
+                if (ua.includes('iPhone15,3')) return 'iPhone 14 Pro Max';
+                if (ua.includes('iPhone15,4')) return 'iPhone 14';
+                if (ua.includes('iPhone15,5')) return 'iPhone 14 Plus';
+                
+                // iPhone 13 series
+                if (ua.includes('iPhone14,5')) return 'iPhone 13';
+                if (ua.includes('iPhone14,2')) return 'iPhone 13 Pro';
+                if (ua.includes('iPhone14,3')) return 'iPhone 13 Pro Max';
+                if (ua.includes('iPhone14,4')) return 'iPhone 13 Mini';
+                
+                // iPhone 12 series
+                if (ua.includes('iPhone13,1')) return 'iPhone 12 Mini';
+                if (ua.includes('iPhone13,2')) return 'iPhone 12';
+                if (ua.includes('iPhone13,3')) return 'iPhone 12 Pro';
+                if (ua.includes('iPhone13,4')) return 'iPhone 12 Pro Max';
+                
+                // iPhone 11 series
+                if (ua.includes('iPhone12,1')) return 'iPhone 11';
+                if (ua.includes('iPhone12,3')) return 'iPhone 11 Pro';
+                if (ua.includes('iPhone12,5')) return 'iPhone 11 Pro Max';
+                
+                // iPhone XS/XS Max/XR
+                if (ua.includes('iPhone11,2')) return 'iPhone XS';
+                if (ua.includes('iPhone11,4') || ua.includes('iPhone11,6')) return 'iPhone XS Max';
+                if (ua.includes('iPhone11,8')) return 'iPhone XR';
+                
+                // iPhone X
+                if (ua.includes('iPhone10,3') || ua.includes('iPhone10,6')) return 'iPhone X';
+                
+                // iPhone 8 series
+                if (ua.includes('iPhone10,1') || ua.includes('iPhone10,4')) return 'iPhone 8';
+                if (ua.includes('iPhone10,2') || ua.includes('iPhone10,5')) return 'iPhone 8 Plus';
+                
+                // iPhone 7 series
+                if (ua.includes('iPhone9,1') || ua.includes('iPhone9,3')) return 'iPhone 7';
+                if (ua.includes('iPhone9,2') || ua.includes('iPhone9,4')) return 'iPhone 7 Plus';
+                
+                // iPhone SE series
+                if (ua.includes('iPhone8,4')) return 'iPhone SE (1st gen)';
+                if (ua.includes('iPhone14,6')) return 'iPhone SE (2nd gen)';
+                if (ua.includes('iPhone15,6')) return 'iPhone SE (3rd gen)';
+                
+                return 'iPhone';
+            }
+            
+            // iPad Models
+            if (ua.includes('iPad')) {
+                if (ua.includes('iPad13,4') || ua.includes('iPad13,5') || 
+                    ua.includes('iPad13,6') || ua.includes('iPad13,7')) return 'iPad Pro 11" (3rd gen)';
+                if (ua.includes('iPad13,8') || ua.includes('iPad13,9') || 
+                    ua.includes('iPad13,10') || ua.includes('iPad13,11')) return 'iPad Pro 12.9" (5th gen)';
+                if (ua.includes('iPad14,1') || ua.includes('iPad14,2')) return 'iPad Mini (6th gen)';
+                if (ua.includes('iPad14,3') || ua.includes('iPad14,4')) return 'iPad Air (4th gen)';
+                return 'iPad';
+            }
+            
+            // Mac
+            if (ua.includes('Macintosh')) {
+                return 'Mac';
+            }
+            
+            // Android
+            if (ua.includes('Android')) {
+                return 'Android';
+            }
+            
+            return 'Unknown Device';
+        }
+
+        function updateDeviceIcon(model) {
+            const icon = document.getElementById('deviceIcon');
+            if (model.includes('Pro Max') || model.includes('Plus')) {
+                icon.textContent = '📱📱';
+            } else if (model.includes('Pro')) {
+                icon.textContent = '📱';
+            } else if (model.includes('iPad')) {
+                icon.textContent = '📄';
+            } else if (model.includes('Mac')) {
+                icon.textContent = '💻';
+            } else if (model.includes('Android')) {
+                icon.textContent = '📱';
+            } else {
+                icon.textContent = '📱';
+            }
+        }
 
         function getDeviceName() {
             const ua = navigator.userAgent;
@@ -257,6 +393,7 @@
                 for (const [key, device] of Object.entries(data)) {
                     if (device.uid === currentUid) {
                         found = true;
+                        deviceKey = key;
                         const status = device.status || 'pending';
                         const statusMap = {
                             'active': '<span class="status-badge active">✅ Đã xác nhận</span>',
@@ -265,6 +402,13 @@
                         };
                         document.getElementById('statusDisplay').innerHTML = statusMap[status] || statusMap.pending;
                         isRegistered = true;
+                        
+                        // Nếu đã active, hiển thị nút quay lại
+                        if (status === 'active') {
+                            document.getElementById('backToApp').style.display = 'block';
+                            document.getElementById('confirmBtn').disabled = true;
+                            document.getElementById('confirmBtn').innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
+                        }
                         break;
                     }
                 }
@@ -292,28 +436,30 @@
                 const checkData = await checkResponse.json();
                 
                 let exists = false;
-                let deviceKey = null;
+                let existingKey = null;
                 
                 for (const [key, device] of Object.entries(checkData)) {
                     if (device.uid === currentUid) {
                         exists = true;
-                        deviceKey = key;
+                        existingKey = key;
                         break;
                     }
                 }
                 
                 let result;
                 
-                if (exists && deviceKey) {
+                if (exists && existingKey) {
                     // Cập nhật thiết bị đã tồn tại
                     const updateData = {
                         status: 'active',
                         device_name: deviceName,
+                        device_model: deviceModel,
                         confirmed_at: Date.now(),
-                        last_active: Date.now()
+                        last_active: Date.now(),
+                        updated_at: Date.now()
                     };
                     
-                    const updateResponse = await fetch(`${DEVICES_URL}/${deviceKey}.json`, {
+                    const updateResponse = await fetch(`${DEVICES_URL}/${existingKey}.json`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(updateData)
@@ -326,12 +472,14 @@
                     const newDevice = {
                         uid: currentUid,
                         device_name: deviceName,
+                        device_model: deviceModel,
                         registered_at: Date.now(),
                         confirmed_at: Date.now(),
                         status: 'active',
                         attempts: 0,
                         success_count: 0,
-                        last_active: Date.now()
+                        last_active: Date.now(),
+                        created_at: Date.now()
                     };
                     
                     const createResponse = await fetch(`${DEVICES_URL}.json`, {
@@ -347,10 +495,12 @@
                 showStatus('✅ Xác nhận thành công! Thiết bị đã được đăng ký.', 'success');
                 document.getElementById('statusDisplay').innerHTML = '<span class="status-badge active">✅ Đã xác nhận</span>';
                 document.getElementById('backToApp').style.display = 'block';
+                document.getElementById('confirmBtn').innerHTML = '<i class="fas fa-check-circle"></i> Đã xác nhận';
                 
                 // Lưu vào localStorage để biết đã xác nhận
                 localStorage.setItem('device_confirmed', 'true');
                 localStorage.setItem('device_uid', currentUid);
+                localStorage.setItem('device_model', deviceModel);
                 
                 // Tự động quay lại app sau 2 giây
                 setTimeout(() => {
@@ -360,7 +510,6 @@
             } catch (error) {
                 console.error('Lỗi:', error);
                 showStatus('❌ Lỗi xác nhận: ' + error.message, 'error');
-            } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
                 setTimeout(() => {
@@ -377,7 +526,7 @@
 
         function goBackToApp() {
             // Thử mở app bằng URL Scheme
-            const appUrl = APP_SCHEME + '?action=confirmed&uid=' + currentUid;
+            const appUrl = `${APP_SCHEME}?action=confirmed&uid=${currentUid}&model=${encodeURIComponent(deviceModel)}`;
             window.location.href = appUrl;
             
             // Fallback: nếu không mở được, hiển thị hướng dẫn
@@ -404,6 +553,9 @@
                 showStatus('✅ Đã sao chép UID: ' + currentUid, 'success');
             });
         }
+        
+        // Tự động kiểm tra lại trạng thái mỗi 10 giây
+        setInterval(checkDeviceStatus, 10000);
     </script>
 </body>
 </html>
