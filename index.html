@@ -35,14 +35,8 @@
             --radius-sm: 10px;
             --radius-full: 50px;
             --font-family: 'Inter', sans-serif;
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
+        html, body { height: 100%; overflow: hidden; touch-action: manipulation; }
         body {
             font-family: var(--font-family);
             background: var(--bg-primary);
@@ -56,7 +50,7 @@
             height: 100%;
         }
         .container {
-            max-width: 480px;
+            max-width: 450px;
             width: 100%;
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -78,42 +72,22 @@
             height: 3px;
             background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
         }
-        .logo {
-            text-align: center;
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--secondary);
-            margin-bottom: 4px;
-        }
+        .logo { text-align: center; font-size: 44px; font-weight: 900; color: var(--secondary); margin-bottom: 2px; }
         .logo span { color: var(--primary-light); }
-        .title {
-            text-align: center;
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-        .device-icon {
-            font-size: 48px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
+        .title { text-align: center; font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+        .subtitle { text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+        .device-icon { font-size: 48px; text-align: center; margin-bottom: 12px; }
         .device-info {
             background: var(--bg-primary);
             border-radius: var(--radius-sm);
-            padding: 16px;
-            margin-bottom: 20px;
+            padding: 14px;
+            margin-bottom: 16px;
             border: 1px solid var(--border-color);
         }
         .device-info .row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid var(--border-color);
             font-size: 13px;
         }
@@ -155,24 +129,17 @@
             gap: 12px;
             font-family: inherit;
         }
-        .btn-confirm:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 30px rgba(124, 58, 237, 0.4);
-        }
-        .btn-confirm:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-confirm:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 30px rgba(124, 58, 237, 0.4); }
+        .btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-confirm i { font-size: 18px; }
         .btn-confirm .spinner { animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .status-msg {
-            margin-top: 14px;
-            padding: 12px;
+            margin-top: 12px;
+            padding: 10px;
             border-radius: var(--radius-sm);
-            font-size: 14px;
+            font-size: 13px;
             display: none;
             text-align: center;
             font-weight: 600;
@@ -183,25 +150,13 @@
         .status-msg.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
         .status-msg.warning { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
         
-        .note {
-            margin-top: 14px;
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: center;
-        }
-        .note i { color: var(--secondary); }
-        
         .back-to-app {
             margin-top: 12px;
             text-align: center;
             font-size: 14px;
             color: var(--text-muted);
         }
-        .back-to-app a {
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 600;
-        }
+        .back-to-app a { color: var(--secondary); text-decoration: none; font-weight: 600; }
         .back-to-app a:hover { text-decoration: underline; }
         
         .status-badge {
@@ -215,121 +170,14 @@
         .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
         .status-badge.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
         
-        .firebase-link {
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-sm);
-            padding: 8px 12px;
-            font-size: 11px;
-            color: var(--text-muted);
-            word-break: break-all;
-            margin-top: 10px;
-            border: 1px solid var(--border-color);
-            display: none;
-        }
-        .firebase-link.show { display: block; }
-        .firebase-link .label { font-weight: 600; color: var(--text-secondary); }
-        .firebase-link .link { color: var(--primary-light); font-family: monospace; }
-        .firebase-link .copy-btn {
-            background: transparent;
-            border: none;
-            color: var(--secondary);
-            cursor: pointer;
-            padding: 2px 8px;
-            font-size: 12px;
-        }
-        .firebase-link .copy-btn:hover { color: var(--primary-light); }
-        
-        .check-status-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 12px;
-            font-family: inherit;
-            transition: 0.3s;
-            margin-top: 8px;
-        }
-        .check-status-btn:hover {
-            background: var(--bg-hover);
-            border-color: var(--primary);
-        }
-        
-        /* UID Manager Section */
-        .uid-manager {
-            margin-top: 16px;
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            display: none;
-        }
-        .uid-manager.show { display: block; }
-        .uid-manager .uid-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .uid-manager .uid-header .title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-        .uid-manager .uid-header .actions {
-            display: flex;
-            gap: 6px;
-        }
-        .uid-manager .uid-header .actions button {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 2px 10px;
-            border-radius: var(--radius-sm);
-            font-size: 10px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: 0.3s;
-        }
-        .uid-manager .uid-header .actions button:hover {
-            background: var(--bg-hover);
-            border-color: var(--primary);
-            color: var(--text-primary);
-        }
-        .uid-manager .uid-header .actions button.danger:hover {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-        .uid-manager .uid-list {
-            max-height: 120px;
-            overflow-y: auto;
-            font-size: 11px;
-        }
-        .uid-manager .uid-list .uid-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-family: monospace;
-        }
-        .uid-manager .uid-list .uid-item:last-child { border-bottom: none; }
-        .uid-manager .uid-list .uid-item .uid-status {
-            font-size: 9px;
-            font-weight: 600;
-            padding: 1px 8px;
-            border-radius: var(--radius-full);
-        }
-        .uid-manager .uid-list .uid-item .uid-status.active { background: rgba(52, 211, 153, 0.15); color: var(--success); }
-        .uid-manager .uid-list .uid-item .uid-status.banned { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-        .uid-manager .uid-list .uid-item .uid-status.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+        .note { margin-top: 12px; font-size: 11px; color: var(--text-muted); text-align: center; }
+        .note i { color: var(--secondary); }
         
         @media (max-width: 480px) {
             .container { padding: 20px 16px; margin: 12px; }
             .logo { font-size: 36px; }
             .title { font-size: 18px; }
-            .device-info .row { font-size: 12px; padding: 6px 0; }
+            .device-info .row { font-size: 12px; padding: 5px 0; }
             .device-info .value { font-size: 10px; max-width: 50%; }
             .btn-confirm { font-size: 16px; padding: 14px; }
         }
@@ -366,26 +214,6 @@
             </div>
         </div>
 
-        <!-- UID Manager -->
-        <div class="uid-manager show" id="uidManager">
-            <div class="uid-header">
-                <span class="title">📋 UID đã lưu</span>
-                <div class="actions">
-                    <button onclick="refreshUIDList()"><i class="fas fa-sync-alt"></i> Làm mới</button>
-                    <button class="danger" onclick="clearAllUIDs()"><i class="fas fa-trash"></i> Xóa all</button>
-                </div>
-            </div>
-            <div class="uid-list" id="uidList">
-                <div style="text-align:center;color:var(--text-muted);padding:8px 0;">Đang tải...</div>
-            </div>
-        </div>
-
-        <div class="firebase-link" id="firebaseLink">
-            <div class="label">🔗 Link Firebase:</div>
-            <div class="link" id="firebaseLinkUrl"></div>
-            <button class="copy-btn" onclick="copyFirebaseLink()"><i class="fas fa-copy"></i> Sao chép</button>
-        </div>
-
         <button class="btn-confirm" id="confirmBtn" onclick="confirmDevice()">
             <i class="fas fa-check-circle"></i> Xác nhận thiết bị
         </button>
@@ -397,10 +225,6 @@
             <a href="#" onclick="goBackToApp()">Quay lại ứng dụng</a>
         </div>
 
-        <button class="check-status-btn" onclick="checkDeviceStatus()">
-            <i class="fas fa-sync-alt"></i> Kiểm tra trạng thái
-        </button>
-
         <div class="note">
             <i class="fas fa-info-circle"></i> Sau khi xác nhận, bạn sẽ được chuyển về ứng dụng để nhập API Key
         </div>
@@ -408,12 +232,11 @@
 
     <script>
         // ============================================================
-        // CẤU HÌNH FIREBASE
+        // CẤU HÌNH - KHÔNG HIỂN THỊ LINK
         // ============================================================
         const FIREBASE_BASE_URL = 'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app';
         const APP_SCHEME = 'pubg://';
-        const STORAGE_UID_KEY = 'device_uid_stored';
-        const STORAGE_UID_LIST_KEY = 'uid_list_stored';
+        const UID_LIST_URL = 'https://apikey-69de8-default-rtdb.asia-southeast1.firebasedatabase.app/uid.json';
 
         // ============================================================
         // STATE
@@ -424,208 +247,38 @@
         let isConfirmed = false;
         let isBanned = false;
         let existingData = null;
-        let uidList = [];
 
         // ============================================================
-        // UID STORAGE - KHÔNG ĐỔI KHI XÓA TẢI LẠI
-        // ============================================================
-        
-        // Tạo UID mới (chỉ dùng khi chưa có)
-        function generateUID() {
-            const timestamp = Date.now().toString(36).toUpperCase();
-            const random = Math.random().toString(36).slice(2, 8).toUpperCase();
-            return `UID-${timestamp}-${random}`;
-        }
-
-        // Lấy UID từ localStorage (không đổi)
-        function getStoredUID() {
-            let uid = localStorage.getItem(STORAGE_UID_KEY);
-            if (!uid) {
-                // Tạo mới nếu chưa có
-                uid = generateUID();
-                localStorage.setItem(STORAGE_UID_KEY, uid);
-                console.log('🆕 Tạo UID mới:', uid);
-            } else {
-                console.log('♻️ Lấy UID đã lưu:', uid);
-            }
-            return uid;
-        }
-
-        // Lấy danh sách UID đã lưu
-        function getStoredUIDList() {
-            try {
-                const list = localStorage.getItem(STORAGE_UID_LIST_KEY);
-                if (list) {
-                    uidList = JSON.parse(list);
-                    return uidList;
-                }
-            } catch (e) {
-                console.error('Lỗi đọc danh sách UID:', e);
-            }
-            uidList = [];
-            return uidList;
-        }
-
-        // Lưu UID vào danh sách
-        function saveUIDToList(uid, status = 'pending', deviceName = 'Unknown', deviceModel = 'Unknown') {
-            const existing = uidList.find(item => item.uid === uid);
-            if (!existing) {
-                uidList.push({
-                    uid: uid,
-                    device_name: deviceName,
-                    device_model: deviceModel,
-                    status: status,
-                    created_at: Date.now()
-                });
-                localStorage.setItem(STORAGE_UID_LIST_KEY, JSON.stringify(uidList));
-                renderUIDList();
-            }
-        }
-
-        // Cập nhật trạng thái UID trong danh sách
-        function updateUIDStatus(uid, status) {
-            const item = uidList.find(item => item.uid === uid);
-            if (item) {
-                item.status = status;
-                localStorage.setItem(STORAGE_UID_LIST_KEY, JSON.stringify(uidList));
-                renderUIDList();
-            }
-        }
-
-        // Xóa tất cả UID khỏi localStorage (cả UID chính)
-        function clearAllUIDs() {
-            if (!confirm('⚠️ Bạn có chắc chắn muốn xóa TẤT CẢ UID đã lưu?\n\nUID của thiết bị này sẽ bị xóa và bạn sẽ phải tạo lại!')) {
-                return;
-            }
-            if (!confirm('🚨 Hành động này KHÔNG THỂ HOÀN TÁC!')) {
-                return;
-            }
-            
-            // Xóa UID chính
-            localStorage.removeItem(STORAGE_UID_KEY);
-            // Xóa danh sách UID
-            localStorage.removeItem(STORAGE_UID_LIST_KEY);
-            // Xóa trạng thái đã xác nhận
-            localStorage.removeItem('device_confirmed');
-            localStorage.removeItem('device_uid');
-            
-            uidList = [];
-            renderUIDList();
-            
-            // Reload để tạo UID mới
-            showStatus('🔄 Đã xóa UID. Đang tạo UID mới...', 'loading');
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        }
-
-        // Refresh danh sách UID
-        function refreshUIDList() {
-            getStoredUIDList();
-            renderUIDList();
-            showStatus('🔄 Đã làm mới danh sách UID', 'success');
-        }
-
-        // Render danh sách UID
-        function renderUIDList() {
-            const container = document.getElementById('uidList');
-            if (uidList.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:8px 0;">📭 Chưa có UID nào</div>';
-                return;
-            }
-            
-            let html = '';
-            // Hiển thị UID hiện tại đầu tiên
-            const current = uidList.find(item => item.uid === currentUid);
-            if (current) {
-                const statusClass = current.status === 'active' ? 'active' : current.status === 'banned' ? 'banned' : 'pending';
-                const statusText = current.status === 'active' ? '✅' : current.status === 'banned' ? '🚫' : '⏳';
-                html += `
-                    <div class="uid-item" style="background:var(--bg-hover);border-radius:4px;padding:4px 8px;">
-                        <span><strong>👉 ${current.uid}</strong></span>
-                        <span>${current.device_name || 'Unknown'}</span>
-                        <span class="uid-status ${statusClass}">${statusText} ${current.status || 'pending'}</span>
-                    </div>
-                `;
-            }
-            
-            // Hiển thị các UID khác
-            const others = uidList.filter(item => item.uid !== currentUid);
-            others.forEach(item => {
-                const statusClass = item.status === 'active' ? 'active' : item.status === 'banned' ? 'banned' : 'pending';
-                const statusText = item.status === 'active' ? '✅' : item.status === 'banned' ? '🚫' : '⏳';
-                html += `
-                    <div class="uid-item">
-                        <span>${item.uid}</span>
-                        <span>${item.device_name || 'Unknown'}</span>
-                        <span class="uid-status ${statusClass}">${statusText}</span>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        // ============================================================
-        // KHỞI TẠO - ƯU TIÊN UID ĐÃ LƯU
+        // KHỞI TẠO - LẤY UID TỪ URL
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Lấy UID từ localStorage (KHÔNG ĐỔI)
-            currentUid = getStoredUID();
-            
-            // 2. Lấy thông tin từ URL (nếu có)
+            // 1. Lấy UID từ URL parameter
             const params = new URLSearchParams(window.location.search);
-            const urlUid = params.get('uid');
+            currentUid = params.get('uid');
             
-            // Nếu URL có UID và khác với UID đã lưu, sử dụng UID đã lưu
-            if (urlUid && urlUid !== currentUid) {
-                console.log('⚠️ UID từ URL khác với UID đã lưu. Sử dụng UID đã lưu.');
-                // Cập nhật URL để hiển thị UID đúng
-                const newUrl = window.location.pathname + '?uid=' + currentUid + 
-                              '&device=' + encodeURIComponent(deviceName) + 
-                              '&model=' + encodeURIComponent(deviceModel);
-                window.history.replaceState({}, '', newUrl);
+            if (!currentUid || currentUid.length === 0) {
+                showStatus('❌ Không tìm thấy UID. Vui lòng thử lại.', 'error');
+                document.getElementById('confirmBtn').disabled = true;
+                document.getElementById('uidDisplay').textContent = 'KHÔNG CÓ UID';
+                return;
             }
             
+            console.log('📱 UID từ URL:', currentUid);
+            
+            // 2. Lấy thông tin device
             deviceName = params.get('device') || getDeviceName();
             deviceModel = getDeviceModel();
             
-            // 3. Lưu thông tin thiết bị vào localStorage
-            localStorage.setItem('device_name', deviceName);
-            localStorage.setItem('device_model', deviceModel);
-            
-            // 4. Lấy danh sách UID đã lưu
-            getStoredUIDList();
-            
-            // 5. Thêm UID hiện tại vào danh sách nếu chưa có
-            saveUIDToList(currentUid, 'pending', deviceName, deviceModel);
-            
-            // 6. Hiển thị thông tin
+            // 3. Hiển thị thông tin
             document.getElementById('uidDisplay').textContent = currentUid;
             document.getElementById('deviceNameDisplay').textContent = deviceName || 'Không có tên';
             document.getElementById('modelDisplay').innerHTML = `<span class="model-badge">${deviceModel}</span>`;
             document.getElementById('timeDisplay').textContent = new Date().toLocaleString('vi-VN');
             
-            // 7. Hiển thị link Firebase
-            if (currentUid) {
-                const firebaseUrl = `${FIREBASE_BASE_URL}/uid/${currentUid}.json`;
-                document.getElementById('firebaseLinkUrl').textContent = firebaseUrl;
-                document.getElementById('firebaseLink').classList.add('show');
-            }
-            
-            // 8. Set icon theo model
+            // 4. Set icon theo model
             updateDeviceIcon(deviceModel);
             
-            if (!currentUid) {
-                showStatus('❌ Không tìm thấy UID. Vui lòng tải lại trang.', 'error');
-                document.getElementById('confirmBtn').disabled = true;
-                return;
-            }
-            
-            // 9. Hiển thị danh sách UID
-            renderUIDList();
-            
-            // 10. Kiểm tra trạng thái thiết bị
+            // 5. Kiểm tra trạng thái thiết bị
             checkDeviceStatus();
         });
 
@@ -712,19 +365,9 @@
             const btn = document.getElementById('confirmBtn');
             
             try {
-                // Kiểm tra trong uid list trước
-                const uidItem = uidList.find(item => item.uid === currentUid);
-                if (uidItem && uidItem.status === 'banned') {
-                    isBanned = true;
-                    statusEl.innerHTML = '<span class="status-badge banned">🚫 Bị khóa</span>';
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-ban"></i> Đã bị khóa';
-                    showStatus('🚫 Thiết bị đã bị khóa!', 'error');
-                    return;
-                }
+                const url = UID_LIST_URL;
+                console.log('📡 Kiểm tra tại:', url);
                 
-                // Kiểm tra từ Firebase
-                const url = `${FIREBASE_BASE_URL}/uid/${currentUid}.json`;
                 const response = await fetch(url);
                 
                 if (!response.ok) {
@@ -732,19 +375,33 @@
                 }
                 
                 const data = await response.json();
-                existingData = data;
+                console.log('📊 Dữ liệu uid.json:', data);
+                
+                let foundData = null;
                 
                 if (data) {
-                    const status = data.status || 'pending';
+                    // Tìm UID trong danh sách
+                    for (const key in data) {
+                        const item = data[key];
+                        if (item && typeof item === 'object') {
+                            if (item.uid === currentUid || key === currentUid) {
+                                foundData = item;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                existingData = foundData;
+                
+                if (foundData) {
+                    const status = foundData.status || 'pending';
                     const statusMap = {
                         'active': '<span class="status-badge active">✅ Đã xác nhận</span>',
                         'banned': '<span class="status-badge banned">🚫 Bị khóa</span>',
                         'pending': '<span class="status-badge pending">⏳ Chờ xác nhận</span>'
                     };
                     statusEl.innerHTML = statusMap[status] || statusMap.pending;
-                    
-                    // Cập nhật trạng thái trong danh sách
-                    updateUIDStatus(currentUid, status);
                     
                     if (status === 'active') {
                         isConfirmed = true;
@@ -763,15 +420,13 @@
                         btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
                     }
                 } else {
-                    // Chưa có dữ liệu
                     statusEl.innerHTML = '<span class="status-badge pending">⏳ Chưa đăng ký</span>';
                     isConfirmed = false;
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận thiết bị';
-                    updateUIDStatus(currentUid, 'pending');
                 }
                 
-                return data;
+                return foundData;
                 
             } catch (error) {
                 console.error('Lỗi kiểm tra:', error);
@@ -813,7 +468,6 @@
                     return;
                 }
 
-                // Tạo dữ liệu thiết bị
                 const deviceData = {
                     uid: currentUid,
                     device_name: deviceName,
@@ -826,12 +480,19 @@
                     success_count: 0
                 };
 
-                // Lưu vào Firebase
-                const url = `${FIREBASE_BASE_URL}/uid/${currentUid}.json`;
-                const response = await fetch(url, {
+                const getResponse = await fetch(UID_LIST_URL);
+                let existingData = {};
+                
+                if (getResponse.ok) {
+                    existingData = await getResponse.json() || {};
+                }
+
+                existingData[currentUid] = deviceData;
+
+                const response = await fetch(UID_LIST_URL, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(deviceData)
+                    body: JSON.stringify(existingData)
                 });
 
                 if (!response.ok) {
@@ -841,10 +502,6 @@
                 const result = await response.json();
                 console.log('✅ Đã lưu vào Firebase:', result);
 
-                // Cập nhật trạng thái trong danh sách
-                updateUIDStatus(currentUid, 'active');
-
-                // Cập nhật UI
                 showStatus('✅ Xác nhận thành công! Thiết bị đã được đăng ký.', 'success');
                 document.getElementById('statusDisplay').innerHTML = '<span class="status-badge active">✅ Đã xác nhận</span>';
                 document.getElementById('backToApp').style.display = 'block';
@@ -852,10 +509,6 @@
                 btn.disabled = true;
                 isConfirmed = true;
 
-                localStorage.setItem('device_confirmed', 'true');
-                localStorage.setItem('device_uid', currentUid);
-
-                // Tự động quay lại app sau 2 giây
                 setTimeout(() => {
                     goBackToApp();
                 }, 2000);
@@ -904,31 +557,13 @@
             });
         }
 
-        function copyFirebaseLink() {
-            const link = document.getElementById('firebaseLinkUrl').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                showStatus('✅ Đã sao chép link Firebase', 'success');
-            }).catch(() => {
-                const textarea = document.createElement('textarea');
-                textarea.value = link;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showStatus('✅ Đã sao chép link Firebase', 'success');
-            });
-        }
-
         // ============================================================
-        // EXPORT TO GLOBAL
+        // EXPORT
         // ============================================================
         window.confirmDevice = confirmDevice;
         window.checkDeviceStatus = checkDeviceStatus;
         window.goBackToApp = goBackToApp;
         window.copyUid = copyUid;
-        window.copyFirebaseLink = copyFirebaseLink;
-        window.refreshUIDList = refreshUIDList;
-        window.clearAllUIDs = clearAllUIDs;
     </script>
 </body>
 </html>
