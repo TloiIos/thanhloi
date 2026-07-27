@@ -34,15 +34,13 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
-
-        /* Hiệu ứng nền nhẹ nhàng, không gây lag GPU mobile */
+ 
         .bg-animation {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;
             background: radial-gradient(circle at 10% 20%, rgba(227,197,103,0.07) 0%, transparent 40%),
                         radial-gradient(circle at 90% 80%, rgba(161,89,240,0.07) 0%, transparent 40%);
         }
-
-        /* Keyframes Animations */
+ 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
@@ -51,10 +49,9 @@
             0%, 100% { box-shadow: 0 0 15px rgba(227,197,103,0.1); }
             50% { box-shadow: 0 0 25px rgba(227,197,103,0.3); }
         }
-
+ 
         .page { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-        /* BASE LAYOUT */
+ 
         .login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; }
         .login-card {
             background: #0c1222; border: 1px solid var(--glass-border);
@@ -64,7 +61,7 @@
         .login-logo { text-align: center; margin-bottom: 20px; }
         .login-logo i { font-size: 40px; color: var(--primary); margin-bottom: 8px; animation: pulseGlow 2s infinite; display: inline-block; }
         .login-logo h1 { font-size: 22px; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
+ 
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 4px; font-size: 12px; color: var(--text-muted); }
         .form-group input, .form-group select {
@@ -73,7 +70,7 @@
             transition: all 0.2s ease;
         }
         .form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(227,197,103,0.2); }
-        
+ 
         .btn {
             width: 100%; padding: 12px; border: none; border-radius: 10px;
             font-size: 14px; font-weight: 600; cursor: pointer;
@@ -87,7 +84,7 @@
         .btn-secondary { background: var(--dark-lighter); color: var(--text); border: 1px solid var(--glass-border); }
         .btn-sm { padding: 6px 12px; font-size: 12px; width: auto; border-radius: 8px; }
         .btn-warning { background: var(--warning); color: #000; }
-
+ 
         .dashboard { display: none; min-height: 100vh; }
         .sidebar {
             position: fixed; left: 0; top: 0; width: 240px; height: 100vh;
@@ -98,7 +95,7 @@
         .sidebar.open { transform: translateX(0); }
         .sidebar-header { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--glass-border); margin-bottom: 16px; }
         .sidebar-header h2 { font-size: 18px; color: var(--primary); }
-        
+ 
         .nav-item {
             display: flex; align-items: center; gap: 10px; padding: 10px 12px;
             border-radius: 8px; cursor: pointer; margin-bottom: 4px;
@@ -106,7 +103,7 @@
         }
         .nav-item:hover { background: rgba(227,197,103,0.06); color: var(--text); }
         .nav-item.active { background: rgba(227,197,103,0.15); color: var(--primary); font-weight: 600; box-shadow: inset 2px 0 0 var(--primary); }
-        
+ 
         .sidebar-footer { position: absolute; bottom: 16px; left: 10px; right: 10px; }
         .admin-info { display: flex; align-items: center; gap: 10px; padding: 8px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--glass-border); }
         .admin-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; }
@@ -114,17 +111,17 @@
         .admin-details p { font-size: 10px; color: var(--text-muted); }
         .logout-btn { margin-top: 8px; width: 100%; padding: 8px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: var(--danger); border-radius: 8px; font-size: 12px; cursor: pointer; transition: background 0.2s; }
         .logout-btn:active { background: rgba(239,68,68,0.25); }
-
+ 
         .main-content { margin-left: 0; padding: 12px; min-height: 100vh; }
         .mobile-topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; background: #0c1222; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); }
         .menu-toggle { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(227,197,103,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; backdrop-filter: blur(2px); transition: opacity 0.2s; }
         .sidebar-overlay.active { display: block; }
-
+ 
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
         .page-header h1 { font-size: 20px; font-weight: 700; color: var(--primary); }
         .page-header p { color: var(--text-muted); font-size: 11px; }
-
+ 
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
         .stat-card {
             background: #0c1222; border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px 12px;
@@ -138,26 +135,26 @@
         .stat-card.orange .stat-icon { background: rgba(251,191,36,0.1); color: var(--warning); }
         .stat-value { font-size: 20px; font-weight: 700; }
         .stat-label { color: var(--text-muted); font-size: 11px; }
-
+ 
         .content-card { background: #0c1222; border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
         .content-card-header h3 { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-
+ 
         .search-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-direction: column; }
         .search-input, select { width: 100%; padding: 8px 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text); font-size: 12px; outline: none; }
         select option { background: var(--dark-light); }
-
+ 
         .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .data-table { width: 100%; border-collapse: collapse; min-width: 500px; font-size: 12px; }
         .data-table th { text-align: left; padding: 8px 10px; color: var(--text-muted); font-size: 10px; text-transform: uppercase; border-bottom: 1px solid var(--glass-border); }
         .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--glass-border); }
         .data-table tr { transition: background 0.15s; }
         .data-table tr:hover td { background: rgba(255,255,255,0.015); }
-
+ 
         .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
         .badge.active { background: rgba(52,211,153,0.15); color: var(--success); }
         .badge.inactive { background: rgba(251,113,133,0.15); color: var(--danger); }
         .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: pulseGlow 1.5px infinite; }
-
+ 
         .action-btns { display: flex; gap: 4px; flex-wrap: wrap; }
         .action-btn { width: 28px; height: 28px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: transform 0.1s; }
         .action-btn:active { transform: scale(0.9); }
@@ -165,7 +162,7 @@
         .action-btn.unlock { background: rgba(52,211,153,0.15); color: var(--success); }
         .action-btn.delete { background: rgba(251,113,133,0.15); color: var(--danger); }
         .action-btn.edit { background: rgba(227,197,103,0.15); color: var(--primary); }
-
+ 
         .package-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .package-card { background: #0c1222; border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px; transition: border-color 0.2s; }
         .package-card:hover { border-color: rgba(227,197,103,0.4); }
@@ -174,12 +171,11 @@
         .package-stats { display: flex; gap: 12px; margin-bottom: 10px; font-size: 11px; color: var(--text-muted); }
         .package-actions { display: flex; gap: 6px; flex-wrap: wrap; }
         .package-actions .btn { flex: 1; padding: 8px; font-size: 11px; min-width: 80px; }
-
+ 
         .key-item { background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; animation: fadeIn 0.2s ease; }
         .key-info h4 { font-family: monospace; font-size: 12px; color: var(--primary); margin-bottom: 2px; }
         .key-info p { font-size: 10px; color: var(--text-muted); }
-        
-        /* Modal Animation */
+ 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 10px; backdrop-filter: blur(3px); }
         .modal-overlay.active { display: flex; }
         .modal { background: #0c1222; border: 1px solid var(--glass-border); border-radius: 16px; padding: 20px; width: 100%; max-width: 450px; max-height: 85vh; overflow-y: auto; animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -188,7 +184,7 @@
         .modal-header p { font-size: 11px; color: var(--text-muted); }
         .modal-footer { display: flex; gap: 8px; margin-top: 14px; }
         .modal-footer .btn { flex: 1; padding: 10px; font-size: 12px; }
-
+ 
         .user-info-box {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
@@ -208,20 +204,19 @@
         .status-badge.cracked { background: rgba(251,113,133,0.2); color: var(--danger); }
         .status-badge.clean { background: rgba(52,211,153,0.2); color: var(--success); }
         .status-badge.banned { background: rgba(251,113,133,0.3); color: var(--danger); }
-
+ 
         .danger-zone {
             border: 2px solid var(--danger) !important;
             background: rgba(251,113,133,0.05) !important;
         }
-
-        /* Toast Animation */
+ 
         .toast-container { position: fixed; top: 10px; right: 10px; left: 10px; z-index: 2000; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
         .toast { background: #0c1222; border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; font-size: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; pointer-events: auto; }
         .toast.success { border-left: 3px solid var(--success); }
         .toast.error { border-left: 3px solid var(--danger); }
         .toast.warning { border-left: 3px solid var(--warning); }
         .toast.info { border-left: 3px solid var(--primary); }
-        
+ 
         @media(min-width: 768px) {
             .sidebar { transform: translateX(0); width: 240px; }
             .main-content { margin-left: 240px; padding: 20px; }
@@ -234,10 +229,10 @@
     </style>
 </head>
 <body>
-
+ 
 <div class="bg-animation"></div>
 <div class="toast-container" id="toastContainer"></div>
-
+ 
 <!-- LOGIN SCREEN -->
 <div class="login-screen" id="loginScreen">
     <div class="login-card">
@@ -260,7 +255,7 @@
         </form>
     </div>
 </div>
-
+ 
 <!-- DASHBOARD -->
 <div class="dashboard" id="dashboard">
     <div class="sidebar" id="sidebar">
@@ -287,13 +282,13 @@
         </div>
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
+ 
     <div class="main-content">
         <div class="mobile-topbar">
             <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
             <div style="font-weight:700;color:var(--primary);font-size:13px;"><i class="fas fa-key"></i> Key Pro Dashboard</div>
         </div>
-
+ 
         <!-- HOME -->
         <div class="page" id="page-home">
             <div class="page-header">
@@ -303,7 +298,7 @@
                 </div>
                 <button class="btn btn-success btn-sm" onclick="openCreateKeyModal()"><i class="fas fa-plus"></i> Tạo Key</button>
             </div>
-
+ 
             <div class="stats-grid">
                 <div class="stat-card blue">
                     <div class="stat-icon"><i class="fas fa-box"></i></div>
@@ -326,7 +321,7 @@
                     <div class="stat-label">Key đã khóa</div>
                 </div>
             </div>
-
+ 
             <div class="content-card">
                 <div class="content-card-header">
                     <h3><i class="fas fa-desktop" style="color:var(--primary)"></i> Thiết bị đang sử dụng Key</h3>
@@ -353,7 +348,7 @@
                 </div>
             </div>
         </div>
-
+ 
         <!-- PACKAGES -->
         <div class="page" id="page-packages" style="display:none;">
             <div class="page-header">
@@ -369,7 +364,7 @@
                 <p style="font-size:12px;">Chưa có Package nào</p>
             </div>
         </div>
-
+ 
         <!-- KEYS -->
         <div class="page" id="page-keys" style="display:none;">
             <div class="page-header">
@@ -413,7 +408,7 @@
                 </div>
             </div>
         </div>
-
+ 
         <!-- MASTER SWITCH -->
         <div class="page" id="page-master" style="display:none;">
             <div class="page-header">
@@ -422,7 +417,24 @@
                     <p>Kiểm tra và quản lý người dùng theo UID</p>
                 </div>
             </div>
-
+ 
+            <!-- GÁN KEY CHO UID (MỚI) -->
+            <div class="content-card" style="border-color:var(--primary)">
+                <div class="content-card-header"><h3 style="color:var(--primary)"><i class="fas fa-link"></i> Gán Key cho UID (Set thủ công)</h3></div>
+                <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>UID người dùng</label>
+                        <input type="text" id="assignUidInput" placeholder="Nhập UID cần gán key...">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Chọn Key</label>
+                        <select id="assignKeySelect"><option value="">-- Chọn key --</option></select>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="assignKeyToUser()" style="width:100%;"><i class="fas fa-link"></i> Gán Key cho UID</button>
+                    <p style="font-size:10px;color:var(--text-muted);">Thao tác này sẽ ghi <code>keyUsed</code> vào <code>devices/&lt;uid&gt;</code> và thêm UID vào danh sách thiết bị của key (kiểm tra hạn mức thiết bị trước khi gán). Nếu UID đang dùng key khác, sẽ tự động gỡ khỏi key cũ.</p>
+                </div>
+            </div>
+ 
             <div class="content-card" style="border-color:var(--danger)">
                 <div class="content-card-header"><h3 style="color:var(--danger)"><i class="fas fa-user-shield"></i> Kiểm soát người dùng (User Control)</h3></div>
                 
@@ -461,7 +473,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <!-- Danh sách user -->
             <div class="content-card">
                 <div class="content-card-header"><h3><i class="fas fa-users"></i> Danh sách người dùng</h3></div>
@@ -481,7 +493,7 @@
                 </div>
             </div>
         </div>
-
+ 
         <!-- AI ASSISTANT -->
         <div class="page" id="page-ai" style="display:none;">
             <div class="page-header">
@@ -504,7 +516,7 @@
         </div>
     </div>
 </div>
-
+ 
 <!-- MODALS -->
 <!-- Create Package -->
 <div class="modal-overlay" id="createPackageModal">
@@ -529,7 +541,7 @@
         </form>
     </div>
 </div>
-
+ 
 <!-- Create Key -->
 <div class="modal-overlay" id="createKeyModal">
     <div class="modal">
@@ -561,7 +573,7 @@
         </form>
     </div>
 </div>
-
+ 
 <!-- View Keys in Package -->
 <div class="modal-overlay" id="viewKeysModal">
     <div class="modal" style="max-width:500px;">
@@ -575,7 +587,7 @@
         </div>
     </div>
 </div>
-
+ 
 <!-- Edit Key -->
 <div class="modal-overlay" id="editKeyModal">
     <div class="modal">
@@ -600,7 +612,7 @@
         </form>
     </div>
 </div>
-
+ 
 <script>
 // FIREBASE CONFIG
 const firebaseConfig = {
@@ -608,12 +620,12 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-
+ 
 const ADMIN_CREDENTIALS = { username: "admin", password: "admin123" };
 let packages = {};
 let keys = {};
 let currentSearchUID = null;
-
+ 
 function generateKey() {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let key = "";
@@ -623,7 +635,7 @@ function generateKey() {
     }
     return key;
 }
-
+ 
 function formatExpiry(expiresAt) {
     if (!expiresAt) return { text: "Vĩnh viễn", cssClass: "" };
     const diffDays = Math.ceil((expiresAt - Date.now()) / 86400000);
@@ -632,7 +644,7 @@ function formatExpiry(expiresAt) {
     if (diffDays === 0) return { text: `Hết hạn hôm nay`, cssClass: "text-warning" };
     return { text: `Còn ${diffDays} ngày (${dateStr})`, cssClass: "" };
 }
-
+ 
 function showToast(message, type = "info") {
     const container = document.getElementById("toastContainer");
     const toast = document.createElement("div");
@@ -642,10 +654,10 @@ function showToast(message, type = "info") {
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
-
+ 
 function openModal(id) { document.getElementById(id).classList.add("active"); }
 function closeModal(id) { document.getElementById(id).classList.remove("active"); }
-
+ 
 // LOGIN
 document.getElementById("loginForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -661,19 +673,19 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
         showToast("Sai tài khoản mật khẩu!", "error");
     }
 });
-
+ 
 function logout() {
     document.getElementById("dashboard").style.display = "none";
     document.getElementById("loginScreen").style.display = "flex";
     showToast("Đã đăng xuất!", "info");
 }
-
+ 
 // SIDEBAR MOBILE
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("sidebarOverlay");
 document.getElementById("menuToggle").addEventListener("click", () => { sidebar.classList.toggle("open"); overlay.classList.toggle("active"); });
 overlay.addEventListener("click", () => { sidebar.classList.remove("open"); overlay.classList.remove("active"); });
-
+ 
 document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", function() {
         document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
@@ -690,7 +702,7 @@ document.querySelectorAll(".nav-item").forEach(item => {
         sidebar.classList.remove("open"); overlay.classList.remove("active");
     });
 });
-
+ 
 // FIREBASE LISTENER
 function initDashboard() {
     db.ref("packages").on("value", snap => {
@@ -699,21 +711,21 @@ function initDashboard() {
     });
     db.ref("keys").on("value", snap => {
         keys = snap.val() || {};
-        renderHome(); renderKeys(); renderPackages();
+        renderHome(); renderKeys(); renderPackages(); updateAssignKeySelect();
     });
 }
-
+ 
 // HOME & STATS
 function renderHome() {
     const totalPackages = Object.keys(packages).length;
     const totalKeys = Object.keys(keys).length;
     let activeKeys = 0, lockedKeys = 0, totalDevicesCount = 0;
     let deviceRowsHtml = "";
-
+ 
     Object.entries(keys).forEach(([keyId, k]) => {
         if (k.status === "active") activeKeys++;
         else if (k.status === "inactive") lockedKeys++;
-
+ 
         if (k.devices && typeof k.devices === "object") {
             Object.keys(k.devices).forEach(devId => {
                 totalDevicesCount++;
@@ -729,13 +741,13 @@ function renderHome() {
             });
         }
     });
-
+ 
     document.getElementById("statPackages").textContent = totalPackages;
     document.getElementById("statKeys").textContent = totalKeys;
     document.getElementById("statKeysActive").textContent = `${activeKeys} đang mở`;
     document.getElementById("statDevices").textContent = totalDevicesCount;
     document.getElementById("statLocked").textContent = lockedKeys;
-
+ 
     const tbody = document.getElementById("devicesTableBody");
     const empty = document.getElementById("devicesEmpty");
     if (deviceRowsHtml === "") {
@@ -748,32 +760,32 @@ function renderHome() {
         tbody.innerHTML = deviceRowsHtml;
     }
 }
-
+ 
 function searchDevices() {
     const q = document.getElementById("deviceSearch").value.toLowerCase();
     document.querySelectorAll("#devicesTableBody tr").forEach(row => {
         row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
     });
 }
-
+ 
 // PACKAGES
 function renderPackages() {
     const grid = document.getElementById("packagesGrid");
     const empty = document.getElementById("packagesEmpty");
     const list = Object.entries(packages);
-
+ 
     if (list.length === 0) {
         grid.innerHTML = "";
         empty.style.display = "block";
         return;
     }
     empty.style.display = "none";
-
+ 
     grid.innerHTML = list.map(([id, pkg]) => {
         const pkgKeys = Object.entries(keys).filter(([_, k]) => k.packageId === id);
         const activeCount = pkgKeys.filter(([_, k]) => k.status === "active").length;
         const isActive = pkg.status !== "inactive";
-
+ 
         return `
             <div class="package-card" style="${!isActive ? 'opacity:0.5;' : ''}">
                 <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
@@ -796,14 +808,14 @@ function renderPackages() {
         `;
     }).join("");
 }
-
+ 
 function togglePackage(id) {
     const pkg = packages[id];
     if (!pkg) return;
     const ns = pkg.status === "inactive" ? "active" : "inactive";
     db.ref(`packages/${id}/status`).set(ns).then(() => showToast("Đã cập nhật package", "success"));
 }
-
+ 
 document.getElementById("createPackageForm").addEventListener("submit", function(e) {
     e.preventDefault();
     db.ref("packages").push({
@@ -817,13 +829,13 @@ document.getElementById("createPackageForm").addEventListener("submit", function
         showToast("Tạo package thành công!", "success");
     });
 });
-
+ 
 // KEYS MANAGEMENT
 function renderKeys() {
     const tbody = document.getElementById("keysTableBody");
     const empty = document.getElementById("keysEmpty");
     const list = Object.entries(keys);
-
+ 
     if (list.length === 0) {
         tbody.innerHTML = "";
         empty.style.display = "block";
@@ -832,13 +844,13 @@ function renderKeys() {
     }
     empty.style.display = "none";
     document.getElementById("keysTable").style.display = "table";
-
+ 
     tbody.innerHTML = list.map(([id, key]) => {
         const pkg = packages[key.packageId] || {};
         const used = key.devices ? Object.keys(key.devices).length : 0;
         const max = key.maxDevices || 1;
         const expiry = formatExpiry(key.expiresAt);
-
+ 
         return `
             <tr data-key-id="${id}">
                 <td>
@@ -862,19 +874,19 @@ function renderKeys() {
         `;
     }).join("");
 }
-
+ 
 function toggleKey(id) {
     const k = keys[id];
     if (!k) return;
     const ns = k.status === "active" ? "inactive" : "active";
     db.ref(`keys/${id}/status`).set(ns).then(() => showToast("Đã đổi trạng thái key", "success"));
 }
-
+ 
 function deleteKey(id) {
     if (!confirm("Bạn có chắc chắn muốn xóa key này?")) return;
     db.ref(`keys/${id}`).remove().then(() => showToast("Đã xóa key!", "success"));
 }
-
+ 
 function deleteAllKeys() {
     if (!confirm("⚠️ CẢNH BÁO: Bạn có chắc chắn muốn xóa TOÀN BỘ key? Hành động này không thể hoàn tác!")) return;
     if (!confirm("Xác nhận lần cuối: Xóa tất cả key?")) return;
@@ -885,14 +897,14 @@ function deleteAllKeys() {
         showToast("Lỗi khi xóa: " + err.message, "error");
     });
 }
-
+ 
 function openViewKeysModal(packageId) {
     const pkg = packages[packageId];
     if (!pkg) return;
     document.getElementById("viewKeysPackageName").textContent = pkg.name;
     const listDiv = document.getElementById("viewKeysList");
     const pkgKeys = Object.entries(keys).filter(([_, k]) => k.packageId === packageId);
-
+ 
     if (pkgKeys.length === 0) {
         listDiv.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">Không có key nào</div>`;
     } else {
@@ -916,7 +928,7 @@ function openViewKeysModal(packageId) {
     }
     openModal("viewKeysModal");
 }
-
+ 
 function updateKeyPackageSelect() {
     const sel1 = document.getElementById("keyPackageSelect");
     const sel2 = document.getElementById("keyFilterPackage");
@@ -924,18 +936,34 @@ function updateKeyPackageSelect() {
     sel1.innerHTML = `<option value="">-- Chọn package --</option>` + ops;
     sel2.innerHTML = `<option value="">Tất cả Package</option>` + ops;
 }
-
+ 
+// Cập nhật dropdown chọn Key ở phần "Gán Key cho UID"
+function updateAssignKeySelect() {
+    const sel = document.getElementById("assignKeySelect");
+    if (!sel) return;
+    const currentVal = sel.value;
+    const ops = Object.entries(keys).map(([id, k]) => {
+        const pkg = packages[k.packageId] || {};
+        const used = k.devices ? Object.keys(k.devices).length : 0;
+        const max = k.maxDevices || 1;
+        const statusLabel = k.status === "active" ? "Mở" : "Khóa";
+        return `<option value="${id}">${id} · ${pkg.name || "N/A"} · ${used}/${max} · ${statusLabel}</option>`;
+    }).join("");
+    sel.innerHTML = `<option value="">-- Chọn key --</option>` + ops;
+    if (currentVal && keys[currentVal]) sel.value = currentVal;
+}
+ 
 function openCreateKeyModal() {
     if (Object.keys(packages).length === 0) { showToast("Vui lòng tạo package trước!", "warning"); return; }
     document.getElementById("createKeyForm").reset();
     openModal("createKeyModal");
 }
-
+ 
 function openCreateKeyForPackage(packageId) {
     document.getElementById("keyPackageSelect").value = packageId;
     openModal("createKeyModal");
 }
-
+ 
 document.getElementById("createKeyForm").addEventListener("submit", function(e) {
     e.preventDefault();
     const pkgId = document.getElementById("keyPackageSelect").value;
@@ -943,11 +971,11 @@ document.getElementById("createKeyForm").addEventListener("submit", function(e) 
     const qty = parseInt(document.getElementById("keyQuantity").value) || 1;
     const days = parseInt(document.getElementById("keyDurationDays").value) || 30;
     const maxDev = parseInt(document.getElementById("keyMaxDevices").value) || 1;
-
+ 
     const updates = {};
     const now = Date.now();
     const expiresAt = now + days * 86400000;
-
+ 
     for (let i = 0; i < qty; i++) {
         const kid = generateKey();
         updates[kid] = {
@@ -958,13 +986,13 @@ document.getElementById("createKeyForm").addEventListener("submit", function(e) 
             maxDevices: maxDev
         };
     }
-
+ 
     db.ref("keys").update(updates).then(() => {
         closeModal("createKeyModal");
         showToast(`Đã tạo thành công ${qty} key!`, "success");
     });
 });
-
+ 
 function openEditKeyModal(id) {
     const k = keys[id];
     if (!k) return;
@@ -975,27 +1003,27 @@ function openEditKeyModal(id) {
     document.getElementById("editKeyExpiry").value = d.toISOString().slice(0, 10);
     openModal("editKeyModal");
 }
-
+ 
 document.getElementById("editKeyForm").addEventListener("submit", function(e) {
     e.preventDefault();
     const id = document.getElementById("editKeyId").value;
     const maxDevices = parseInt(document.getElementById("editKeyMaxDevices").value) || 1;
     const expiryVal = document.getElementById("editKeyExpiry").value;
     const expiresAt = new Date(expiryVal + "T23:59:59").getTime();
-
+ 
     db.ref(`keys/${id}`).update({ maxDevices, expiresAt }).then(() => {
         closeModal("editKeyModal");
         showToast("Cập nhật thành công!", "success");
     });
 });
-
+ 
 function searchKeys() {
     const q = document.getElementById("keySearch").value.toLowerCase();
     document.querySelectorAll("#keysTableBody tr").forEach(row => {
         row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
     });
 }
-
+ 
 function filterKeys() {
     const pkg = document.getElementById("keyFilterPackage").value;
     const st = document.getElementById("keyFilterStatus").value;
@@ -1009,9 +1037,72 @@ function filterKeys() {
         row.style.display = show ? "" : "none";
     });
 }
-
-// ================== MASTER SWITCH - USER CONTROL ==================
-
+ 
+// ================== MASTER SWITCH - GÁN KEY CHO UID ==================
+function assignKeyToUser() {
+    const uid = document.getElementById("assignUidInput").value.trim();
+    const keyId = document.getElementById("assignKeySelect").value;
+ 
+    if (!uid) {
+        showToast("Vui lòng nhập UID!", "warning");
+        return;
+    }
+    if (!keyId) {
+        showToast("Vui lòng chọn key để gán!", "warning");
+        return;
+    }
+ 
+    const key = keys[keyId];
+    if (!key) {
+        showToast("Key không tồn tại hoặc đã bị xóa!", "error");
+        return;
+    }
+    if (key.status !== "active") {
+        showToast("Key này đang bị khóa, không thể gán!", "warning");
+        return;
+    }
+    if (key.expiresAt && key.expiresAt < Date.now()) {
+        showToast("Key này đã hết hạn, không thể gán!", "warning");
+        return;
+    }
+ 
+    const used = key.devices ? Object.keys(key.devices).length : 0;
+    const max = key.maxDevices || 1;
+    const alreadyOnThisKey = key.devices && key.devices[uid];
+    if (!alreadyOnThisKey && used >= max) {
+        showToast(`Key đã đạt giới hạn thiết bị (${used}/${max})!`, "error");
+        return;
+    }
+ 
+    // Kiểm tra UID có đang dùng key khác không
+    db.ref("devices/" + uid + "/keyUsed").once("value").then(snap => {
+        const oldKeyId = snap.val();
+        const updates = {};
+ 
+        if (oldKeyId && oldKeyId !== keyId) {
+            updates[`keys/${oldKeyId}/devices/${uid}`] = null;
+        }
+ 
+        updates[`devices/${uid}/keyUsed`] = keyId;
+        updates[`devices/${uid}/isBanned`] = false;
+        updates[`devices/${uid}/updatedAt`] = Date.now();
+        updates[`keys/${keyId}/devices/${uid}`] = true;
+ 
+        db.ref().update(updates).then(() => {
+            showToast(`Đã gán key ${keyId} cho UID ${uid}!`, "success");
+            document.getElementById("assignUidInput").value = "";
+            document.getElementById("assignKeySelect").value = "";
+            loadUsersList();
+        }).catch(err => {
+            showToast("Lỗi khi gán key: " + err.message, "error");
+        });
+    }).catch(err => {
+        showToast("Lỗi khi kiểm tra UID: " + err.message, "error");
+    });
+}
+ 
+// ================== MASTER SWITCH - USER CONTROL (FIXED) ==================
+ 
 function searchUser() {
     const uid = document.getElementById("userSearchInput").value.trim();
     if(!uid) {
@@ -1019,10 +1110,8 @@ function searchUser() {
         return;
     }
     currentSearchUID = uid;
-    checkUserData(uid);
-}
-
-function checkUserData(uid) {
+    
+    // Đọc trực tiếp từ path devices/{uid}
     db.ref("devices/" + uid).once("value").then(snap => {
         const userData = snap.val();
         const display = document.getElementById("userInfoDisplay");
@@ -1033,7 +1122,7 @@ function checkUserData(uid) {
             document.getElementById("displayStatus").innerHTML = '<span class="status-badge clean">Không tìm thấy</span>';
             document.getElementById("displayKey").textContent = 'Không có dữ liệu';
             document.getElementById("displayFeatures").textContent = 'Không có dữ liệu hoạt động';
-            showToast("UID không tồn tại trong hệ thống!", "warning");
+            showToast(`UID ${uid} không tồn tại trong hệ thống!`, "warning");
             return;
         }
         
@@ -1070,7 +1159,7 @@ function checkUserData(uid) {
         showToast("Lỗi khi tra cứu: " + err.message, "error");
     });
 }
-
+ 
 function banUser() {
     if(!currentSearchUID) {
         showToast("Vui lòng tra cứu UID trước!", "warning");
@@ -1084,7 +1173,7 @@ function banUser() {
         });
     }
 }
-
+ 
 function unbanUser() {
     if(!currentSearchUID) {
         showToast("Vui lòng tra cứu UID trước!", "warning");
@@ -1096,28 +1185,71 @@ function unbanUser() {
         loadUsersList();
     });
 }
-
+ 
 function clearUserData() {
     if(!currentSearchUID) {
         showToast("Vui lòng tra cứu UID trước!", "warning");
         return;
     }
     if(confirm(`CẢNH BÁO: Bạn sẽ xóa toàn bộ dữ liệu của user ${currentSearchUID}. Tiếp tục?`)) {
-        db.ref("devices/" + currentSearchUID).remove().then(() => {
-            showToast(`Đã xóa dữ liệu user ${currentSearchUID}!`, "success");
-            document.getElementById("userInfoDisplay").style.display = 'none';
-            loadUsersList();
+        const uid = currentSearchUID;
+        db.ref("devices/" + uid + "/keyUsed").once("value").then(snap => {
+            const keyId = snap.val();
+            const updates = {};
+            updates[`devices/${uid}`] = null;
+            if (keyId) {
+                updates[`keys/${keyId}/devices/${uid}`] = null;
+            }
+            db.ref().update(updates).then(() => {
+                showToast(`Đã xóa dữ liệu user ${uid}!`, "success");
+                document.getElementById("userInfoDisplay").style.display = 'none';
+                loadUsersList();
+            });
+        }).catch(err => {
+            showToast("Lỗi khi xóa dữ liệu: " + err.message, "error");
         });
     }
 }
-
+ 
+// Hàm checkUserData được gọi lại sau khi ban/unban để refresh
+function checkUserData(uid) {
+    db.ref("devices/" + uid).once("value").then(snap => {
+        const userData = snap.val();
+        if(!userData) {
+            document.getElementById("userInfoDisplay").style.display = 'none';
+            return;
+        }
+        
+        let statusHtml = '';
+        if(userData.isBanned) {
+            statusHtml = '<span class="status-badge banned">🔒 Đã khóa</span>';
+        } else if(userData.isCracked) {
+            statusHtml = '<span class="status-badge cracked">⚠️ Phát hiện Crack</span>';
+        } else {
+            statusHtml = '<span class="status-badge clean">✅ Sạch</span>';
+        }
+        document.getElementById("displayStatus").innerHTML = statusHtml;
+        document.getElementById("displayKey").textContent = userData.keyUsed || 'Không có key';
+        
+        let features = [];
+        if(userData.features) {
+            for(let f in userData.features) {
+                if(userData.features[f] === true) {
+                    features.push(f);
+                }
+            }
+        }
+        document.getElementById("displayFeatures").textContent = features.length > 0 ? features.join(', ') : 'Không có chức năng nào đang bật';
+    });
+}
+ 
 // Enter key to search
 document.getElementById("userSearchInput").addEventListener("keypress", e => {
     if(e.key === 'Enter') searchUser();
 });
-
-// ================== LOAD USERS LIST ==================
-
+ 
+// ================== LOAD USERS LIST (FIXED) ==================
+ 
 function loadUsersList() {
     db.ref("devices").once("value").then(snap => {
         const devices = snap.val() || {};
@@ -1165,7 +1297,7 @@ function loadUsersList() {
         document.getElementById("usersTableBody").innerHTML = html || `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Chưa có user nào</td></tr>`;
     });
 }
-
+ 
 function quickCheck(uid) {
     document.getElementById("userSearchInput").value = uid;
     searchUser();
@@ -1175,7 +1307,7 @@ function quickCheck(uid) {
     document.querySelectorAll(".page").forEach(p => p.style.display = "none");
     document.getElementById("page-master").style.display = "block";
 }
-
+ 
 function quickBan(uid) {
     if(confirm(`Khóa user ${uid}?`)) {
         db.ref("devices/" + uid + "/isBanned").set(true).then(() => {
@@ -1184,16 +1316,16 @@ function quickBan(uid) {
         });
     }
 }
-
+ 
 function quickUnban(uid) {
     db.ref("devices/" + uid + "/isBanned").remove().then(() => {
         showToast(`Đã mở khóa ${uid}`, "success");
         loadUsersList();
     });
 }
-
+ 
 // ================== AI ASSISTANT ==================
-
+ 
 function askAI() {
     const prompt = document.getElementById("aiPrompt").value.trim();
     if (!prompt) return;
@@ -1211,7 +1343,7 @@ function askAI() {
         💡 Gợi ý: Bạn có thể tạo thêm key hoặc package mới!`;
     }, 600);
 }
-
+ 
 document.querySelectorAll(".modal-overlay").forEach(m => {
     m.addEventListener("click", function(e) { if (e.target === this) this.classList.remove("active"); });
 });
