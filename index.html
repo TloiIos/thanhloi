@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" content="#07070b">
+    <title>Vault — Get Key</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-ring"></div>
+            <div class="loader-text">Verifying device</div>
+        </div>
+    </div>
+
+    <div class="wrap sec-wrap">
+
+        <!-- Top bar -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-mark">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <div class="brand-name">API SEVER <span>· thành lợi</span></div>
+            </div>
+            <div class="status-pill">
+                <span class="dot"></span>
+                System online
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="eyebrow">API · Server · Activation</div>
+            <h1>Cấp <em>activation key</em><br/>tức thì cho <em>Thành Lợi</em>.</h1>
+            <p>Một key cho mỗi thiết bị — hết hạn sau 24 giờ. Bấm nút bên dưới để nhận key kích hoạt ngay.</p>
+        </section>
+
+        <!-- Device -->
+        <section style="margin-bottom: 40px;">
+            <div class="sec-head">
+                <h3>Device fingerprint</h3>
+                <span class="hint">UID · com.myModApp.uniqueDeviceID</span>
+            </div>
+            <div class="device">
+                <div class="device-ico">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="13" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
+                        <circle cx="12" cy="10" r="2.5"/>
+                    </svg>
+                </div>
+                <div class="device-meta">
+                    <div class="device-label">Unique ID · <span>read-only</span></div>
+                    <div class="device-id" id="deviceIdDisplay">Đang tải...</div>
+                </div>
+                <button class="device-copy" id="copyDeviceBtn" title="Sao chép UID">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Active Package -->
+        <section style="margin-bottom: 32px;">
+            <div class="sec-head">
+                <h3>Active package</h3>
+                <span class="hint">Locked · auto-issued</span>
+            </div>
+            <div class="pkg-banner" id="pkgBanner">
+                <div class="pkg-banner-left">
+                    <div class="pkg-banner-ico">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <div class="pkg-banner-meta">
+                        <div class="pkg-banner-name" id="pkgName">Đang tải...</div>
+                        <div class="pkg-banner-sub">
+                            <span class="pkg-banner-state"><span class="dot"></span> Active</span>
+                            <span class="dot-sep">·</span>
+                            <span>24 giờ</span>
+                            <span class="dot-sep">·</span>
+                            <span>1 thiết bị</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pkg-banner-right">
+                    <div class="pkg-banner-stat">
+                        <div class="stat-label">Devices</div>
+                        <div class="stat-val">1</div>
+                    </div>
+                    <div class="pkg-banner-stat">
+                        <div class="stat-label">Duration</div>
+                        <div class="stat-val">24h</div>
+                    </div>
+                    <div class="pkg-banner-stat">
+                        <div class="stat-label">Cooldown</div>
+                        <div class="stat-val">24h</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="cta-row">
+            <button class="btn-cta" id="cta" disabled>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                </svg>
+                <span id="ctaText">Đang tải package...</span>
+                <span class="kbd">↵ Enter</span>
+            </button>
+        </div>
+
+        <!-- Result -->
+        <div class="result" id="result"></div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span class="live">Realtime</span>
+            <span>Firebase · asia-southeast1</span>
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"><span class="dot"></span><span id="toastText"></span></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
