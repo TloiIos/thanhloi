@@ -72,6 +72,21 @@
             </div>
         </section>
 
+        <!-- Lock banner (shown when 10/10 keys issued) -->
+        <div class="lock-banner" id="lockBanner" aria-hidden="true">
+            <div class="lock-banner-ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    <circle cx="12" cy="16" r="1" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="lock-banner-text">
+                <h4>Web đã đóng vĩnh viễn</h4>
+                <p>Đã cấp đủ <span>10 / 10 key</span> — không thể tạo thêm.</p>
+            </div>
+        </div>
+
         <!-- Active Package -->
         <section style="margin-bottom: 32px;">
             <div class="sec-head">
@@ -110,6 +125,10 @@
                         <div class="stat-label">Cooldown</div>
                         <div class="stat-val">24h</div>
                     </div>
+                    <div class="pkg-banner-stat pkg-banner-stat--count">
+                        <div class="stat-label">Đã cấp</div>
+                        <div class="stat-val"><span id="pkgCount">0</span> / 10</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -131,7 +150,7 @@
         <!-- Footer -->
         <footer class="footer">
             <span class="live">Realtime</span>
-            <span>Firebase · asia-southeast1</span>
+            <span>Thành Lợi SEVER</span>
         </footer>
     </div>
 

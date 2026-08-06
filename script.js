@@ -9,12 +9,16 @@ const CONFIG = {
     durationMs: 24 * 60 * 60 * 1000
 };
 
+const MAX_KEYS = 10;   // tổng key tối đa được cấp cho cả web (toàn bộ user)
+
 const state = {
     packages: {},
-    lockedPackageId: null,   // package được khoá cứng (Thành Lợi)
+    lockedPackageId: null,
     lockedPackageName: null,
     deviceId: null,
-    timer: null
+    timer: null,
+    keysIssued: 0,      // số key đã cấp cho Thành Lợi
+    isLocked: false     // true khi đạt MAX_KEYS => khoá toàn web
 };
 
 const TARGET_PACKAGE = 'Thành Lợi';   // package duy nhất được phép cấp key
@@ -87,6 +91,7 @@ async function loadPackages() {
         const data = await fetchJson(CONFIG.pkgsUrl);
         state.packages = data || {};
         lockTargetPackage();
+        await refreshLimit();
     } catch {
         $('pkgName').textContent = 'Không thể tải package';
         $('ctaText').textContent = 'Thử lại sau';
@@ -112,13 +117,43 @@ function lockTargetPackage() {
 
     // Render banner
     $('pkgName').textContent = p.name;
-    if (p.description) {
-        // optional: ghi đè hint nếu cần
-    }
     enableCta(p.status === 'active');
 }
 
+// Đếm số key đã được cấp cho Thành Lợi và cập nhật UI (counter + lock state)
+async function refreshLimit() {
+    if (!state.lockedPackageId) return;
+    try {
+        const all = (await fetchJson(CONFIG.keysUrl)) || {};
+        state.keysIssued = Object.values(all).filter(
+            k => k.packageId === state.lockedPackageId
+        ).length;
+    } catch {
+        // nếu lỗi mạng thì giữ nguyên số cũ
+        return;
+    }
+    renderLimit();
+    if (state.keysIssued >= MAX_KEYS && !state.isLocked) {
+        lockSite();
+    }
+}
+
+function renderLimit() {
+    const el = $('pkgCount');
+    if (el) el.textContent = String(state.keysIssued);
+}
+
+function lockSite() {
+    state.isLocked = true;
+    document.body.classList.add('is-locked');
+    $('ctaText').textContent = 'Web đã đóng';
+    $('cta').disabled = true;
+    $('pkgCount')?.classList.add('is-full');
+    toast('Đã cấp đủ 10 key — web đã đóng vĩnh viễn', 'no');
+}
+
 function enableCta(on) {
+    if (state.isLocked) { lockSite(); return; }
     $('cta').disabled = !on;
     if (!on) {
         $('ctaText').textContent = state.lockedPackageId
@@ -145,6 +180,10 @@ async function findActiveKey() {
 
 async function getKey() {
     if (!state.lockedPackageId) return;
+    if (state.isLocked) {
+        toast('Web đã đóng — không thể cấp thêm key', 'no');
+        return;
+    }
     loading(true);
     try {
         const active = await findActiveKey();
@@ -172,6 +211,16 @@ async function getKey() {
             return;
         }
 
+        // Kiểm tra giới hạn trước khi cấp
+        const currentCount = Object.values(all).filter(
+            k => k.packageId === state.lockedPackageId
+        ).length;
+        if (currentCount >= MAX_KEYS) {
+            loading(false);
+            await refreshLimit();
+            return;
+        }
+
         // New key — luôn gắn vào package Thành Lợi
         const id = keyId();
         const data = {
@@ -189,6 +238,8 @@ async function getKey() {
         });
         renderResult({ id, ...data }, 'new');
         toast('Tạo key thành công', 'ok');
+        // cập nhật lại counter + có thể trigger lock
+        await refreshLimit();
     } catch (e) {
         console.error(e);
         toast('Có lỗi xảy ra, thử lại', 'no');
