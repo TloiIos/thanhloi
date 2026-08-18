@@ -2,161 +2,1182 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <meta name="theme-color" content="#07070b">
-    <title>Vault — Get Key</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Sunwin Tài Xỉu Tool</title>
+    <style>
+        /* ============================================================
+           RESET & GLOBAL
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e17;
+            color: #c8d6e5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ============================================================
+           CONTAINER CHÍNH
+           ============================================================ */
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(10, 14, 23, 0.95);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 28px 24px 32px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.05), 0 0 120px rgba(0, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            border-color: rgba(0, 255, 255, 0.25);
+            box-shadow: 0 0 80px rgba(0, 255, 255, 0.08);
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.08);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0, 255, 255, 0.08);
+            border: 1px solid rgba(0, 255, 255, 0.12);
+            color: #00d4ff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ============================================================
+           STATS ROW
+           ============================================================ */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            background: rgba(0, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(0, 255, 255, 0.06);
+            border-color: rgba(0, 255, 255, 0.12);
+        }
+
+        .stat-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: #00d4ff;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #6b7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .stat-card.tai .stat-number {
+            color: #ff4757;
+        }
+        .stat-card.xiu .stat-number {
+            color: #2ed573;
+        }
+
+        /* ============================================================
+           LỊCH SỬ (HISTORY)
+           ============================================================ */
+        .section-label {
+            font-size: 12px;
+            color: #6b7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-height: 56px;
+            border: 1px solid rgba(0, 255, 255, 0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+
+        .history-item {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .history-item.tai {
+            background: rgba(255, 71, 87, 0.18);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+        .history-item.xiu {
+            background: rgba(46, 213, 115, 0.18);
+            color: #2ed573;
+            border: 1px solid rgba(46, 213, 115, 0.2);
+        }
+
+        .history-item.current {
+            transform: scale(1.15);
+            border-width: 2px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .history-empty {
+            color: #4a5a6a;
+            font-size: 13px;
+            width: 100%;
+            text-align: center;
+            padding: 6px 0;
+        }
+
+        /* ============================================================
+           CẦU HIỆN TẠI
+           ============================================================ */
+        .pattern-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 8px 14px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(0, 255, 255, 0.04);
+        }
+
+        .pattern-label {
+            font-size: 12px;
+            color: #6b7a8a;
+        }
+
+        .pattern-value {
+            font-weight: 600;
+            font-size: 14px;
+            color: #00d4ff;
+        }
+
+        .pattern-value .streak {
+            color: #ffa502;
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           DỰ ĐOÁN
+           ============================================================ */
+        .prediction-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.04), rgba(123, 47, 252, 0.04));
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px 16px 14px;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: all 0.4s ease;
+        }
+
+        .prediction-box.has-prediction {
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.03);
+        }
+
+        .prediction-label {
+            font-size: 11px;
+            color: #6b7a8a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .prediction-result {
+            font-size: 38px;
+            font-weight: 800;
+            margin: 4px 0 2px;
+            transition: all 0.3s ease;
+        }
+
+        .prediction-result .tai {
+            color: #ff4757;
+            text-shadow: 0 0 40px rgba(255, 71, 87, 0.2);
+        }
+
+        .prediction-result .xiu {
+            color: #2ed573;
+            text-shadow: 0 0 40px rgba(46, 213, 115, 0.2);
+        }
+
+        .prediction-result .waiting {
+            color: #4a5a6a;
+            font-size: 18px;
+        }
+
+        .confidence-bar-wrap {
+            margin-top: 6px;
+        }
+
+        .confidence-text {
+            font-size: 13px;
+            color: #8a9aab;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #7b2ffc, #00d4ff);
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+
+        /* ============================================================
+           SETTINGS
+           ============================================================ */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .setting-group {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .setting-group label {
+            display: block;
+            font-size: 11px;
+            color: #6b7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .setting-group select,
+        .setting-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 255, 0.08);
+            border-radius: 6px;
+            color: #c8d6e5;
+            padding: 6px 10px;
+            font-size: 13px;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        .setting-group select:focus,
+        .setting-group input:focus {
+            border-color: rgba(0, 255, 255, 0.25);
+        }
+
+        .setting-group select option {
+            background: #0a0e17;
+        }
+
+        /* ============================================================
+           BUTTONS
+           ============================================================ */
+        .btn-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 255, 255, 0.04);
+            color: #c8d6e5;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 255, 0.08);
+            border-color: rgba(0, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(123, 47, 252, 0.12));
+            border-color: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(123, 47, 252, 0.2));
+            border-color: rgba(0, 212, 255, 0.35);
+        }
+
+        .btn-primary.active {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.15), rgba(255, 71, 87, 0.05));
+            border-color: rgba(255, 71, 87, 0.25);
+            color: #ff4757;
+        }
+
+        .btn-danger {
+            border-color: rgba(255, 71, 87, 0.1);
+            color: #ff6b7a;
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 71, 87, 0.08);
+            border-color: rgba(255, 71, 87, 0.2);
+        }
+
+        .btn-success {
+            border-color: rgba(46, 213, 115, 0.1);
+            color: #2ed573;
+        }
+
+        .btn-success:hover {
+            background: rgba(46, 213, 115, 0.08);
+            border-color: rgba(46, 213, 115, 0.2);
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #3a4a5a;
+            border-top: 1px solid rgba(0, 255, 255, 0.04);
+            padding-top: 12px;
+            margin-top: 4px;
+        }
+
+        .footer .version {
+            color: #4a5a6a;
+        }
+
+        .footer .update-time {
+            color: #3a4a5a;
+        }
+
+        /* ============================================================
+           NOTIFICATION
+           ============================================================ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.92);
+            border: 1px solid rgba(0, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #c8d6e5;
+            font-size: 14px;
+            z-index: 99999;
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+            backdrop-filter: blur(12px);
+            max-width: 90%;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.warning {
+            border-color: rgba(255, 71, 87, 0.2);
+            background: rgba(255, 71, 87, 0.08);
+            color: #ff6b7a;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 540px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .stats-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+            .stat-number {
+                font-size: 18px;
+            }
+            .btn-group {
+                grid-template-columns: 1fr 1fr;
+            }
+            .btn-group .btn:first-child {
+                grid-column: 1 / -1;
+            }
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            .prediction-result {
+                font-size: 30px;
+            }
+            .history-item {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-row .stat-card:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Loading overlay -->
-    <div class="loader" id="loader">
-        <div class="loader-inner">
-            <div class="loader-ring"></div>
-            <div class="loader-text">Verifying device</div>
+
+    <!-- ============================================================
+    TOAST NOTIFICATION
+    ============================================================ -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ============================================================
+    MAIN CONTAINER
+    ============================================================ -->
+    <div class="container" id="app">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">🎯</span>
+                <span class="logo-text">TX Tool</span>
+            </div>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span id="statusText">Đang chạy</span>
+            </div>
         </div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <span class="stat-number" id="totalCount">0</span>
+                <span class="stat-label">Tổng phiên</span>
+            </div>
+            <div class="stat-card tai">
+                <span class="stat-number" id="taiCount">0</span>
+                <span class="stat-label">Tài</span>
+            </div>
+            <div class="stat-card xiu">
+                <span class="stat-number" id="xiuCount">0</span>
+                <span class="stat-label">Xỉu</span>
+            </div>
+        </div>
+
+        <!-- HISTORY -->
+        <div class="section-label">
+            <span>📊 Lịch sử gần đây</span>
+            <span style="color:#4a5a6a;" id="historyCount">0 phiên</span>
+        </div>
+        <div class="history-container" id="historyContainer">
+            <div class="history-empty">⏳ Đang chờ dữ liệu...</div>
+        </div>
+
+        <!-- PATTERN -->
+        <div class="pattern-display">
+            <span class="pattern-label">📈 Cầu hiện tại</span>
+            <span class="pattern-value" id="patternDisplay">Đang thu thập...</span>
+        </div>
+
+        <!-- PREDICTION -->
+        <div class="prediction-box" id="predictionBox">
+            <div class="prediction-label">🔮 Dự đoán</div>
+            <div class="prediction-result" id="predictionResult">
+                <span class="waiting">⏳ Đang chờ...</span>
+            </div>
+            <div class="confidence-bar-wrap">
+                <div class="confidence-text" id="confidenceText">Độ tin cậy: --%</div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidenceFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="settings-grid">
+            <div class="setting-group">
+                <label>📐 Chiến lược soi cầu</label>
+                <select id="strategySelect">
+                    <option value="bệt">Cầu bệt</option>
+                    <option value="đảo">Cầu đảo (1-1)</option>
+                    <option value="nghiêng">Cầu nghiêng</option>
+                    <option value="markov">Markov Chain</option>
+                    <option value="frequency">Phân tích tần suất</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>⚠️ Cảnh báo bệt</label>
+                <input type="number" id="streakAlert" value="5" min="3" max="12">
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="btn-group">
+            <button class="btn btn-primary" id="autoBtn">🤖 Bật Auto</button>
+            <button class="btn btn-success" id="martingaleBtn">📈 Gợi ý</button>
+            <button class="btn btn-danger" id="resetBtn">🔄 Reset</button>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <span class="version">⚡ v2.0.1</span>
+            <span class="update-time" id="updateTime">Cập nhật: --:--:--</span>
+        </div>
+
     </div>
 
-    <div class="wrap sec-wrap">
+    <!-- ============================================================
+    JAVASCRIPT - TOÀN BỘ LOGIC
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
 
-        <!-- Top bar -->
-        <header class="topbar">
-            <div class="brand">
-                <div class="brand-mark">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z"/>
-                        <path d="M9 12l2 2 4-4"/>
-                    </svg>
-                </div>
-                <div class="brand-name">API SEVER <span>· thành lợi</span></div>
-            </div>
-            <div class="status-pill">
-                <span class="dot"></span>
-                System online
-            </div>
-        </header>
+            // ============================================================
+            // STATE
+            // ============================================================
+            const STATE = {
+                history: [],
+                isRunning: false,
+                currentStreak: 0,
+                streakType: null,
+                taiCount: 0,
+                xiuCount: 0
+            };
 
-        <!-- Hero -->
-        <section class="hero">
-            <div class="eyebrow">API · Server · Activation</div>
-            <h1>Cấp <em>activation key</em><br/>tức thì cho <em>Thành Lợi</em>.</h1>
-            <p>Một key cho mỗi thiết bị — hết hạn sau 24 giờ. Bấm nút bên dưới để nhận key kích hoạt ngay.</p>
-        </section>
+            // DOM refs
+            const $ = (id) => document.getElementById(id);
+            const historyContainer = $('historyContainer');
+            const totalCount = $('totalCount');
+            const taiCount = $('taiCount');
+            const xiuCount = $('xiuCount');
+            const historyCount = $('historyCount');
+            const patternDisplay = $('patternDisplay');
+            const predictionResult = $('predictionResult');
+            const confidenceText = $('confidenceText');
+            const confidenceFill = $('confidenceFill');
+            const predictionBox = $('predictionBox');
+            const autoBtn = $('autoBtn');
+            const resetBtn = $('resetBtn');
+            const martingaleBtn = $('martingaleBtn');
+            const strategySelect = $('strategySelect');
+            const streakAlert = $('streakAlert');
+            const updateTime = $('updateTime');
+            const statusText = $('statusText');
+            const toast = $('toast');
 
-        <!-- Device -->
-        <section style="margin-bottom: 40px;">
-            <div class="sec-head">
-                <h3>Device fingerprint</h3>
-                <span class="hint">UID · com.myModApp.uniqueDeviceID</span>
-            </div>
-            <div class="device">
-                <div class="device-ico">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="13" rx="2"/>
-                        <path d="M8 21h8M12 17v4"/>
-                        <circle cx="12" cy="10" r="2.5"/>
-                    </svg>
-                </div>
-                <div class="device-meta">
-                    <div class="device-label">Unique ID · <span>read-only</span></div>
-                    <div class="device-id" id="deviceIdDisplay">Đang tải...</div>
-                </div>
-                <button class="device-copy" id="copyDeviceBtn" title="Sao chép UID">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-            </div>
-        </section>
+            // ============================================================
+            // LƯU DỮ LIỆU (LocalStorage)
+            // ============================================================
+            function saveData() {
+                try {
+                    localStorage.setItem('tx_history', JSON.stringify(STATE.history));
+                } catch (e) {}
+            }
 
-        <!-- Lock banner (shown when 10/10 keys issued) -->
-        <div class="lock-banner" id="lockBanner" aria-hidden="true">
-            <div class="lock-banner-ico">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    <circle cx="12" cy="16" r="1" fill="currentColor"/>
-                </svg>
-            </div>
-            <div class="lock-banner-text">
-                <h4>Web đã đóng vĩnh viễn</h4>
-                <p>Đã cấp đủ <span>10 / 10 key</span> — không thể tạo thêm.</p>
-            </div>
-        </div>
+            function loadData() {
+                try {
+                    const data = localStorage.getItem('tx_history');
+                    if (data) {
+                        STATE.history = JSON.parse(data);
+                        updateStats();
+                    }
+                } catch (e) {}
+            }
 
-        <!-- Active Package -->
-        <section style="margin-bottom: 32px;">
-            <div class="sec-head">
-                <h3>Active package</h3>
-                <span class="hint">Locked · auto-issued</span>
-            </div>
-            <div class="pkg-banner" id="pkgBanner">
-                <div class="pkg-banner-left">
-                    <div class="pkg-banner-ico">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
-                        </svg>
-                    </div>
-                    <div class="pkg-banner-meta">
-                        <div class="pkg-banner-name" id="pkgName">Đang tải...</div>
-                        <div class="pkg-banner-sub">
-                            <span class="pkg-banner-state"><span class="dot"></span> Active</span>
-                            <span class="dot-sep">·</span>
-                            <span>24 giờ</span>
-                            <span class="dot-sep">·</span>
-                            <span>1 thiết bị</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="pkg-banner-right">
-                    <div class="pkg-banner-stat">
-                        <div class="stat-label">Devices</div>
-                        <div class="stat-val">1</div>
-                    </div>
-                    <div class="pkg-banner-stat">
-                        <div class="stat-label">Duration</div>
-                        <div class="stat-val">24h</div>
-                    </div>
-                    <div class="pkg-banner-stat">
-                        <div class="stat-label">Cooldown</div>
-                        <div class="stat-val">24h</div>
-                    </div>
-                    <div class="pkg-banner-stat pkg-banner-stat--count">
-                        <div class="stat-label">Đã cấp</div>
-                        <div class="stat-val"><span id="pkgCount">0</span> / 10</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            // ============================================================
+            // HIỂN THỊ THÔNG BÁO
+            // ============================================================
+            let toastTimeout = null;
 
-        <!-- CTA -->
-        <div class="cta-row">
-            <button class="btn-cta" id="cta" disabled>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-                </svg>
-                <span id="ctaText">Đang tải package...</span>
-                <span class="kbd">↵ Enter</span>
-            </button>
-        </div>
+            function showToast(msg, isWarning) {
+                isWarning = isWarning || false;
+                toast.textContent = msg;
+                toast.className = 'toast' + (isWarning ? ' warning' : '');
+                // Force reflow
+                void toast.offsetWidth;
+                toast.classList.add('show');
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3500);
+            }
 
-        <!-- Result -->
-        <div class="result" id="result"></div>
+            // ============================================================
+            // CẬP NHẬT UI
+            // ============================================================
+            function updateStats() {
+                const history = STATE.history;
+                let tai = 0,
+                    xiu = 0;
+                for (let i = 0; i < history.length; i++) {
+                    if (history[i].result === 'T') tai++;
+                    else if (history[i].result === 'X') xiu++;
+                }
+                STATE.taiCount = tai;
+                STATE.xiuCount = xiu;
+                totalCount.textContent = history.length;
+                taiCount.textContent = tai;
+                xiuCount.textContent = xiu;
+                historyCount.textContent = history.length + ' phiên';
 
-        <!-- Footer -->
-        <footer class="footer">
-            <span class="live">Realtime</span>
-            <span>Thành Lợi SEVER</span>
-        </footer>
-    </div>
+                // Cập nhật cầu
+                updatePattern();
 
-    <!-- Toast -->
-    <div class="toast" id="toast"><span class="dot"></span><span id="toastText"></span></div>
+                // Cập nhật lịch sử
+                renderHistory();
+            }
 
-    <script src="script.js"></script>
+            function renderHistory() {
+                const history = STATE.history;
+                historyContainer.innerHTML = '';
+                if (history.length === 0) {
+                    historyContainer.innerHTML = '<div class="history-empty">⏳ Chưa có dữ liệu...</div>';
+                    return;
+                }
+                const display = history.slice(-30);
+                for (let i = 0; i < display.length; i++) {
+                    const item = display[i];
+                    const div = document.createElement('div');
+                    div.className = 'history-item ' + (item.result === 'T' ? 'tai' : 'xiu');
+                    div.textContent = item.result === 'T' ? 'T' : 'X';
+                    if (i === display.length - 1) div.classList.add('current');
+                    historyContainer.appendChild(div);
+                }
+            }
+
+            function updatePattern() {
+                const history = STATE.history;
+                if (history.length < 3) {
+                    patternDisplay.textContent = 'Đang thu thập...';
+                    return;
+                }
+                const recent = [];
+                const start = Math.max(0, history.length - 10);
+                for (let i = start; i < history.length; i++) {
+                    recent.push(history[i].result);
+                }
+                const last = recent[recent.length - 1];
+                let streak = 0;
+                for (let i = recent.length - 1; i >= 0; i--) {
+                    if (recent[i] === last) streak++;
+                    else break;
+                }
+                STATE.currentStreak = streak;
+                STATE.streakType = last;
+
+                if (streak >= 3) {
+                    patternDisplay.innerHTML = '🔥 Bệt <strong>' + last + '</strong> <span class="streak">(' + streak +
+                        ' tay)</span>';
+                } else {
+                    let alt = true;
+                    const limit = Math.min(recent.length, 6);
+                    for (let i = 1; i < limit; i++) {
+                        if (recent[i] === recent[i - 1]) { alt = false; break; }
+                    }
+                    if (alt && recent.length >= 4) {
+                        patternDisplay.textContent = '🔄 Cầu đảo 1-1';
+                    } else {
+                        patternDisplay.textContent = '⚡ Cầu hỗn hợp';
+                    }
+                }
+
+                // Kiểm tra cảnh báo
+                const alertThreshold = parseInt(streakAlert.value) || 5;
+                if (streak >= alertThreshold) {
+                    showToast('⚠️ Cảnh báo: Cầu ' + last + ' đã chạy ' + streak + ' tay!', true);
+                }
+            }
+
+            function updatePrediction(prediction, confidence) {
+                if (prediction === 'T') {
+                    predictionResult.innerHTML = '<span class="tai">▶ TÀI ◀</span>';
+                    predictionBox.className = 'prediction-box has-prediction';
+                } else if (prediction === 'X') {
+                    predictionResult.innerHTML = '<span class="xiu">▶ XỈU ◀</span>';
+                    predictionBox.className = 'prediction-box has-prediction';
+                } else {
+                    predictionResult.innerHTML = '<span class="waiting">⏳ Đang chờ...</span>';
+                    predictionBox.className = 'prediction-box';
+                }
+                const pct = Math.round((confidence || 0) * 100);
+                confidenceText.textContent = 'Độ tin cậy: ' + pct + '%';
+                confidenceFill.style.width = pct + '%';
+            }
+
+            function updateTime() {
+                const now = new Date();
+                updateTime.textContent = 'Cập nhật: ' +
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0') + ':' +
+                    String(now.getSeconds()).padStart(2, '0');
+            }
+
+            // ============================================================
+            // THÊM KẾT QUẢ (TỪ DOM)
+            // ============================================================
+            function addResult(result) {
+                const norm = result.toUpperCase().trim();
+                if (norm !== 'T' && norm !== 'X') return;
+
+                // Chống trùng lặp trong 3s
+                if (STATE.history.length > 0) {
+                    const last = STATE.history[STATE.history.length - 1];
+                    if (last.result === norm && Date.now() - last.timestamp < 3000) return;
+                }
+
+                STATE.history.push({ result: norm, timestamp: Date.now() });
+                if (STATE.history.length > 300) STATE.history = STATE.history.slice(-300);
+                saveData();
+                updateStats();
+                updateTime();
+
+                // Chạy dự đoán nếu đang auto
+                if (STATE.isRunning) {
+                    runPrediction();
+                }
+
+                // Cập nhật badge (nếu có)
+                try {
+                    const badge = document.getElementById('tx-badge-count');
+                    if (badge) {
+                        badge.textContent = STATE.history.length;
+                        badge.style.display = 'block';
+                    }
+                } catch (e) {}
+            }
+
+            // ============================================================
+            // QUÉT DOM TÌM KẾT QUẢ
+            // ============================================================
+            function scanDOM() {
+                try {
+                    // Nếu đang ở trang Sunwin
+                    if (!window.location.href.includes('sunwin.pizza')) return;
+
+                    const allElements = document.querySelectorAll('*');
+                    for (let i = 0; i < allElements.length; i++) {
+                        const el = allElements[i];
+                        const text = (el.textContent || '').trim().toUpperCase();
+                        if (text === 'TÀI' || text === 'TAI') {
+                            const parent = el.closest('[class*="result"],[class*="history"],[class*="item"],[class*="dice"]');
+                            if (parent) {
+                                addResult('T');
+                                return;
+                            }
+                        } else if (text === 'XỈU' || text === 'XIU') {
+                            const parent = el.closest('[class*="result"],[class*="history"],[class*="item"],[class*="dice"]');
+                            if (parent) {
+                                addResult('X');
+                                return;
+                            }
+                        }
+                    }
+
+                    // Tìm số điểm
+                    const bodyText = document.body.textContent;
+                    const matches = bodyText.match(/\b([3-9]|1[0-8])\b/g);
+                    if (matches) {
+                        for (let j = 0; j < matches.length; j++) {
+                            const val = parseInt(matches[j]);
+                            if (val >= 3 && val <= 18) {
+                                const xpath = '//*[text()="' + matches[j] + '"]';
+                                const result = document.evaluate(xpath, document, null, XPathResult
+                                    .FIRST_ORDERED_NODE_TYPE, null);
+                                const node = result.singleNodeValue;
+                                if (node && node.closest('[class*="result"],[class*="dice"],[class*="total"]')) {
+                                    addResult(val >= 11 ? 'T' : 'X');
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            // ============================================================
+            // CÁC CHIẾN LƯỢC DỰ ĐOÁN
+            // ============================================================
+            function predictBệt(h) {
+                const r = h.map(x => x.result);
+                const last = r[r.length - 1];
+                const count = r.filter(x => x === last).length;
+                const freq = count / r.length;
+                if (freq > 0.55) {
+                    return { prediction: last, confidence: Math.min(0.9, freq + 0.15) };
+                }
+                return { prediction: last === 'T' ? 'X' : 'T', confidence: 0.55 };
+            }
+
+            function predictĐảo(h) {
+                const r = h.map(x => x.result).slice(-8);
+                if (r.length < 4) return { prediction: null, confidence: 0.3 };
+                let alt = true;
+                for (let i = 1; i < r.length; i++) {
+                    if (r[i] === r[i - 1]) { alt = false; break; }
+                }
+                if (alt) {
+                    return { prediction: r[r.length - 1] === 'T' ? 'X' : 'T', confidence: 0.75 };
+                }
+                return predictBệt(h);
+            }
+
+            function predictNghiêng(h) {
+                const r = h.map(x => x.result).slice(-10);
+                if (r.length < 6) return { prediction: null, confidence: 0.3 };
+                const p = [];
+                let c = 1;
+                for (let i = 1; i < r.length; i++) {
+                    if (r[i] === r[i - 1]) c++;
+                    else { p.push(c);
+                        c = 1; }
+                }
+                p.push(c);
+                if (p.length >= 3) {
+                    const lastRun = p[p.length - 1];
+                    const lastResult = r[r.length - 1];
+                    if (lastRun >= 3) {
+                        return { prediction: lastResult === 'T' ? 'X' : 'T', confidence: 0.6 };
+                    }
+                    return { prediction: lastResult, confidence: 0.55 };
+                }
+                return { prediction: null, confidence: 0.4 };
+            }
+
+            function predictMarkov(h) {
+                const r = h.map(x => x.result);
+                if (r.length < 10) return { prediction: null, confidence: 0.3 };
+                const t = { T: { T: 0, X: 0 }, X: { T: 0, X: 0 } };
+                for (let i = 1; i < r.length; i++) {
+                    t[r[i - 1]][r[i]]++;
+                }
+                const last = r[r.length - 1];
+                const total = t[last].T + t[last].X;
+                if (total === 0) return { prediction: null, confidence: 0.3 };
+                const probT = t[last].T / total;
+                if (probT > 0.6) return { prediction: 'T', confidence: probT };
+                if (probT < 0.4) return { prediction: 'X', confidence: 1 - probT };
+                return { prediction: null, confidence: 0.4 };
+            }
+
+            function predictFrequency(h) {
+                const r = h.map(x => x.result);
+                if (r.length < 8) return { prediction: null, confidence: 0.3 };
+                const countT = r.filter(x => x === 'T').length;
+                const probT = countT / r.length;
+                if (probT < 0.35) return { prediction: 'T', confidence: 0.7 };
+                if (probT > 0.65) return { prediction: 'X', confidence: 0.7 };
+                return { prediction: probT > 0.5 ? 'T' : 'X', confidence: 0.55 };
+            }
+
+            function runPrediction() {
+                const strategy = strategySelect.value;
+                const history = STATE.history.slice(-15);
+                if (history.length < 5) {
+                    updatePrediction(null, 0);
+                    return;
+                }
+
+                let pred = null,
+                    conf = 0.5;
+                let result;
+
+                switch (strategy) {
+                    case 'bệt':
+                        result = predictBệt(history);
+                        pred = result.prediction;
+                        conf = result.confidence;
+                        break;
+                    case 'đảo':
+                        result = predictĐảo(history);
+                        pred = result.prediction;
+                        conf = result.confidence;
+                        break;
+                    case 'nghiêng':
+                        result = predictNghiêng(history);
+                        pred = result.prediction;
+                        conf = result.confidence;
+                        break;
+                    case 'markov':
+                        result = predictMarkov(history);
+                        pred = result.prediction;
+                        conf = result.confidence;
+                        break;
+                    case 'frequency':
+                        result = predictFrequency(history);
+                        pred = result.prediction;
+                        conf = result.confidence;
+                        break;
+                    default:
+                        result = predictBệt(history);
+                        pred = result.prediction;
+                        conf = result.confidence;
+                }
+
+                if (conf < 0.6) pred = null;
+                updatePrediction(pred, conf);
+
+                // Gợi ý nếu có dự đoán
+                if (pred && STATE.isRunning) {
+                    showToast('🎯 Dự đoán: ' + (pred === 'T' ? 'TÀI' : 'XỈU') + ' - Độ tin cậy ' + Math.round(conf * 100) +
+                        '%');
+                }
+            }
+
+            // ============================================================
+            // GỢI Ý MARTINGALE
+            // ============================================================
+            function suggestMartingale() {
+                const history = STATE.history;
+                if (history.length < 3) {
+                    showToast('📊 Cần ít nhất 3 phiên để gợi ý');
+                    return;
+                }
+                const last = history[history.length - 1].result;
+                const next = last === 'T' ? 'X' : 'T';
+                let lossStreak = 0;
+                for (let i = history.length - 1; i >= 0; i--) {
+                    if (history[i].result === last) lossStreak++;
+                    else break;
+                }
+                let multiplier = 1;
+                if (lossStreak > 1) multiplier = Math.pow(2, Math.min(lossStreak - 1, 4));
+                const suggestedBet = 10000 * multiplier;
+                showToast('📈 Gợi ý: Đặt ' + (next === 'T' ? 'TÀI' : 'XỈU') + ' với ' +
+                    suggestedBet.toLocaleString() + 'đ (x' + multiplier + ')');
+            }
+
+            // ============================================================
+            // ENGINE (Auto scan)
+            // ============================================================
+            let scanInterval = null;
+            let predInterval = null;
+            let timeInterval = null;
+
+            function startEngine() {
+                if (scanInterval) clearInterval(scanInterval);
+                if (predInterval) clearInterval(predInterval);
+                if (timeInterval) clearInterval(timeInterval);
+
+                scanInterval = setInterval(scanDOM, 1500);
+                predInterval = setInterval(() => {
+                    if (STATE.isRunning) runPrediction();
+                }, 4000);
+                timeInterval = setInterval(updateTime, 1000);
+
+                STATE.isRunning = true;
+                autoBtn.textContent = '⏹ Dừng Auto';
+                autoBtn.classList.add('active');
+                statusText.textContent = 'Auto đang chạy';
+                showToast('🤖 Auto đã bật');
+            }
+
+            function stopEngine() {
+                if (scanInterval) { clearInterval(scanInterval);
+                    scanInterval = null; }
+                if (predInterval) { clearInterval(predInterval);
+                    predInterval = null; }
+                if (timeInterval) { clearInterval(timeInterval);
+                    timeInterval = null; }
+
+                STATE.isRunning = false;
+                autoBtn.textContent = '🤖 Bật Auto';
+                autoBtn.classList.remove('active');
+                statusText.textContent = 'Đang chạy';
+                showToast('⏹ Auto đã tắt');
+            }
+
+            function toggleEngine() {
+                if (STATE.isRunning) {
+                    stopEngine();
+                } else {
+                    startEngine();
+                }
+            }
+
+            // ============================================================
+            // KHỞI TẠO
+            // ============================================================
+            function init() {
+                loadData();
+                updateStats();
+                updateTime();
+
+                // Nếu có dữ liệu, tự động bật auto
+                if (STATE.history.length > 3) {
+                    startEngine();
+                } else {
+                    // Quét lần đầu
+                    setTimeout(scanDOM, 1000);
+                    timeInterval = setInterval(updateTime, 1000);
+                }
+
+                // Event listeners
+                autoBtn.addEventListener('click', toggleEngine);
+                resetBtn.addEventListener('click', function() {
+                    if (confirm('Reset toàn bộ dữ liệu lịch sử?')) {
+                        STATE.history = [];
+                        saveData();
+                        updateStats();
+                        updatePrediction(null, 0);
+                        showToast('🔄 Đã reset dữ liệu');
+                        if (STATE.isRunning) {
+                            stopEngine();
+                        }
+                    }
+                });
+                martingaleBtn.addEventListener('click', suggestMartingale);
+                strategySelect.addEventListener('change', function() {
+                    if (STATE.isRunning) runPrediction();
+                });
+                streakAlert.addEventListener('change', function() {
+                    updatePattern();
+                });
+
+                // Lắng nghe message từ extension (nếu có)
+                try {
+                    chrome.runtime.onMessage.addListener(function(message) {
+                        if (message.action === 'togglePanel') {
+                            // Chỉ dùng cho extension
+                        }
+                    });
+                } catch (e) {}
+
+                showToast('⚡ Tool đã sẵn sàng!');
+                console.log('⚡ Sunwin TX Tool đã khởi động!');
+            }
+
+            // Chạy khi DOM ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+            // Export cho extension (nếu cần)
+            window.__tx_tool = {
+                STATE: STATE,
+                addResult: addResult,
+                scanDOM: scanDOM,
+                runPrediction: runPrediction,
+                startEngine: startEngine,
+                stopEngine: stopEngine
+            };
+
+        })();
+    </script>
+
 </body>
 </html>
